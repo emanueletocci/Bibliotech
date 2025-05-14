@@ -41,6 +41,7 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                          fontSize: 30,
                         ),
                       ),
                     ),
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(height: 25),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: TextButton.icon(
+                    child: FilledButton.icon(
                       onPressed: () {},
                       icon: Icon(Icons.add, size: 25),
                       style: TextButton.styleFrom(
@@ -91,7 +92,7 @@ class HomeScreen extends StatelessWidget {
             style: TextButton.styleFrom(
               minimumSize: Size(200, 60),
               //backgroundColor: Colors.purpleAccent,
-              foregroundColor: Colors.white,
+              //foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
