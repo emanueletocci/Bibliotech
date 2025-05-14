@@ -8,6 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        spacing: 30,
         children: [
           Stack(
             children: [
@@ -45,12 +46,12 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 25,),
+                  SizedBox(height: 25),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: TextButton.icon(
                       onPressed: () {},
-                      icon: Icon(Icons.add),
+                      icon: Icon(Icons.add, size: 25),
                       style: TextButton.styleFrom(
                         minimumSize: Size(100, 70),
                         backgroundColor: Colors.purpleAccent,
@@ -86,6 +87,27 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
+          TextButton.icon(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              minimumSize: Size(200, 60),
+              backgroundColor: Colors.purpleAccent,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            icon: Icon(Icons.heat_pump_rounded, size: 25),
+            label: Text("Wishlist"),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 24),
+              child: Text("Ultime aggiunte"),
+            ),
+          ),
+          Text("Ultime aggiunte"),
         ],
       ),
     );
