@@ -40,7 +40,6 @@ class HomeScreen extends StatelessWidget {
                         "Welcome!",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -54,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                       icon: Icon(Icons.add, size: 25),
                       style: TextButton.styleFrom(
                         minimumSize: Size(100, 70),
-                        backgroundColor: Colors.purpleAccent,
+                        //backgroundColor: Colors.purpleAccent,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -91,7 +90,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {},
             style: TextButton.styleFrom(
               minimumSize: Size(200, 60),
-              backgroundColor: Colors.purpleAccent,
+              //backgroundColor: Colors.purpleAccent,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
