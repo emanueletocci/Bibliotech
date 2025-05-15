@@ -27,8 +27,8 @@ class BarraNavigazione extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.category),
-          label: 'Categorie',
+          icon: Icon(Icons.book),
+          label: 'Libreria',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.bar_chart),
