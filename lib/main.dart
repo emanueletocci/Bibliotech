@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home/homepage.dart';
 import 'themes/themes.dart';
+import 'widgets/barra_navigazione.dart';
 
 void main() {
   runApp(const MyApp());

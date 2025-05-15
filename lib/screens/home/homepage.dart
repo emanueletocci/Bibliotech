@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Assicurati di avere Flutter >= 3.24 per CarouselView
+import '../../widgets/barra_navigazione.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
@@ -14,6 +14,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
+      ),
+      bottomNavigationBar: BarraNavigazione(
+        currentIndex: 0,
+        onTap: (index) {},
       ),
     );
   }
