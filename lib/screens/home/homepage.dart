@@ -8,6 +8,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         child: Column(
           spacing: 30,
@@ -214,6 +218,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      
     );
   }
 }
