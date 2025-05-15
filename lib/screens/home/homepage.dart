@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Assicurati di avere Flutter >= 3.24 per CarouselView
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
@@ -7,182 +8,186 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        spacing: 30,
-        children: [
-          Stack(
-            children: [
-              Container(
-                height: 250,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF8F5CFF), // Colore viola
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(70),
-                    bottomLeft: Radius.circular(150),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blueGrey,
-                      spreadRadius: 1,
-                      blurRadius: 15,
-                      offset: Offset(0, 3),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 30,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 250,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8F5CFF),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(70),
+                      bottomLeft: Radius.circular(150),
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueGrey,
+                        spreadRadius: 1,
+                        blurRadius: 15,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
-                  vertical: 15.0,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 15.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SafeArea(
+                        child: Text(
+                          "Welcome!",
+                          style: const TextStyle(
+                            fontSize: 32,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.add,
+                            size: 25,
+                            color: Color(0xFF8F5CFF),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF8F5CFF),
+                            minimumSize: const Size(280, 70),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          label: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Aggiungi un libro!",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF8F5CFF),
+                                ),
+                              ),
+                              Text(
+                                "Stai leggendo qualcosa?",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF8F5CFF),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SafeArea(
-                      child: Text(
-                        "Welcome!",
-                        style: const TextStyle(
-                          fontSize: 32,
-                          color: Colors.white,
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                spacing: 30,
+                children: [
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.blind,
+                        size: 25,
+                        color: Color(0xFF8F5CFF),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF8F5CFF),
+                        minimumSize: const Size(280, 70),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        elevation: 3,
+                      ),
+                      label: const Text(
+                        "Wishlist",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
+                    children: [
+                      const Text(
+                        "Libri consigliati",
+                        style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.add,
-                          size: 25,
-                          color: Color(0xFF8F5CFF),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF8F5CFF),
-                          minimumSize: const Size(280, 70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        label: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Aggiungi un libro!",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF8F5CFF),
-                              ),
+                      SizedBox(
+                        height: 150,
+                        child: CarouselView(
+                          itemExtent: 200,
+                          children: [
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
                             ),
-                            Text(
-                              "Stai leggendo qualcosa?",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF8F5CFF),
-                              ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Column(
-              spacing: 30,
-              children: [
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.blind,
-                      size: 25,
-                      color: Color(0xFF8F5CFF),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF8F5CFF),
-                      minimumSize: const Size(280, 70),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                      const Text(
+                        "Ultime aggiunte",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      elevation: 3,
-                    ),
-                    label: const Text(
-                      "Wishlist",
-                      style: TextStyle(fontSize: 18),
-                    ),
+                      SizedBox(
+                        height: 150,
+                        child: CarouselView(
+                          itemExtent: 200,
+                          children: [
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Column(
-                  spacing: 10,
-                  children: [
-                    Text(
-                      "Libri consigliati",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      child: CarouselView(
-                        itemExtent: 300,
-                        children: [
-                          Image.network(
-                            'https://picsum.photos/250?image=9',
-                            fit: BoxFit.cover,
-                          ),
-                          Image.network(
-                            'https://picsum.photos/250?image=10',
-                            fit: BoxFit.cover,
-                          ),
-                          Image.network(
-                            'https://picsum.photos/250?image=11',
-                            fit: BoxFit.cover,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      "Ultime aggiunte",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      child: CarouselView(
-                        itemExtent: 300,
-                        children: [
-                          Image.network(
-                            'https://picsum.photos/250?image=9',
-                            fit: BoxFit.cover,
-                          ),
-                          Image.network(
-                            'https://picsum.photos/250?image=10',
-                            fit: BoxFit.cover,
-                          ),
-                          Image.network(
-                            'https://picsum.photos/250?image=11',
-                            fit: BoxFit.cover,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
