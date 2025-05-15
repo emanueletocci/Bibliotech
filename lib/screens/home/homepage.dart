@@ -36,7 +36,6 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15.0,
-                    vertical: 15.0,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,8 +44,8 @@ class HomeScreen extends StatelessWidget {
                         child: Text(
                           "Welcome!",
                           style: const TextStyle(
-                            fontSize: 32,
                             color: Colors.white,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -57,11 +56,8 @@ class HomeScreen extends StatelessWidget {
                           icon: const Icon(
                             Icons.add,
                             size: 25,
-                            color: Color(0xFF8F5CFF),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF8F5CFF),
                             minimumSize: const Size(280, 70),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
@@ -75,7 +71,6 @@ class HomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF8F5CFF),
                                 ),
                               ),
                               Text(
@@ -83,7 +78,6 @@ class HomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
-                                  color: Color(0xFF8F5CFF),
                                 ),
                               ),
                             ],
@@ -106,11 +100,8 @@ class HomeScreen extends StatelessWidget {
                       icon: const Icon(
                         Icons.blind,
                         size: 25,
-                        color: Color(0xFF8F5CFF),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF8F5CFF),
                         minimumSize: const Size(280, 70),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
