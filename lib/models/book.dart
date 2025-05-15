@@ -14,6 +14,7 @@ class Libro {
   bool? preferito;
   bool? letto;
   bool? wishlist;
+  String? note;
 
   Libro({
     required this.titolo,
@@ -29,6 +30,7 @@ class Libro {
     this.preferito,
     this.letto,
     this.wishlist,
+    this.note,
   });
 
 
