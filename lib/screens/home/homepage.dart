@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
-        child: Column(spacing: 30, children: <Widget> [Header(), Body()]),
+        child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
       ),
     );
   }
