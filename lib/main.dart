@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotech',
       theme: appTheme,
-      home: const HomeScreen(title: 'Homepage'),
+      //home: const HomeScreen(title: 'Homepage'),
     );
   }
 }
