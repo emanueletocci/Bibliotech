@@ -178,6 +178,30 @@ class HomeScreen extends StatelessWidget {
                               'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
                               fit: BoxFit.cover,
                             ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
+                              fit: BoxFit.cover,
+                            ),
                           ],
                         ),
                       ),
