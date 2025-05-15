@@ -4,16 +4,16 @@ class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  List<Categoria>? categorie;  // usiamo direttamente la classe Categoria
+  List<Categoria>? categorie;
   String? lingua;
   String? trama;
   String isbn;
   DateTime? dataPubblicazione;
-  List<String> recensioni; 
   double? voto;
-  String? copertina;  // qui ci va il link alla copertina
-  bool preferito;
-  bool letto;
+  String? copertina;
+  bool? preferito;
+  bool? letto;
+  bool? wishlist;
 
   Libro({
     required this.titolo,
@@ -24,25 +24,12 @@ class Libro {
     this.trama,
     required this.isbn,
     this.dataPubblicazione,
-    this.recensioni = const [],
+    this.voto,
     this.copertina,
-    this.preferito = false,
-    this.letto = false,
+    this.preferito,
+    this.letto,
+    this.wishlist,
   });
 
-  void aggiungiRecensione(String recensione) {
-    recensioni.add(recensione);
-  }
 
-  void segnaComePreferito() {
-    preferito = true;
-  }
-
-  void togliDaiPreferiti() {
-    preferito = false;
-  }
-
-  void segnaComeLetto() {
-    letto = true;
-  }
 }
