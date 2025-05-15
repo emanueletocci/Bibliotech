@@ -1,5 +1,6 @@
 class Libro {
   // aggiungere foto e voto
+
   String titolo;
   List<String> autori;
   int numeroPagine;
@@ -8,7 +9,9 @@ class Libro {
   String trama;
   String? isbn;
   DateTime? dataPubblicazione;
-  List<String> recensioni; //non so se fare list o meno
+  List<String> recensioni; 
+  double? voto;
+  String? copertina;  // qui ci va il link alla copertina
   bool preferito;
   bool letto;
 
@@ -22,6 +25,7 @@ class Libro {
     this.isbn,
     this.dataPubblicazione,
     this.recensioni = const [],
+    this.copertina,
     this.preferito = false,
     this.letto = false,
   });
