@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
           spacing: 30,
           children: [
             Stack(
-              children: [
+              children: <Widget> [
                 Container(
                   height: 250,
                   width: double.infinity,
@@ -34,12 +34,10 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       SafeArea(
                         child: Text(
                           "Welcome!",
@@ -53,10 +51,7 @@ class HomeScreen extends StatelessWidget {
                       Center(
                         child: ElevatedButton.icon(
                           onPressed: () {},
-                          icon: const Icon(
-                            Icons.add,
-                            size: 25,
-                          ),
+                          icon: const Icon(Icons.add, size: 25),
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(280, 70),
                             shape: RoundedRectangleBorder(
@@ -65,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           label: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: const <Widget> [
                               Text(
                                 "Aggiungi un libro!",
                                 style: TextStyle(
@@ -93,25 +88,40 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Column(
                 spacing: 30,
-                children: [
+                children: <Widget>[
                   Center(
-                    child: ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.blind,
-                        size: 25,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(280, 70),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 10,
+                      children: <Widget>[
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.blind, size: 25),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            elevation: 3,
+                          ),
+                          label: const Text(
+                            "Wishlist",
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
-                        elevation: 3,
-                      ),
-                      label: const Text(
-                        "Wishlist",
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.favorite, size: 25),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          label: const Text(
+                            "Preferiti",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Column(
