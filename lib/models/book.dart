@@ -1,13 +1,13 @@
-class Libro {
-  // aggiungere foto e voto
+import 'categoria.dart';
 
+class Libro {
   String titolo;
-  List<String> autori;
-  int numeroPagine;
-  List<String> categorie;
+  List<String>? autori;
+  int? numeroPagine;
+  List<Categoria>? categorie;  // usiamo direttamente la classe Categoria
   String? lingua;
-  String trama;
-  String? isbn;
+  String? trama;
+  String isbn;
   DateTime? dataPubblicazione;
   List<String> recensioni; 
   double? voto;
@@ -17,12 +17,12 @@ class Libro {
 
   Libro({
     required this.titolo,
-    required this.autori,
-    required this.numeroPagine,
-    required this.categorie,
+    this.autori,
+    this.numeroPagine,
+    this.categorie,
     this.lingua,
-    required this.trama,
-    this.isbn,
+    this.trama,
+    required this.isbn,
     this.dataPubblicazione,
     this.recensioni = const [],
     this.copertina,
