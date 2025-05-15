@@ -8,14 +8,14 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        spacing: 30,
         children: [
           Stack(
             children: [
               Container(
+                width: double.infinity,
                 height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurpleAccent,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF8F5CFF), // Colore viola
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(70),
                     bottomLeft: Radius.circular(150),
@@ -30,83 +30,108 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 24, top: 80),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 15.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SafeArea(
                       child: Text(
                         "Welcome!",
-                        style: TextStyle(
+                        style: const TextStyle(
+                          fontSize: 32,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 25),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: TextButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.add, size: 25),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size(100, 70),
-                        //backgroundColor: Colors.purpleAccent,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.add,
+                          size: 25,
+                          color: Color(0xFF8F5CFF),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF8F5CFF),
+                          minimumSize: const Size(280, 70),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        label: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Aggiungi un libro!",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF8F5CFF),
+                              ),
+                            ),
+                            Text(
+                              "Stai leggendo qualcosa?",
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF8F5CFF),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      label: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Aggiungi un libro!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            "Stai leggendo qualcosa?",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-          TextButton.icon(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              minimumSize: Size(200, 60),
-              //backgroundColor: Colors.purpleAccent,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.blind,
+                    size: 25,
+                    color: Color(0xFF8F5CFF),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF8F5CFF),
+                    minimumSize: const Size(280, 70),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    elevation: 3,
+                  ),
+                  label: const Text(
+                    "Wishlist",
+                    style: TextStyle(fontSize: 18, color: Color(0xFF8F5CFF)),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Ultime aggiunte",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            icon: Icon(Icons.heat_pump_rounded, size: 25),
-            label: Text("Wishlist"),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 24),
-              child: Text("Ultime aggiunte"),
-            ),
-          ),
-          Text("Ultime aggiunte"),
         ],
       ),
     );
