@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BookDetail extends StatefulWidget {
-  const BookDetail({Key? key}) : super(key: key);
+  const BookDetail({super.key});
 
   @override
   _BookDetailState createState() => _BookDetailState();
@@ -14,10 +14,7 @@ class _BookDetailState extends State<BookDetail>
   @override
   void initState() {
     super.initState();
-    _tabControllerDetail = TabController(
-      length: 2,
-      vsync: this,
-    ); // Due tab: Info e Note
+    _tabControllerDetail = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -107,7 +104,9 @@ class _BookDetailState extends State<BookDetail>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
-          image: AssetImage('assets/images/book_cover.png'),
+          image: NetworkImage(
+            'https://images.unsplash.com/photo-1512820790803-83ca734da794'          ),
+
           fit: BoxFit.fill,
         ),
       ),
@@ -169,9 +168,10 @@ class _BookDetailState extends State<BookDetail>
 
   // SEZIONE NOTE/RECENSIONI
   Widget noteSection() {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.all(16),
-      child: ListView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Recensione 1: Fantastico per imparare Flutter!",
@@ -193,30 +193,26 @@ class InfoBlock extends StatelessWidget {
   final String label;
   final String value;
 
-  const InfoBlock({Key? key, required this.label, required this.value})
-    : super(key: key);
+  const InfoBlock({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[700],
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(value, style: TextStyle(fontSize: 16, color: Colors.black)),
-            ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+            ),
           ),
-        ),
+          SizedBox(height: 4),
+          Text(value, style: TextStyle(fontSize: 16, color: Colors.black)),
+        ],
       ),
     );
   }
