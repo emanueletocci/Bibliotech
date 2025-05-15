@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home/homepage.dart';
+import 'widgets/barra_navigazione.dart';
 import 'themes/themes.dart';
 
 void main() {
