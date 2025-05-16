@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotech',
       theme: appTheme,
-      home: const TabView(), // Punto di ingresso
+      home: const HomeScreen(title: 'Bibliotech'), // Punto di ingresso
       debugShowCheckedModeBanner: false,
     );
   }
