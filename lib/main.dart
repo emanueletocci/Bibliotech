@@ -1,6 +1,5 @@
+import 'package:bibliotech/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/home/homepage.dart';
-import 'widgets/barra_navigazione.dart';
 import 'themes/themes.dart';
 
 void main() {
@@ -15,8 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotech',
       theme: appTheme,
-      home: const HomeScreen(title: 'Bibliotech'), // Punto di ingresso
-      debugShowCheckedModeBanner: false,
+      home: const MainScreen(),
     );
   }
 }
