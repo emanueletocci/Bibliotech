@@ -18,17 +18,17 @@ class AggiungiLibro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Aggiungi libro")),
+      appBar: AppBar(title: const Text("Aggiungi libro"), backgroundColor: Colors.deepPurple),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Center(
+            Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  immLibro,
+                "https://covers.openlibrary.org/b/isbn/9780385533225-L.jpg", 
                   height: 200,
                   width: 140,
                   fit: BoxFit.cover,
@@ -41,25 +41,21 @@ class AggiungiLibro extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Titolo del libro'),
             ),
             const SizedBox(height: 10),
-
             TextField(
               controller: autoriController,
               decoration: const InputDecoration(labelText: 'Autori'),
             ),
             const SizedBox(height: 10),
-
             TextField(
               controller: linguaController,
               decoration: const InputDecoration(labelText: 'Lingua'),
             ),
             const SizedBox(height: 10),
-
             TextField(
               controller: isbnController,
               decoration: const InputDecoration(labelText: 'ISBN'),
             ),
             const SizedBox(height: 10),
-
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Categoria'),
               items: categorie.map((cat) {
@@ -70,23 +66,20 @@ class AggiungiLibro extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-
             TextField(
               controller: dataPubblicazioneController,
               decoration: const InputDecoration(labelText: 'Data Pubblicazione'),
               keyboardType: TextInputType.datetime,
             ),
             const SizedBox(height: 10),
-
             TextField(
               controller: noteController,
               decoration: const InputDecoration(labelText: 'Note personali'),
             ),
             const SizedBox(height: 20),
-             Center(
+            Center(
               child: ElevatedButton.icon(
-                onPressed: () {
-                },
+                onPressed: () {},
                 icon: const Icon(Icons.add),
                 label: const Text("Aggiungi"),
                 style: ElevatedButton.styleFrom(
