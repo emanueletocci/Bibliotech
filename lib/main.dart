@@ -1,3 +1,4 @@
+import 'package:bibliotech/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/home/homepage.dart';
 import 'themes/themes.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotech',
       theme: appTheme,
-      home: const HomeScreen(title: 'Homepage'),
+      home: const MainScreen(),
     );
   }
 }

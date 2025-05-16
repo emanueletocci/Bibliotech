@@ -7,19 +7,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
-      ),
-      bottomNavigationBar: BarraNavigazione(
-        currentIndex: 0,
-        onTap: (index) {},
-      ),
-    );
+      );
   }
 }
 
@@ -50,7 +40,7 @@ class Header extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
