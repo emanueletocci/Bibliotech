@@ -1,3 +1,8 @@
+/*
+ * Questo file contiene l'implemenazione della struttura della schermata principale dell'applicazione, contenente lo Scaffold e la barra di navigazione in basso. Le altre schermate (homepage, libreria, statistiche) sono 
+ * implementate in file separati e richiamate qui, al fine di mantenere il codice piú ordinato ed evitare di innestare scaffold.
+*/
+
 import 'package:flutter/material.dart';
 import 'home/homepage.dart';
 
