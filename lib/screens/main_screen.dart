@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'home/homepage.dart';
+import 'libreria/libreria.dart';
 import '../components/popup_aggiunta.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(title: "Homepage"),
+    Libreria(),
   ];
 
   void _onTabTapped(int index) {
