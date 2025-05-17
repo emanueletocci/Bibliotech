@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'home/homepage.dart';
+import '../components/popup_aggiunta.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -53,7 +54,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Azione del pulsante floating
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,  // consente al popup di occupare tutto lo schermo
+            builder: (context) {
+              return const PopupAggiunta();
+            },
+          );
         },
         child: const Icon(Icons.add),
       ),
