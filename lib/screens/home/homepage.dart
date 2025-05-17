@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../components/popup_aggiunta.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
@@ -7,8 +8,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
-      );
+      child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
+    );
   }
 }
 
@@ -55,7 +56,16 @@ class Header extends StatelessWidget {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled:
+                          true, // consente al popup di occupare tutto lo schermo
+                      builder: (context) {
+                        return const PopupAggiunta();
+                      },
+                    );
+                  },
                   icon: const Icon(Icons.add, size: 25),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(280, 70),
