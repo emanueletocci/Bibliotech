@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'home/homepage.dart';
+import 'libreria/libreria.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(title: "Homepage"),
-    //BooksPage(),
+    Libreria(),
     //ProfilePage(),
   ];
 
