@@ -18,8 +18,6 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(title: "Homepage"),
-    //BooksPage(),
-    //ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -32,12 +30,12 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
+        index: _selectedIndex,  // mostro solo la schermata corrispondente a questo indice
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onTabTapped,
+        onTap: _onTabTapped // il parametro index (tab corrente) viene passato automaticamente,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
