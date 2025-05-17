@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'home/homepage.dart';
 import 'libreria/libreria.dart';
+import '../components/popup_aggiunta.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,7 +21,6 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomeScreen(title: "Homepage"),
     Libreria(),
-    //ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -33,12 +33,12 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
+        index: _selectedIndex,  // mostro solo la schermata corrispondente a questo indice
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onTabTapped,
+        onTap: _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -56,7 +56,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Azione del pulsante floating
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,  // consente al popup di occupare tutto lo schermo
+            builder: (context) {
+              return const PopupAggiunta();
+            },
+          );
         },
         child: const Icon(Icons.add),
       ),
