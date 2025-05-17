@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onTabTapped // il parametro index (tab corrente) viene passato automaticamente,
+        onTap: _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
