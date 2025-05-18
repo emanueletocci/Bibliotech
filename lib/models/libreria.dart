@@ -1,24 +1,26 @@
-/*
- * Questo file contiene l'implementazione della logica di business per l'intera libreria...
- * nonché la mappa che a runtime contiene tutti i libri e le loro informazioni.
-*/
-
 import 'libro.dart';
 
 class Libreria {
+
+  // Implementazione del Singleton: il pattern consente di avere una sola istanza della libreria, accessibile da qualsiasi parte dell'app
+  static final Libreria _instance = Libreria._internal();   // si usa il named constructor 'internal'
+  
+  // chiamata al costruttore factory che restituisce l'istanza precedentemente creata
+  // chiamando Libreria() in qualsiasi parte dell'app, si ottiene sempre la stessa istanza, mediante tale costruttore
+  
+  factory Libreria() => _instance;    
+
+  // Definizione del costruttore privato 'internal'
+  Libreria._internal();
+
   // struttura dati che contiene l'insieme di libri a runtime
   // I libri vengono ulteriormente salvati in un database all'uscita dall'app
-
-  String? nomeLibreria;
   Map<String, Libro> _libri = {}; // chiave: isbn, valore: libro... in questo modo i duplicati sono gestiti automaticamente
-
-  Libreria({String? nomeLibreria}) {
-    this.nomeLibreria = nomeLibreria;
-    print("Libreria creata: $nomeLibreria");
-  }
 
   // Metodo per ottenere il numero totale di libri presenti in libreria
   int get numeroTotaleLibri => _libri.length; 
+
+
   // get é una keyword in dart che consente di implementare un getter. 
   // Si accede come una proprietà, senza doverla chiamare come un metodo.
 
@@ -73,5 +75,4 @@ class Libreria {
   List<Libro> getLibri() {
     return _libri.values.toList();
   }
-
 }
