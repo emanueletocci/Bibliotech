@@ -3,7 +3,7 @@
  * nonché la mappa che a runtime contiene tutti i libri e le loro informazioni.
 */
 
-import '../models/book.dart';
+import '../models/libro.dart';
 
 class LibreriaService {
   // struttura dati che contiene l'insieme di libri a runtime
