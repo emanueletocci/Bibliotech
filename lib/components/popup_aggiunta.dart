@@ -1,3 +1,4 @@
+import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro.dart';
 import 'package:flutter/material.dart';
 
 class PopupAggiunta extends StatelessWidget {
@@ -57,7 +58,7 @@ class PopupAggiunta extends StatelessWidget {
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
-                  () {},
+                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro(immLibro: "immLibro")));},
                 ),
               ],
             ),
