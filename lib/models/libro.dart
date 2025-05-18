@@ -33,5 +33,4 @@ class Libro {
     this.note,
   });
 
-
 }
