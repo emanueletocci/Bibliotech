@@ -1,3 +1,5 @@
+![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
+
 # Bibliotech
 
 Bozze: https://docs.google.com/document/d/134Bb6w__ZjqzB6ukmv6nTkFb9iBX_u7PH47r1ZrXh1k/edit?usp=sharing
