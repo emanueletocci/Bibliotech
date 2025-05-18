@@ -3,6 +3,8 @@ import 'libro.dart';
 class Libreria {
 
   // Implementazione del Singleton: il pattern consente di avere una sola istanza della libreria, accessibile da qualsiasi parte dell'app
+  // https://medium.com/@swe.jamirulinfo/singleton-is-a-design-pattern-in-dart-98dd947c6dd1
+  
   static final Libreria _instance = Libreria._internal();   // si usa il named constructor 'internal'
   
   // chiamata al costruttore factory che restituisce l'istanza precedentemente creata
