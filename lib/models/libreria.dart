@@ -5,7 +5,7 @@
 
 import 'libro.dart';
 
-class LibreriaService {
+class Libreria {
   // struttura dati che contiene l'insieme di libri a runtime
   // I libri vengono ulteriormente salvati in un database all'uscita dall'app
 
