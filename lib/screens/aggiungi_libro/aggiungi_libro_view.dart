@@ -21,6 +21,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         const SnackBar(
           content: Text('Libro inserito correttamente!'),
           backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
         ),
       );
       // Attendo 2 secondi prima di tornare alla schermata principale
