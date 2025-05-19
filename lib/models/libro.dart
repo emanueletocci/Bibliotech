@@ -1,4 +1,4 @@
-import 'genere.dart';
+import 'genere-libro.dart';
 import 'stato-libro.dart';
 class Libro {
   String titolo;  

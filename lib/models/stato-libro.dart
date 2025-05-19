@@ -1,7 +1,6 @@
 enum StatoLibro {
-  daLeggere,
-  inLettura,
-  letto,
-  abbandonato,
-  inWishlist,
+  Da_Leggere,
+  In_Lettura,
+  Letto,
+  Abbandonato,
 }

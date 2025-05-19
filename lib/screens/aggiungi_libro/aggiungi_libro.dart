@@ -11,14 +11,6 @@ class AggiungiLibro extends StatefulWidget {
 class _AggiungiLibroState extends State<AggiungiLibro> {
   final AggiungiLibroController controller = AggiungiLibroController();
 
-  final List<String> categorie = ['Science', 'Thriller', 'Fantasy'];
-  final List<String> stati = [
-    'Da leggere',
-    'In lettura',
-    'Letto',
-    'In wishlist',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +54,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                 decoration: const InputDecoration(labelText: 'Categoria'),
                 value: controller.categoriaSelezionata,
                 items:
-                    categorie
+                    controller.generi
                         .map(
                           (cat) =>
                               DropdownMenuItem(value: cat, child: Text(cat)),
@@ -106,7 +98,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                 decoration: const InputDecoration(labelText: 'Stato'),
                 value: controller.statoSelezionato,
                 items:
-                    stati
+                    controller.stati
                         .map(
                           (cat) =>
                               DropdownMenuItem(value: cat, child: Text(cat)),

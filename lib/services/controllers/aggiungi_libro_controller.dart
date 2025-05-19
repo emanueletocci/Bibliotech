@@ -2,6 +2,8 @@
 // Da decidere se implementare un controller differente per l'aggiunta tramite API e quella tramite barcode (se decidiamo di lasciarla)
 
 import 'package:flutter/material.dart';
+import '../../models/genere-libro.dart';
+import '../../models/stato-libro.dart';
 
 class AggiungiLibroController {
   final TextEditingController titoloController = TextEditingController();
@@ -17,4 +19,8 @@ class AggiungiLibroController {
 
   String? categoriaSelezionata;
   String? statoSelezionato;
+
+  // Converto le enumerazioni in liste di stringhe per il DropdownButton
+  final List<String> generi = GenereLibro.values.map((stato) => stato.name).toList();
+  final List<String> stati = StatoLibro.values.map((stato) => stato.name.replaceAll('_', ' ')).toList();  // sostituisco gli underscore con spazi
 }
