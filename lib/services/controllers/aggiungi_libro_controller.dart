@@ -65,16 +65,14 @@ class AggiungiLibroController {
         (genere) => genere.name == genereSelezionato,
       );
     } catch (e) {
-      print('Selezionato genere non valido: $genereSelezionato');
-      genere = null;
+      genere = null; //se non viene selezionato un genere, lo setto a null
     }
     try {
       stato = StatoLibro.values.firstWhere(
         (stato) => stato.name == statoSelezionato,
       );
     } catch (e) {
-      print('Selezionato genere non valido: $genereSelezionato');
-      stato = null;
+      stato = null; //se non viene selezionato uno stato, lo setto a null
     }
 
     if (controllaCampi()) {
@@ -96,19 +94,22 @@ class AggiungiLibroController {
 
       // A questo punto, il libro può essere aggiunto alla libreria
       libreria.aggiungiLibro(nuovoLibro);
-    }
+    } 
   }
 
   bool controllaCampi() {
-    // Controlla se i campi sono stati compilati correttamente
+    // Controlla se i campi sono stati compilati correttamente\
+    // Le eccezioni vengono catturate all'interno della vista... e mostrato un alert 
     bool status = true;
 
-    if (titolo == null) {
+    if (titolo?.isEmpty == true) {
       status = false;
+      throw Exception("Il titolo non può essere vuoto");
     }
 
-    if (isbn == null) {
+    if (isbn?.isEmpty == true) {
       status = false;
+      throw Exception("L'ISBN non può essere vuoto");
     }
 
     return status;

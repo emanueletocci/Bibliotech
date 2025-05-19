@@ -11,6 +11,21 @@ class AggiungiLibro extends StatefulWidget {
 class _AggiungiLibroState extends State<AggiungiLibro> {
   final AggiungiLibroController controller = AggiungiLibroController();
 
+
+  void _handleAggiungiLibro() {
+    // catturo l'eccezione lanciata dal controller 
+    try{controller.handleAggiungi();}
+    catch (e) {
+      // Se viene lanciata un'eccezione, mostro un messaggio di errore
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +127,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: controller.handleAggiungi,
+                  onPressed: _handleAggiungiLibro,
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
