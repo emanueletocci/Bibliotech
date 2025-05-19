@@ -58,7 +58,7 @@ class PopupAggiunta extends StatelessWidget {
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
-                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro(immLibro: "immLibro")));},
+                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro()));},
                 ),
               ],
             ),
