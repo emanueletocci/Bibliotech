@@ -1,20 +1,20 @@
 import 'categoria.dart';
 
 class Libro {
-  String titolo;
-  List<String>? autori;
+  String titolo;  //
+  List<String>? autori; //
   int? numeroPagine;
   List<Categoria>? categorie;
-  String? lingua;
+  String? lingua;   //
   String? trama;
   String isbn;
-  DateTime? dataPubblicazione;
+  DateTime? dataPubblicazione;  //
   double? voto;
-  String? copertina;
+  String? copertina;  //
   bool? preferito;
-  bool? letto;
-  bool? wishlist;
-  String? note;
+  bool? letto;  
+  bool? wishlist; 
+  String? note; //
 
   Libro({
     required this.titolo,
