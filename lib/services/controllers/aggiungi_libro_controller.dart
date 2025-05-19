@@ -2,8 +2,8 @@
 // Da decidere se implementare un controller differente per l'aggiunta tramite API e quella tramite barcode (se decidiamo di lasciarla)
 
 import 'package:flutter/material.dart';
-import '../../models/genere-libro.dart';
-import '../../models/stato-libro.dart';
+import '../../models/genere_libro.dart';
+import '../../models/stato_libro.dart';
 
 class AggiungiLibroController {
   final TextEditingController titoloController = TextEditingController();

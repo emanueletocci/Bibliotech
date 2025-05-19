@@ -4,7 +4,7 @@ class Libreria extends StatefulWidget {
   const Libreria({super.key});
 
   @override
-  _LibreriaState createState() => _LibreriaState();
+  State<Libreria> createState() => _LibreriaState();
 }
 class _LibreriaState extends State<Libreria> {
   @override

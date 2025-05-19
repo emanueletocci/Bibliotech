@@ -112,11 +112,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    // Usa controller per accedere ai dati
-                    final titolo = controller.titoloController.text;
-                    // ... altri campi
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(

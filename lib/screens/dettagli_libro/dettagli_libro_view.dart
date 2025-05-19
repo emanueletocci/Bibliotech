@@ -4,7 +4,7 @@ class BookDetail extends StatefulWidget {
   const BookDetail({super.key});
 
   @override
-  _BookDetailState createState() => _BookDetailState();
+  State<BookDetail> createState() => _BookDetailState();
 }
 
 class _BookDetailState extends State<BookDetail>

@@ -1,5 +1,6 @@
-import 'genere-libro.dart';
-import 'stato-libro.dart';
+import 'genere_libro.dart';
+import 'stato_libro.dart';
+
 class Libro {
   String titolo;  
   List<String>? autori; 

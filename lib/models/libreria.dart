@@ -17,7 +17,7 @@ class Libreria {
 
   // struttura dati che contiene l'insieme di libri a runtime
   // I libri vengono ulteriormente salvati in un database all'uscita dall'app
-  Map<String, Libro> _libri = {}; // chiave: isbn, valore: libro... in questo modo i duplicati sono gestiti automaticamente
+  final Map<String, Libro> _libri = {}; // chiave: isbn, valore: libro... in questo modo i duplicati sono gestiti automaticamente
 
   // Metodo per ottenere il numero totale di libri presenti in libreria
   int get numeroTotaleLibri => _libri.length; 
