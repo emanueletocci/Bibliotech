@@ -1,36 +1,32 @@
-import 'categoria.dart';
-
+import 'genere.dart';
+import 'stato-libro.dart';
 class Libro {
-  String titolo;  //
-  List<String>? autori; //
+  String titolo;  
+  List<String>? autori; 
   int? numeroPagine;
-  List<Categoria>? categorie;
-  String? lingua;   //
+  List<GenereLibro>? generi;
+  String? lingua;   
   String? trama;
   String isbn;
-  DateTime? dataPubblicazione;  //
+  DateTime? dataPubblicazione;  
   double? voto;
-  String? copertina;  //
-  bool? preferito;
-  bool? letto;  
-  bool? wishlist; 
-  String? note; //
+  String? copertina;  
+  String? note; 
+  StatoLibro? stato;
 
   Libro({
     required this.titolo,
     this.autori,
     this.numeroPagine,
-    this.categorie,
+    this.generi,
     this.lingua,
     this.trama,
     required this.isbn,
     this.dataPubblicazione,
     this.voto,
     this.copertina,
-    this.preferito,
-    this.letto,
-    this.wishlist,
     this.note,
+    this.stato,
   });
 
 }
