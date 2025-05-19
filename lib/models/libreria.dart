@@ -28,10 +28,10 @@ class Libreria {
 
   // Consente l'aggiunta di un libro alla libreria
   void aggiungiLibro(Libro libro) {
-    if (libro.isbn.isNotEmpty) {
+    if (libro.isbn.isNotEmpty && libro.titolo.isNotEmpty) {
       _libri[libro.isbn] = libro;
     } else {
-      throw Exception("ISBN non valido");
+      throw Exception("ISBN o titolo non valido");
     }
   }
 

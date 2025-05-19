@@ -52,7 +52,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Categoria'),
-                value: controller.categoriaSelezionata,
+                value: controller.genereSelezionato,
                 items:
                     controller.generi
                         .map(
@@ -62,7 +62,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                         .toList(),
                 onChanged: (val) {
                   setState(() {
-                    controller.categoriaSelezionata = val;
+                    controller.genereSelezionato = val;
                   });
                 },
               ),
@@ -112,7 +112,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: controller.handleAggiungi,
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(

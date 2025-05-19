@@ -5,7 +5,7 @@ class Libro {
   String titolo;  
   List<String>? autori; 
   int? numeroPagine;
-  List<GenereLibro>? generi;
+  GenereLibro? genere;
   String? lingua;   
   String? trama;
   String isbn;
@@ -19,7 +19,7 @@ class Libro {
     required this.titolo,
     this.autori,
     this.numeroPagine,
-    this.generi,
+    this.genere,
     this.lingua,
     this.trama,
     required this.isbn,
