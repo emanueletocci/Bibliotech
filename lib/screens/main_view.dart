@@ -4,8 +4,8 @@
 */
 
 import 'package:flutter/material.dart';
-import 'home/homepage.dart';
-import 'libreria/libreria.dart';
+import 'home/homepage_view.dart';
+import 'libreria/libreria_view.dart';
 import '../components/popup_aggiunta.dart';
 
 class MainScreen extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro.dart';
+import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
 import 'package:flutter/material.dart';
 
 class PopupAggiunta extends StatelessWidget {

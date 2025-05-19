@@ -1,4 +1,4 @@
-import 'package:bibliotech/screens/main_screen.dart';
+import 'package:bibliotech/screens/main_view.dart';
 import 'package:flutter/material.dart';
 import 'themes/themes.dart';
 
