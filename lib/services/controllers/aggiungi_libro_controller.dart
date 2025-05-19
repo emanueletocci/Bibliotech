@@ -99,7 +99,7 @@ class AggiungiLibroController {
 
   bool controllaCampi() {
     // Controlla se i campi sono stati compilati correttamente\
-    // Le eccezioni vengono catturate all'interno della vista... e mostrato un alert 
+    // Le eccezioni vengono catturate all'interno della vista... e mostrato un alert
     bool status = true;
 
     if (titolo?.isEmpty == true) {

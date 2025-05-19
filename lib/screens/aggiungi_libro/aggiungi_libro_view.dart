@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
+import '../main_view.dart';
 
 class AggiungiLibro extends StatefulWidget {
   const AggiungiLibro({super.key});
@@ -11,17 +12,33 @@ class AggiungiLibro extends StatefulWidget {
 class _AggiungiLibroState extends State<AggiungiLibro> {
   final AggiungiLibroController controller = AggiungiLibroController();
 
-
   void _handleAggiungiLibro() {
-    // catturo l'eccezione lanciata dal controller 
-    try{controller.handleAggiungi();}
-    catch (e) {
+    // catturo l'eccezione lanciata dal controller
+    try {
+      controller.handleAggiungi();
+      // Se handleAggiungi() viene eseguito senza errori, mostro uno SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Libro inserito correttamente!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      // Attendo 2 secondi prima di tornare alla schermata principale
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        ); // torno alla schermata principale se non vengono lanciate eccezioni
+      });
+    } catch (e) {
+      String errorMessage = e.toString();
+      const prefix = 'Exception: ';
+      if (errorMessage.startsWith(prefix)) {
+        // Rimuovo il prefisso "Exception: " dal messaggio di errore
+        errorMessage = errorMessage.substring(prefix.length);
+      }
       // Se viene lanciata un'eccezione, mostro un messaggio di errore
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
   }
