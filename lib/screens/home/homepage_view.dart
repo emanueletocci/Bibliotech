@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../components/popup_aggiunta.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
   final String title;
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(spacing: 30, children: <Widget>[Header(), Body()]),
+      child: Column(
+        spacing: 10,
+        children: <Widget>[
+          Header(),
+          Body(),
+        ],
+      ),
     );
   }
 }
