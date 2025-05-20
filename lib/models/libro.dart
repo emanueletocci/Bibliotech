@@ -11,7 +11,7 @@ class Libro {
   String isbn;
   DateTime? dataPubblicazione;  
   double? voto;
-  String? copertina;  
+  String? copertina; // conterrá il percorso locale dell'immagine o un percorso di rete
   String? note; 
   StatoLibro? stato;
 
@@ -29,5 +29,4 @@ class Libro {
     this.note,
     this.stato,
   });
-
 }
