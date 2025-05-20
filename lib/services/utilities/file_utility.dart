@@ -17,7 +17,7 @@ class FileUtility {
 
   // Metodo per scrivere una stringa in un file
   static Future<File> writeTextToFile(String filename, String text) async { 
-    final file = await _localFile(filename); 
+    final file = await _localFile(filename); // Usa il parametro filename
     return file.writeAsString(text);
   }
 

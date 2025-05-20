@@ -1,28 +1,19 @@
-// Implementazione del controller per la pagina di aggiunta libro
-// Da decidere se implementare un controller differente per l'aggiunta tramite API e quella tramite barcode (se decidiamo di lasciarla)
-
 import 'package:flutter/material.dart';
 import '../../models/genere_libro.dart';
 import '../../models/stato_libro.dart';
 import '../../models/libro.dart';
 import '../../models/libreria.dart';
-import 'package:image_picker/image_picker.dart'; 
-import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
-
 class AggiungiLibroController {
-  // Converto le enumerazioni in liste di stringhe per il DropdownButton
   final List<String> generi =
-      GenereLibro.values.map((stato) => stato.name).toList();
+  GenereLibro.values.map((stato) => stato.name).toList();
   final List<String> stati =
-      StatoLibro.values
-          .map((stato) => stato.name.replaceAll('_', ' '))
-          .toList(); // sostituisco gli underscore con spazi
+  StatoLibro.values.map((stato) => stato.name.replaceAll('_', ' ')).toList();
 
-  // Inizializzo i controller per i campi di input
   final TextEditingController titoloController = TextEditingController();
   final TextEditingController autoriController = TextEditingController();
   final TextEditingController numeroPagineController = TextEditingController();
@@ -30,12 +21,12 @@ class AggiungiLibroController {
   final TextEditingController tramaController = TextEditingController();
   final TextEditingController isbnController = TextEditingController();
   final TextEditingController dataPubblicazioneController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController votoController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
-  String? genereSelezionato; // valore selezionato dal DropdownButton
-  String? statoSelezionato; // valore selezionato dal DropdownButton
+  String? genereSelezionato;
+  String? statoSelezionato;
 
   final Libreria libreria = Libreria();
 
@@ -47,39 +38,34 @@ class AggiungiLibroController {
   String? isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertinaURL;          // URL della copertina (generalmente fornito da Google Books)
-  File? _copertinaLocalPath;    // Percorso locale della copertina (se presente). 
+  String? copertina;
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
 
-
-  // Metodo per la selezione e salvataggio della copertina dlla galleria 
-  // https://www.html.it/pag/397059/flutter-gestione-dei-file-lettura-e-scrittura-su-file-di-testo/
-  
+  // Metodo per la selezione e salvataggio della copertina dalla galleria
+  // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
   Future<void> selezionaCopertina() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
     if (pickedFile != null) {
-      _copertinaLocalPath = File(pickedFile.path); // Salva il File
-
-      // Salva l'immagine usando FileUtility.saveFile
+      final File imageFile = File(pickedFile.path);
       final String fileName = p.basename(pickedFile.path);
-      final File savedImage = await FileUtility.saveFile(_copertinaLocalPath!, fileName);
-      copertinaURL = savedImage.path; // Ottieni il percorso del file salvato
-
+      final File savedImage = await FileUtility.saveFile(
+        imageFile,
+        fileName,
+      );
+      copertina = savedImage.path; // Memorizza il percorso locale dell'immagine salvata
     } else {
-      _copertinaLocalPath = null;
-      copertinaURL = null;
+      copertina = null; // Se non viene selezionata nessuna immagine, la copertina è null
     }
   }
 
-
   // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
   void handleAggiungi() {
-    // Quando l'utente preme il pulsante "Aggiungi", vengono recuperati i valori dai controller
-
     titolo = titoloController.text.trim();
     autori = autoriController.text.split(',').map((e) => e.trim()).toList();
     numeroPagine = int.tryParse(numeroPagineController.text);
@@ -92,21 +78,20 @@ class AggiungiLibroController {
 
     try {
       genere = GenereLibro.values.firstWhere(
-        (genere) => genere.name == genereSelezionato,
+            (genere) => genere.name == genereSelezionato,
       );
     } catch (e) {
-      genere = null; //se non viene selezionato un genere, lo setto a null
+      genere = null;
     }
     try {
       stato = StatoLibro.values.firstWhere(
-        (stato) => stato.name == statoSelezionato,
+            (stato) => stato.name == statoSelezionato,
       );
     } catch (e) {
-      stato = null; //se non viene selezionato uno stato, lo setto a null
+      stato = null;
     }
 
     if (controllaCampi()) {
-      // Se i campi sono stati compilati correttamente, viene creato un nuovo libro
       Libro nuovoLibro = Libro(
         titolo: titolo!,
         autori: autori,
@@ -117,20 +102,16 @@ class AggiungiLibroController {
         isbn: isbn!,
         dataPubblicazione: dataPubblicazione,
         voto: voto,
-        copertinaUrl: copertinaURL,
-        //copertinaLocalPath: copertinaLocalPath,
+        copertina: copertina,
         note: note,
         stato: stato,
       );
 
-      // A questo punto, il libro può essere aggiunto alla libreria
       libreria.aggiungiLibro(nuovoLibro);
-    } 
+    }
   }
 
   bool controllaCampi() {
-    // Controlla se i campi sono stati compilati correttamente\
-    // Le eccezioni vengono catturate all'interno della vista... e mostrato un alert
     bool status = true;
 
     if (titolo?.isEmpty == true) {

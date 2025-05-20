@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import '../main_view.dart';
+import 'dart:io';
 
 class AggiungiLibro extends StatefulWidget {
   const AggiungiLibro({super.key});
@@ -13,9 +14,8 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
   final AggiungiLibroController controller = AggiungiLibroController();
 
   void _handleAggiungiLibro() {
-    // catturo l'eccezione lanciata dal controller
     try {
-      controller.handleAggiungi();
+      controller.handleAggiungi(); // Chiama il metodo per aggiungere il libro
       // Se handleAggiungi() viene eseguito senza errori, mostro uno SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -26,7 +26,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
       );
       // Attendo 2 secondi prima di tornare alla schermata principale
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement( // Usare pushReplacement per evitare di tornare alla pagina di aggiunta
           MaterialPageRoute(builder: (context) => const MainScreen()),
         ); // torno alla schermata principale se non vengono lanciate eccezioni
       });
@@ -42,6 +42,14 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
+  }
+
+  // Questo metodo gestisce la selezione della copertina al tap sul placeholder
+  void _selectCoverImage() async {
+    await controller.selezionaCopertina();
+    setState(() {
+      // Aggiorna lo stato per mostrare l'immagine selezionata
+    });
   }
 
   @override
@@ -60,13 +68,43 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    'https://plus.unsplash.com/premium_photo-1747633943306-0379c57c22dd?q=80&w=1313&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    height: 200,
-                    width: 140,
-                    fit: BoxFit.cover,
+                child: GestureDetector(
+                  onTap: _selectCoverImage,  // metodo per la selezione della copertina,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: SizedBox(
+                      height: 200,
+                      width: 140,
+                      child: Builder(
+                        builder: (context) {
+                          // Mostra l'immagine se disponibile, altrimenti un placeholder
+                          if (controller.copertina != null) {
+                            if ((controller.copertina!.startsWith('http://')) ||
+                                (controller.copertina!.startsWith('https://'))) {
+                              // È un URL remoto! Mostra l'immagine remota
+                              return Image.network(
+                                controller.copertina!,
+                                fit: BoxFit.cover,
+                              );
+                            } else {
+                              // È un percorso locale! Crea un oggetto File e mostra l'immagine locale
+                              // Assicurati che il file esista prima di provare a caricarlo
+                              final File localImageFile = File(controller.copertina!);
+                              return Image.file(
+                                localImageFile,
+                                fit: BoxFit.cover,
+                              );
+                            }
+                          } else {
+                            // Nessuna copertina disponibile! Mostro un placeholder di default
+                            return Image.asset(
+                              'assets/images/book_placeholder.jpg', // Assicurati che questo percorso sia corretto
+                              fit: BoxFit.cover,
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -86,13 +124,11 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Categoria'),
                 value: controller.genereSelezionato,
-                items:
-                    controller.generi
-                        .map(
-                          (cat) =>
-                              DropdownMenuItem(value: cat, child: Text(cat)),
-                        )
-                        .toList(),
+                items: controller.generi
+                    .map(
+                      (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
+                )
+                    .toList(),
                 onChanged: (val) {
                   setState(() {
                     controller.genereSelezionato = val;
@@ -130,13 +166,11 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Stato'),
                 value: controller.statoSelezionato,
-                items:
-                    controller.stati
-                        .map(
-                          (cat) =>
-                              DropdownMenuItem(value: cat, child: Text(cat)),
-                        )
-                        .toList(),
+                items: controller.stati
+                    .map(
+                      (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
+                )
+                    .toList(),
                 onChanged: (val) {
                   setState(() {
                     controller.statoSelezionato = val;
@@ -145,7 +179,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: _handleAggiungiLibro,
+                  onPressed: _handleAggiungiLibro, // <-- Questo gestisce SOLO l'aggiunta del libro
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
