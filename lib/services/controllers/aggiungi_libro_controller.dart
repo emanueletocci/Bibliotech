@@ -6,6 +6,12 @@ import '../../models/genere_libro.dart';
 import '../../models/stato_libro.dart';
 import '../../models/libro.dart';
 import '../../models/libreria.dart';
+import 'package:image_picker/image_picker.dart'; 
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import '../utilities/file_utility.dart';
+import 'package:path/path.dart' as p;
+
 
 class AggiungiLibroController {
   // Converto le enumerazioni in liste di stringhe per il DropdownButton
@@ -41,10 +47,34 @@ class AggiungiLibroController {
   String? isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertina; // Placeholder per la copertina, da implementare in futuro
+  String? copertinaURL;          // URL della copertina (generalmente fornito da Google Books)
+  File? _copertinaLocalPath;    // Percorso locale della copertina (se presente). 
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
+
+
+  // Metodo per la selezione e salvataggio della copertina dlla galleria 
+  // https://www.html.it/pag/397059/flutter-gestione-dei-file-lettura-e-scrittura-su-file-di-testo/
+  
+  Future<void> selezionaCopertina() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      _copertinaLocalPath = File(pickedFile.path); // Salva il File
+
+      // Salva l'immagine usando FileUtility.saveFile
+      final String fileName = p.basename(pickedFile.path);
+      final File savedImage = await FileUtility.saveFile(_copertinaLocalPath!, fileName);
+      copertinaURL = savedImage.path; // Ottieni il percorso del file salvato
+
+    } else {
+      _copertinaLocalPath = null;
+      copertinaURL = null;
+    }
+  }
+
 
   // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
   void handleAggiungi() {
@@ -87,7 +117,8 @@ class AggiungiLibroController {
         isbn: isbn!,
         dataPubblicazione: dataPubblicazione,
         voto: voto,
-        copertina: copertina,
+        copertinaUrl: copertinaURL,
+        //copertinaLocalPath: copertinaLocalPath,
         note: note,
         stato: stato,
       );

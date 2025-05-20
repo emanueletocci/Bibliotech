@@ -11,7 +11,8 @@ class Libro {
   String isbn;
   DateTime? dataPubblicazione;  
   double? voto;
-  String? copertina;  
+  String? copertinaUrl;         // URL della copertina
+  String? copertinaLocalPath;   // Percorso locale della copertina (se presente)
   String? note; 
   StatoLibro? stato;
 
@@ -25,9 +26,19 @@ class Libro {
     required this.isbn,
     this.dataPubblicazione,
     this.voto,
-    this.copertina,
+    this.copertinaUrl,
+    this.copertinaLocalPath, // Aggiungi questo nel costruttore
     this.note,
     this.stato,
   });
+
+  // Metodo per stabilire quale copertina mostrare
+  String? get currentCover {
+    // se é stata caricata una copertina locale mostra quella,
+    if (copertinaLocalPath != null && copertinaLocalPath!.isNotEmpty) {
+      return copertinaLocalPath;
+    }
+    return copertinaUrl;
+  }
 
 }
