@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        spacing: 10,
+        spacing: 15,
         children: <Widget>[
           Header(
             libreria: _libreria,
@@ -81,6 +81,7 @@ class Header extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           child: Column(
+            spacing: 15,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SafeArea(
@@ -155,12 +156,12 @@ class Body extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
-        spacing: 30,
+        // spacing: 30, // Rimosso: Column non ha 'spacing'
         children: <Widget>[
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 10,
+              // spacing: 10, // Rimosso: Row non ha 'spacing'
               children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {},
@@ -189,9 +190,10 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 30), // Sostituisce spacing: 30 della Column principale
           Column(
+            spacing: 15,
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
             children: [
               const Text(
                 "Libri consigliati",
@@ -199,41 +201,43 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 150,
-                child:
-                    (libriConsigliati.isEmpty)
-                        ? const Center(
-                          child: Text("Nessun libro consigliato al momento."),
-                        )
-                        : CarouselView(
-                          itemExtent: 166,
-                          children:
-                              libriConsigliati.map((libro) {
-                                return Container(
-                                  width:
-                                      150, // Larghezza desiderata della copertina
-                                  height:
-                                      150, // Altezza desiderata della copertina
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ), // Spazio tra le copertine
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: LibroCoverWidget(libro: libro),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
+                child: Builder(
+                  builder: (BuildContext context) { // 'builder' deve essere il nome del parametro
+                    if (libriConsigliati.isEmpty) {
+                      return const Center(
+                        child: Text("Nessun libro consigliato al momento."),
+                      );
+                    } else {
+                      return CarouselView(
+                        itemExtent: 166,
+                        children: libriConsigliati.map((libro) {
+                          return Container(
+                            width: 150, // Larghezza desiderata della copertina
+                            height: 150, // Altezza desiderata della copertina
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ), // Spazio tra le copertine
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: LibroCoverWidget(libro: libro),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                  }, // Chiusura corretta del Builder
+                ),
               ),
               const Text(
                 "Ultime aggiunte",
@@ -241,37 +245,41 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 150,
-                child:
-                    (ultimeAggiunte.isEmpty)
-                        ? const Center(child: Text("Nessuna aggiunta recente."))
-                        : CarouselView(
-                          itemExtent: 166,
-                          children:
-                              ultimeAggiunte.map((libro) {
-                                return Container(
-                                  width: 150,
-                                  height: 150,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: LibroCoverWidget(libro: libro),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
+                child: Builder( // Usiamo Builder per poter usare if/else direttamente qui
+                  builder: (BuildContext context) {
+                    if (ultimeAggiunte.isEmpty) {
+                      return const Center(child: Text("Nessuna aggiunta recente."));
+                    } else {
+                      return CarouselView(
+                        itemExtent: 166,
+                        children: ultimeAggiunte.map((libro) {
+                          return Container(
+                            width: 150,
+                            height: 150,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: LibroCoverWidget(libro: libro),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           ),
