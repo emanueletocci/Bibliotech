@@ -3,7 +3,6 @@ import '../../components/popup_aggiunta.dart';
 import '../../models/libreria.dart';
 import '../../models/libro.dart';
 import '../../components/libro_cover_widget.dart';
-import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -149,37 +148,9 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Libro> _libri = libreria.getLibri();
-    final List<Libro> _libriConsigliati = _libri.take(3).toList();
-    final List<Libro> _ultimeAggiunte = _libri.reversed.take(3).toList();
-
-    // Funzione helper per creare un widget immagine/placeholder per un libro
-    Widget _buildBookCover(Libro libro) {
-      // Se la copertina è un URL di rete
-      if (libro.copertina!.startsWith('http://') ||
-          libro.copertina!.startsWith('https://')) {
-        return Image.network(
-          libro.copertina!,
-          fit: BoxFit.cover,
-          // Puoi comunque mantenere un errorBuilder per problemi di rete
-          errorBuilder:
-              (context, error, stackTrace) => const Center(
-                child: Icon(Icons.broken_image, size: 50, color: Colors.red),
-              ),
-        );
-      } else {
-        // Altrimenti, assumiamo che sia un percorso di file locale
-        return Image.file(
-          File(libro.copertina!),
-          fit: BoxFit.cover,
-          // Anche qui, un errorBuilder può essere utile per problemi di file system
-          errorBuilder:
-              (context, error, stackTrace) => const Center(
-                child: Icon(Icons.broken_image, size: 50, color: Colors.red),
-              ),
-        );
-      }
-    }
+    final List<Libro> libri = libreria.getLibri();
+    final List<Libro> libriConsigliati = libri.take(3).toList();
+    final List<Libro> ultimeAggiunte = libri.reversed.take(3).toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -229,14 +200,14 @@ class Body extends StatelessWidget {
               SizedBox(
                 height: 150,
                 child:
-                    (_libriConsigliati.isEmpty)
+                    (libriConsigliati.isEmpty)
                         ? const Center(
                           child: Text("Nessun libro consigliato al momento."),
                         )
                         : CarouselView(
                           itemExtent: 166,
                           children:
-                              _libriConsigliati.map((libro) {
+                              libriConsigliati.map((libro) {
                                 return Container(
                                   width:
                                       150, // Larghezza desiderata della copertina
@@ -249,7 +220,7 @@ class Body extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8.0),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black,
                                         spreadRadius: 1,
                                         blurRadius: 3,
                                         offset: const Offset(0, 2),
@@ -258,7 +229,7 @@ class Body extends StatelessWidget {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    child: _buildBookCover(libro),
+                                    child: LibroCoverWidget(libro: libro),
                                   ),
                                 );
                               }).toList(),
@@ -271,12 +242,12 @@ class Body extends StatelessWidget {
               SizedBox(
                 height: 150,
                 child:
-                    (_ultimeAggiunte.isEmpty)
+                    (ultimeAggiunte.isEmpty)
                         ? const Center(child: Text("Nessuna aggiunta recente."))
                         : CarouselView(
                           itemExtent: 166,
                           children:
-                              _ultimeAggiunte.map((libro) {
+                              ultimeAggiunte.map((libro) {
                                 return Container(
                                   width: 150,
                                   height: 150,
@@ -287,7 +258,7 @@ class Body extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(8.0),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black,
                                         spreadRadius: 1,
                                         blurRadius: 3,
                                         offset: const Offset(0, 2),
@@ -296,7 +267,7 @@ class Body extends StatelessWidget {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    child: _buildBookCover(libro),
+                                    child: LibroCoverWidget(libro: libro),
                                   ),
                                 );
                               }).toList(),

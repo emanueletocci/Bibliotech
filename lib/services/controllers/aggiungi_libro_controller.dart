@@ -35,7 +35,7 @@ class AggiungiLibroController {
   int? numeroPagine;
   String? lingua;
   String? trama;
-  String? isbn;
+  String isbn;
   DateTime? dataPubblicazione;
   double? voto;
   String copertina;
@@ -44,7 +44,8 @@ class AggiungiLibroController {
   GenereLibro? genere;
 
   AggiungiLibroController() :
-    copertina = 'assets/images/book_placeholder.jpg';
+    copertina = 'assets/images/book_placeholder.jpg',
+    isbn= '';
   
 
   // Metodo per la selezione e salvataggio della copertina dalla galleria
@@ -103,7 +104,7 @@ class AggiungiLibroController {
         genere: genere,
         lingua: lingua,
         trama: trama,
-        isbn: isbn!,
+        isbn: isbn,
         dataPubblicazione: dataPubblicazione,
         voto: voto,
         copertina: copertina,
@@ -123,9 +124,17 @@ class AggiungiLibroController {
       throw Exception("Il titolo non può essere vuoto");
     }
 
-    if (isbn?.isEmpty == true) {
+    if (isbn.isEmpty == true) {
       status = false;
       throw Exception("L'ISBN non può essere vuoto");
+    }
+
+    // Inserire validazione ISBN
+
+    // Se il libro é giá presente, non lo aggiungo e lancio eccezione
+    if(libreria.cercaLibroPerIsbn(isbn) != null){
+      status = false;
+      throw Exception("Il libro con questo ISBN è già presente in libreria");
     }
 
     return status;

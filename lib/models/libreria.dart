@@ -26,10 +26,9 @@ class Libreria {
   // get é una keyword in dart che consente di implementare un getter.
   // Si accede come una proprietà, senza doverla chiamare come un metodo.
 
-  // Consente l'aggiunta di un libro alla libreria
+  // Consente l'aggiunta di un libro alla libreria, se non é giá presente
   void aggiungiLibro(Libro libro) {
-    // Il controllo sui campi é stato delegato al controller
-    _libri[libro.isbn] = libro;
+    _libri.putIfAbsent(libro.isbn, () => libro);
   
   }
 
