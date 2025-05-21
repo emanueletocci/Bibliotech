@@ -26,7 +26,8 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
       );
       // Attendo 2 secondi prima di tornare alla schermata principale
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacement( // Usare pushReplacement per evitare di tornare alla pagina di aggiunta
+        Navigator.of(context).pushReplacement(
+          // Usare pushReplacement per evitare di tornare alla pagina di aggiunta
           MaterialPageRoute(builder: (context) => const MainScreen()),
         ); // torno alla schermata principale se non vengono lanciate eccezioni
       });
@@ -69,7 +70,8 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap: _selectCoverImage,  // metodo per la selezione della copertina,
+                  onTap:
+                      _selectCoverImage, // metodo per la selezione della copertina,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: SizedBox(
@@ -78,27 +80,29 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                       child: Builder(
                         builder: (context) {
                           // Mostra l'immagine se disponibile, altrimenti un placeholder
-                          if (controller.copertina != null) {
-                            if ((controller.copertina!.startsWith('http://')) ||
-                                (controller.copertina!.startsWith('https://'))) {
-                              // È un URL remoto! Mostra l'immagine remota
-                              return Image.network(
-                                controller.copertina!,
-                                fit: BoxFit.cover,
-                              );
-                            } else {
-                              // È un percorso locale! Crea un oggetto File e mostra l'immagine locale
-                              // Assicurati che il file esista prima di provare a caricarlo
-                              final File localImageFile = File(controller.copertina!);
-                              return Image.file(
-                                localImageFile,
-                                fit: BoxFit.cover,
-                              );
-                            }
-                          } else {
-                            // Nessuna copertina disponibile! Mostro un placeholder di default
+                          if ((controller.copertina.startsWith('http://')) ||
+                              (controller.copertina.startsWith('https://'))) {
+                            // È un URL remoto! Mostra l'immagine remota
+                            return Image.network(
+                              controller.copertina,
+                              fit: BoxFit.cover,
+                            );
+                          // Non si puó usare Image.file con gli elementi presenti in assets per cui
+                          // devo controllare manualmente se l'immagine è il placeholder di default
+                          } else if (controller.copertina == 'assets/images/book_placeholder.jpg'){
+                            // Mostra il placeholder di default
                             return Image.asset(
-                              'assets/images/book_placeholder.jpg', // Assicurati che questo percorso sia corretto
+                              controller.copertina,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                          else {
+                            // È un percorso locale! Crea un oggetto File e mostra l'immagine locale
+                            final File localImageFile = File(
+                              controller.copertina,
+                            );
+                            return Image.file(
+                              localImageFile,
                               fit: BoxFit.cover,
                             );
                           }
@@ -124,11 +128,13 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Categoria'),
                 value: controller.genereSelezionato,
-                items: controller.generi
-                    .map(
-                      (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
-                )
-                    .toList(),
+                items:
+                    controller.generi
+                        .map(
+                          (cat) =>
+                              DropdownMenuItem(value: cat, child: Text(cat)),
+                        )
+                        .toList(),
                 onChanged: (val) {
                   setState(() {
                     controller.genereSelezionato = val;
@@ -166,11 +172,13 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Stato'),
                 value: controller.statoSelezionato,
-                items: controller.stati
-                    .map(
-                      (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
-                )
-                    .toList(),
+                items:
+                    controller.stati
+                        .map(
+                          (cat) =>
+                              DropdownMenuItem(value: cat, child: Text(cat)),
+                        )
+                        .toList(),
                 onChanged: (val) {
                   setState(() {
                     controller.statoSelezionato = val;
@@ -179,7 +187,8 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: _handleAggiungiLibro, // <-- Questo gestisce SOLO l'aggiunta del libro
+                  onPressed:
+                      _handleAggiungiLibro, // <-- Questo gestisce SOLO l'aggiunta del libro
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(

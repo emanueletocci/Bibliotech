@@ -20,9 +20,9 @@ class BookCoverDisplay extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      margin: const EdgeInsets.symmetric(horizontal: 8.0), // Spazio tra gli elementi nel carosello
+      margin: const EdgeInsets.symmetric(horizontal: 8.0), 
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Colore di sfondo per quando non c'è copertina
+        color: Colors.grey[200], 
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(

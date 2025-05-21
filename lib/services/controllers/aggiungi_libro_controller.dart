@@ -38,10 +38,14 @@ class AggiungiLibroController {
   String? isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertina;
+  String copertina;
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
+
+  AggiungiLibroController() :
+    copertina = 'assets/images/book_placeholder.jpg';
+  
 
   // Metodo per la selezione e salvataggio della copertina dalla galleria
   // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
@@ -60,7 +64,7 @@ class AggiungiLibroController {
       );
       copertina = savedImage.path; // Memorizza il percorso locale dell'immagine salvata
     } else {
-      copertina = null; // Se non viene selezionata nessuna immagine, la copertina è null
+      return; // Se non viene selezionata nessuna immagine, lascio il placeholder di default
     }
   }
 
