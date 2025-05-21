@@ -22,8 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _libreria = Libreria();
-    //?. operatore null-aware: se libreria é null, non viene eseguito il metodo getLibri()
-    // se é null, l'espressione restituisce null
   }
 
   // callaback per la gestione dello stato nei widget figli
@@ -156,7 +154,7 @@ class Body extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
-        // spacing: 30, // Rimosso: Column non ha 'spacing'
+        spacing: 20,
         children: <Widget>[
           Center(
             child: Row(
@@ -190,7 +188,6 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 30), // Sostituisce spacing: 30 della Column principale
           Column(
             spacing: 15,
             crossAxisAlignment: CrossAxisAlignment.start,
