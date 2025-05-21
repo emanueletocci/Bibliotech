@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../components/popup_aggiunta.dart';
 import '../../models/libreria.dart';
 import '../../models/libro.dart';
+import '../../components/libro_cover_widget.dart';
+import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -12,17 +14,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Libreria? _libreria;
+  late final Libreria _libreria;
 
   // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
   // initState si usa per inizializzare variabili di stato che richiedono un'inizializzazione
   // complessa, dipendente da altre variabili o oggetti (come la libreria)
-  @override 
-  void initState(){
+  @override
+  void initState() {
     super.initState();
     _libreria = Libreria();
     //?. operatore null-aware: se libreria é null, non viene eseguito il metodo getLibri()
     // se é null, l'espressione restituisce null
+  }
+
+  // callaback per la gestione dello stato nei widget figli
+  // Per semplicitá il metodo viene chiamato alla chiusura del popup di aggiunta, sia nel caso in cui
+  // é stato effettivamente inserito un libro, sia nel caso in cui l'utente ha chiuso semplicemente il popup
+  void _onLibreriaChanged() {
+    setState(() {});
   }
 
   @override
@@ -31,8 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         spacing: 10,
         children: <Widget>[
-          Header(),
-          Body(),
+          Header(
+            libreria: _libreria,
+            onLibreriaChanged: _onLibreriaChanged,
+          ), // passo la libreria al widget Header
+          Body(libreria: _libreria), // passo la libreria al widget Body
         ],
       ),
     );
@@ -40,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  final Libreria? libreria;
+  final VoidCallback onLibreriaChanged;
+  const Header({super.key, this.libreria, required this.onLibreriaChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +105,7 @@ class Header extends StatelessWidget {
                         return const PopupAggiunta();
                       },
                     );
+                    onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
                   },
                   icon: const Icon(Icons.add, size: 25),
                   style: ElevatedButton.styleFrom(
@@ -129,10 +144,43 @@ class Header extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  const Body({super.key});
+  final Libreria libreria;
+  const Body({super.key, required this.libreria});
 
   @override
   Widget build(BuildContext context) {
+    final List<Libro> _libri = libreria.getLibri();
+    final List<Libro> _libriConsigliati = _libri.take(3).toList();
+    final List<Libro> _ultimeAggiunte = _libri.reversed.take(3).toList();
+
+    // Funzione helper per creare un widget immagine/placeholder per un libro
+    Widget _buildBookCover(Libro libro) {
+      // Se la copertina è un URL di rete
+      if (libro.copertina!.startsWith('http://') ||
+          libro.copertina!.startsWith('https://')) {
+        return Image.network(
+          libro.copertina!,
+          fit: BoxFit.cover,
+          // Puoi comunque mantenere un errorBuilder per problemi di rete
+          errorBuilder:
+              (context, error, stackTrace) => const Center(
+                child: Icon(Icons.broken_image, size: 50, color: Colors.red),
+              ),
+        );
+      } else {
+        // Altrimenti, assumiamo che sia un percorso di file locale
+        return Image.file(
+          File(libro.copertina!),
+          fit: BoxFit.cover,
+          // Anche qui, un errorBuilder può essere utile per problemi di file system
+          errorBuilder:
+              (context, error, stackTrace) => const Center(
+                child: Icon(Icons.broken_image, size: 50, color: Colors.red),
+              ),
+        );
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
@@ -180,23 +228,41 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 150,
-                child: CarouselView(
-                  itemExtent: 200,
-                  children: [
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
+                child:
+                    (_libriConsigliati.isEmpty)
+                        ? const Center(
+                          child: Text("Nessun libro consigliato al momento."),
+                        )
+                        : CarouselView(
+                          itemExtent: 166,
+                          children:
+                              _libriConsigliati.map((libro) {
+                                return Container(
+                                  width:
+                                      150, // Larghezza desiderata della copertina
+                                  height:
+                                      150, // Altezza desiderata della copertina
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ), // Spazio tra le copertine
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 3,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: _buildBookCover(libro),
+                                  ),
+                                );
+                              }).toList(),
+                        ),
               ),
               const Text(
                 "Ultime aggiunte",
@@ -204,62 +270,42 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 150,
-                child: CarouselView(
-                  itemExtent: 200,
-                  children: [
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                    Image.network(
-                      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
+                child:
+                    (_ultimeAggiunte.isEmpty)
+                        ? const Center(child: Text("Nessuna aggiunta recente."))
+                        : CarouselView(
+                          itemExtent: 166,
+                          children:
+                              _ultimeAggiunte.map((libro) {
+                                return Container(
+                                  width: 150,
+                                  height: 150,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 3,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: _buildBookCover(libro),
+                                  ),
+                                );
+                              }).toList(),
+                        ),
               ),
             ],
           ),
         ],
       ),
     );
-  }
-}
-
-// DA COMPLETARE
-class Footer extends StatelessWidget {
-  const Footer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("");
   }
 }
