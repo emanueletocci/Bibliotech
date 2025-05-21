@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../components/popup_aggiunta.dart';
+import '../../models/libreria.dart';
+import '../../models/libro.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -10,6 +12,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Libreria? _libreria;
+
+  // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
+  // initState si usa per inizializzare variabili di stato che richiedono un'inizializzazione
+  // complessa, dipendente da altre variabili o oggetti (come la libreria)
+  @override 
+  void initState(){
+    super.initState();
+    _libreria = Libreria();
+    //?. operatore null-aware: se libreria é null, non viene eseguito il metodo getLibri()
+    // se é null, l'espressione restituisce null
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
