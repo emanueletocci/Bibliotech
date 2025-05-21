@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/libro.dart';
 import 'dart:io';
-import '../screens/dettagli_libro/dettagli_libro_view.dart';
 
 class LibroCoverWidget extends StatelessWidget {
   final Libro libro;
@@ -11,12 +10,9 @@ class LibroCoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: GestureDetector(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: _buildBookCover(libro),
-        ),
-        onTap: () => {}, // Aprire pagina dettagli libro
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: _buildBookCover(libro),
       ),
     );
   }

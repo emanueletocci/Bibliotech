@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import '../main_view.dart';
 import 'dart:io';
+import '../../components/libro_cover_widget.dart';
 
 class AggiungiLibro extends StatefulWidget {
   const AggiungiLibro({super.key});
@@ -26,10 +27,13 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
       );
       // Attendo 2 secondi prima di tornare alla schermata principale
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacement(
+        if (!mounted) return; // Controllo se il widget è ancora montato
+
+        Navigator.of(context).push(
           // Usare pushReplacement per evitare di tornare alla pagina di aggiunta
           MaterialPageRoute(builder: (context) => const MainScreen()),
         ); // torno alla schermata principale se non vengono lanciate eccezioni
+
       });
     } catch (e) {
       String errorMessage = e.toString();
@@ -43,14 +47,6 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
-  }
-
-  // Questo metodo gestisce la selezione della copertina al tap sul placeholder
-  void _selectCoverImage() async {
-    await controller.selezionaCopertina();
-    setState(() {
-      // Aggiorna lo stato per mostrare l'immagine selezionata
-    });
   }
 
   @override
@@ -70,8 +66,12 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap:
-                      _selectCoverImage, // metodo per la selezione della copertina,
+                  onTap: () async{
+                    await controller.selezionaCopertina();
+                    setState(() {
+                      // Aggiorna lo stato per mostrare l'immagine selezionata
+                    });
+                  },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: SizedBox(
