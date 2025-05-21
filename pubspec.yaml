@@ -39,8 +39,8 @@ dependencies:
   curved_navigation_bar: ^1.0.6 #latest version
 
   #robe per sqlite
-  sqflite: ^2.3.0
-  path: ^1.8.3
+  sqflite: ^2.4.2
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

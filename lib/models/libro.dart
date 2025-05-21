@@ -2,20 +2,23 @@ import 'genere_libro.dart';
 import 'stato_libro.dart';
 
 class Libro {
-  String titolo;  
-  List<String>? autori; 
+  int id;
+  String titolo;
+  String? autori;
   int? numeroPagine;
   GenereLibro? genere;
-  String? lingua;   
+  String? lingua;
   String? trama;
   String isbn;
-  DateTime? dataPubblicazione;  
+  DateTime? dataPubblicazione;
   double? voto;
-  String? copertina;  
-  String? note; 
+  String? copertina;
+  String? note;
+  String? urlimg;
   StatoLibro? stato;
 
   Libro({
+    required this.id,
     required this.titolo,
     this.autori,
     this.numeroPagine,
@@ -28,6 +31,30 @@ class Libro {
     this.copertina,
     this.note,
     this.stato,
+    this.urlimg,
   });
 
+  Map<String, Object?> toMap() {
+    return {
+      'id': id,
+      'titolo': titolo,
+      'autori': autori,
+      'numeroPagine': numeroPagine,
+      'genere': genere?.toString(),
+      'lingua': lingua,
+      'trama': trama,
+      'isbn': isbn,
+      'dataPubblicazione': dataPubblicazione?.toIso8601String(),
+      'voto': voto,
+      'copertina': copertina,
+      'note': note,
+      'urlimg': urlimg,
+      'stato': stato?.toString(),
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Libro{id: $id, titolo: $titolo, autori: $autori, numeroPagine: $numeroPagine, genere: $genere, lingua: $lingua, trama: $trama, isbn: $isbn, dataPubblicazione: $dataPubblicazione, voto: $voto, copertina: $copertina, note: $note, urlimg: $urlimg, stato: $stato}';
+  }
 }
