@@ -108,7 +108,7 @@ Future<void> updateLibro(Libro libro) async {
   );
 }
 
-Future<List<Libro>> getLibro(int id) async {
+Future<Libro> getLibro(int id) async {
   // Get a reference to the database.
   final db = await libri;
 
@@ -123,41 +123,39 @@ Future<List<Libro>> getLibro(int id) async {
   // Convert the list of each libro's fields into a list of `libro` objects.
   if (result.isNotEmpty) {
     final libroMap = result.first;
-    return [
-      Libro(
-        id: libroMap['id'] as int,
-        titolo: libroMap['titolo'] as String,
-        autori: libroMap['autori'] as String?,
-        numeroPagine: libroMap['numeroPagine'] as int?,
-        genere:
-            libroMap['genere'] != null
-                ? GenereLibro.values.firstWhere(
-                  (g) => g.toString() == 'GenereLibro.${libroMap['genere']}',
-                )
-                : null,
-        lingua: libroMap['lingua'] as String?,
-        trama: libroMap['trama'] as String?,
-        isbn: libroMap['isbn'] as String,
-        dataPubblicazione:
-            libroMap['dataPubblicazione'] != null
-                ? DateTime.tryParse(libroMap['dataPubblicazione'] as String)
-                : null,
-        voto:
-            libroMap['voto'] != null
-                ? (libroMap['voto'] as num).toDouble()
-                : null,
-        copertina: libroMap['copertina'] as String?,
-        note: libroMap['note'] as String?,
-        urlimg: libroMap['urlimg'] as String?,
-        stato:
-            libroMap['stato'] != null
-                ? StatoLibro.values.firstWhere(
-                  (s) => s.toString() == 'StatoLibro.${libroMap['stato']}',
-                )
-                : null,
-      ),
-    ];
+    return Libro(
+      id: libroMap['id'] as int,
+      titolo: libroMap['titolo'] as String,
+      autori: libroMap['autori'] as String?,
+      numeroPagine: libroMap['numeroPagine'] as int?,
+      genere:
+          libroMap['genere'] != null
+              ? GenereLibro.values.firstWhere(
+                (g) => g.toString() == 'GenereLibro.${libroMap['genere']}',
+              )
+              : null,
+      lingua: libroMap['lingua'] as String?,
+      trama: libroMap['trama'] as String?,
+      isbn: libroMap['isbn'] as String,
+      dataPubblicazione:
+          libroMap['dataPubblicazione'] != null
+              ? DateTime.tryParse(libroMap['dataPubblicazione'] as String)
+              : null,
+      voto:
+          libroMap['voto'] != null
+              ? (libroMap['voto'] as num).toDouble()
+              : null,
+      copertina: libroMap['copertina'] as String?,
+      note: libroMap['note'] as String?,
+      urlimg: libroMap['urlimg'] as String?,
+      stato:
+          libroMap['stato'] != null
+              ? StatoLibro.values.firstWhere(
+                (s) => s.toString() == 'StatoLibro.${libroMap['stato']}',
+              )
+              : null,
+    );
   } else {
-    return [];
+    throw Exception('Libro not found');
   }
 }

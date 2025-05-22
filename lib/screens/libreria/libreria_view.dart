@@ -1,9 +1,12 @@
+import 'package:bibliotech/models/db.dart';
+import 'package:bibliotech/models/libro.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Libreria extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    init();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -18,12 +21,13 @@ class Libreria extends StatelessWidget {
                   padding: EdgeInsets.all(7),
                   crossAxisCount: 2,
                   children: [
-                    Libro(path: 'assets/images/book2.jpg'),
-                    Libro(path: 'assets/images/book3.jpg'),
-                    Libro(path: 'assets/images/book4.jpg'),
-                    Libro(path: 'assets/images/book5.jpg'),
-                    Libro(path: 'assets/images/book6.jpg'),
-                    Libro(path: 'assets/images/book1.jpg'),
+                    //LibroContainer(path: _link),
+                    LibroContainer(path: 'assets/images/book2.jpg'),
+                    LibroContainer(path: 'assets/images/book3.jpg'),
+                    LibroContainer(path: 'assets/images/book4.jpg'),
+                    LibroContainer(path: 'assets/images/book5.jpg'),
+                    LibroContainer(path: 'assets/images/book6.jpg'),
+                    LibroContainer(path: 'assets/images/book1.jpg'),
                   ],
                 ),
               ),
@@ -32,6 +36,12 @@ class Libreria extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> init() async {
+    final libro = await getLibro(1);
+    var _link = libro.urlimg;
+    //List<Libro> _libreria_iniziale = await getLibri();
   }
 }
 
@@ -48,9 +58,9 @@ class SearchBarCustom extends StatelessWidget {
   }
 }
 
-class Libro extends StatelessWidget {
+class LibroContainer extends StatelessWidget {
   final String path;
-  const Libro({Key? key, required this.path}) : super(key: key);
+  const LibroContainer({Key? key, required this.path}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
