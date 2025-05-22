@@ -144,8 +144,6 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
@@ -193,7 +191,8 @@ class Body extends StatelessWidget {
               SizedBox(
                 height: 200,
                 child: Builder(
-                  builder: (BuildContext context) { // 'builder' deve essere il nome del parametro
+                  builder: (BuildContext context) {
+                    // 'builder' deve essere il nome del parametro
                     if (controller.libriConsigliati.isEmpty) {
                       return const Center(
                         child: Text("Nessun libro consigliato al momento."),
@@ -201,30 +200,22 @@ class Body extends StatelessWidget {
                     } else {
                       return CarouselView(
                         itemExtent: 166,
-                        children: controller.libriConsigliati.map((libro) {
-                          return Container(
-                            width: 150, // Larghezza desiderata della copertina
-                            height: 150, // Altezza desiderata della copertina
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ), // Spazio tra le copertine
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 2),
+                        children:
+                            controller.libriConsigliati.map((libro) {
+                              return Container(
+                                width:
+                                    150, // Larghezza desiderata della copertina
+                                height:
+                                    150, // Altezza desiderata della copertina
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ), // Spazio tra le copertine
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: LibroCoverWidget(libro: libro),
                                 ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: LibroCoverWidget(libro: libro),
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList(),
                       );
                     }
                   }, // Chiusura corretta del Builder
@@ -236,37 +227,29 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 200,
-                child: Builder( // Usiamo Builder per poter usare if/else direttamente qui
+                child: Builder(
                   builder: (BuildContext context) {
                     if (controller.ultimeAggiunte.isEmpty) {
-                      return const Center(child: Text("Nessuna aggiunta recente."));
+                      return const Center(
+                        child: Text("Nessuna aggiunta recente."),
+                      );
                     } else {
                       return CarouselView(
                         itemExtent: 166,
-                        children: controller.ultimeAggiunte.map((libro) {
-                          return Container(
-                            width: 150,
-                            height: 150,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 2),
+                        children:
+                            controller.ultimeAggiunte.map((libro) {
+                              return Container(
+                                width: 150,
+                                height: 150,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
                                 ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: LibroCoverWidget(libro: libro),
-                            ),
-                          );
-                        }).toList(),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: LibroCoverWidget(libro: libro),
+                                ),
+                              );
+                            }).toList(),
                       );
                     }
                   },
