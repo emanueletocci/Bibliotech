@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_api_controller.dart';
 import '../../components/libro_cover_widget.dart';
-import '../../screens/main_view.dart';
 import '../../models/libro.dart';
 
 class RicercaGoogleBooksView extends StatefulWidget {
@@ -21,7 +20,6 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
     try {
       // Esegui la ricerca nel controller e attendi il suo completamento.
       await controller.searchBooks();
-
     } catch (e) {
       // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore.
       String errorMessage = e.toString();
@@ -30,9 +28,11 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
         // Rimuovo il prefisso "Exception: " dal messaggio di errore
         errorMessage = errorMessage.substring(prefix.length);
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+      }
     } finally {
       setState(() {});
     }
@@ -83,17 +83,18 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
               controller: controller.searchQueryController,
               decoration: InputDecoration(
                 labelText: 'Cerca per titolo or ISBN',
-                suffixIcon: controller.isLoading
-                    ? const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {
-                          _handleSearchBooks();
-                        },
-                      ),
+                suffixIcon:
+                    controller.isLoading
+                        ? const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                        : IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            _handleSearchBooks();
+                          },
+                        ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(21),
                 ),
@@ -109,7 +110,8 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
               child: ListView.builder(
                 itemCount: controller.searchResults.length,
                 itemBuilder: (context, index) {
-                  final book = controller.searchResults[index]; // <--- IL LIBRO È QUI!
+                  final book =
+                      controller.searchResults[index]; // <--- IL LIBRO È QUI!
                   return Card(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 8.0,

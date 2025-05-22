@@ -32,8 +32,6 @@ class AggiungiLibroController {
 
   final Libreria _libreria = Libreria();
 
-  VoidCallback? _onUpdate; // Callback per aggiornare l'interfaccia utente
-
   String? titolo;
   List<String>? autori;
   int? numeroPagine;
