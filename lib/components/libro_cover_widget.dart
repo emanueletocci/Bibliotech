@@ -8,11 +8,9 @@ class LibroCoverWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: _buildBookCover(libro),
-      ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: _buildBookCover(libro),
     );
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import '../main_view.dart';
 import 'dart:io';
-import '../../components/libro_cover_widget.dart';
 
 class AggiungiLibro extends StatefulWidget {
   const AggiungiLibro({super.key});
