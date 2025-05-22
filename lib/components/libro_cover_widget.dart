@@ -9,7 +9,6 @@ class LibroCoverWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: _buildBookCover(libro),
