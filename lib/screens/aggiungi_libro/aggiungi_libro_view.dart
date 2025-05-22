@@ -46,6 +46,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
+    setState(() {});    // Aggiorno lo stato per riflettere eventuali modifiche sull'UI
   }
 
   @override

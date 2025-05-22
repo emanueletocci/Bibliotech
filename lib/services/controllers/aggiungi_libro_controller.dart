@@ -51,21 +51,6 @@ class AggiungiLibroController {
     : copertina = 'assets/images/book_placeholder.jpg',
       isbn = '';
 
-  // NUOVO: Metodo per la UI per registrarsi e ricevere aggiornamenti
-  void addListener(VoidCallback listener) {
-    _onUpdate = listener;
-  }
-
-  // NUOVO: Metodo per la UI per disregistrarsi
-  void removeListener() {
-    _onUpdate = null;
-  }
-
-  // NUOVO: Metodo interno per notificare la UI
-  void _notifyListeners() {
-    _onUpdate?.call();
-  }
-
   // Metodo per la selezione e salvataggio della copertina dalla galleria
   // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
   Future<void> selezionaCopertina() async {
@@ -80,7 +65,6 @@ class AggiungiLibroController {
       final File savedImage = await FileUtility.saveFile(imageFile, fileName);
       copertina =
           savedImage.path; // Memorizza il percorso locale dell'immagine salvata
-      _notifyListeners(); // Notifica la UI per aggiornare l'immagine_notifica
     } else {
       return; // Se non viene selezionata nessuna immagine, lascio il placeholder di default
     }

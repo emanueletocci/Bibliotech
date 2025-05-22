@@ -47,7 +47,6 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
     }
   }
 
-  // MODIFICATO: Ora accetta un oggetto Libro come parametro
   void _handleAggiungiLibro(Libro libroToAdd) async { // Ho rinominato il parametro per chiarezza
     try {
       // Chiama il metodo del controller, passandogli il libro
