@@ -78,6 +78,8 @@ class Libro {
 
       numeroPagine: volumeInfo?['pageCount'] as int?,
       // genere: mappedGenere, // Applica la mappatura del genere (questo rimane a tua discrezione)
+
+      
       lingua: volumeInfo?['language'] as String?,
       trama: volumeInfo?['description'] as String?,
 
@@ -90,7 +92,7 @@ class Libro {
       voto: null,
       note: null,
       stato: null,
-      
+
       copertina: imageLinks?['thumbnail'] as String?,
     );
   }
@@ -145,7 +147,7 @@ class Libro {
         }
       }
     }
-    // Restituisco l'ISBN-13 se trovato, altrimenti l'ISBN-10, altrimenti una stringa vuota
+    // Restituisco l'ISBN-13 se trovato, l'ISBN-10, altrimenti una stringa vuota
     // ISBN-13 ha la priorità su ISBN-10
     return foundIsbn13 ?? foundIsbn10 ?? '';
   }

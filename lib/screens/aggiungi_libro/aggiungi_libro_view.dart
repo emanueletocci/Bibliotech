@@ -187,7 +187,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               Center(
                 child: ElevatedButton.icon(
                   onPressed:
-                      _handleAggiungiLibro, // <-- Questo gestisce SOLO l'aggiunta del libro
+                      _handleAggiungiLibro, 
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
