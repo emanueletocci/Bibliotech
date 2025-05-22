@@ -17,6 +17,24 @@ class Libro {
   String? urlimg;
   StatoLibro? stato;
 
+  /// Costruisce un'istanza della classe [Libro] pronto da copiare.
+  /// final libro = Libro(
+  ///   id: '1',
+  ///   titolo: 'Il Signore degli Anelli',
+  ///   autori: ['J.R.R. Tolkien'],
+  ///   numeroPagine: 1200,
+  ///   genere: 'Fantasy',
+  ///   lingua: 'Italiano',
+  ///   trama: 'Un epico viaggio nella Terra di Mezzo.',
+  ///   isbn: '978-1234567890',
+  ///   dataPubblicazione: DateTime(1954, 7, 29),
+  ///   voto: 5,
+  ///   copertina: 'copertina.jpg',
+  ///   note: 'Edizione illustrata',
+  ///   stato: 'Letto',
+  ///   urlimg: 'https://esempio.com/copertina.jpg',
+  /// );
+  /// ```
   Libro({
     required this.id,
     required this.titolo,

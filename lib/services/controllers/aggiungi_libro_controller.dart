@@ -33,8 +33,9 @@ class AggiungiLibroController {
 
   final Libreria libreria = Libreria();
 
+  int? id;
   String? titolo;
-  List<String>? autori;
+  String? autori;
   int? numeroPagine;
   String? lingua;
   String? trama;
@@ -45,13 +46,15 @@ class AggiungiLibroController {
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
+  String? urlimg; //link copertina
 
   // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
   void handleAggiungi() {
     // Quando l'utente preme il pulsante "Aggiungi", vengono recuperati i valori dai controller
 
+    id = null;
     titolo = titoloController.text.trim();
-    autori = autoriController.text.split(',').map((e) => e.trim()).toList();
+    autori = autoriController.text.trim();
     numeroPagine = int.tryParse(numeroPagineController.text);
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
@@ -78,6 +81,7 @@ class AggiungiLibroController {
     if (controllaCampi()) {
       // Se i campi sono stati compilati correttamente, viene creato un nuovo libro
       Libro nuovoLibro = Libro(
+        id: id ?? 0,
         titolo: titolo!,
         autori: autori,
         numeroPagine: numeroPagine,
@@ -90,11 +94,12 @@ class AggiungiLibroController {
         copertina: copertina,
         note: note,
         stato: stato,
+        urlimg: urlimg,
       );
 
       // A questo punto, il libro può essere aggiunto alla libreria
       libreria.aggiungiLibro(nuovoLibro);
-    } 
+    }
   }
 
   bool controllaCampi() {
