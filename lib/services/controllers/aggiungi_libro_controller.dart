@@ -30,7 +30,7 @@ class AggiungiLibroController {
   String? genereSelezionato;
   String? statoSelezionato;
 
-  final Libreria libreria = Libreria();
+  final Libreria _libreria = Libreria();
 
   VoidCallback? _onUpdate; // Callback per aggiornare l'interfaccia utente
 
@@ -113,7 +113,7 @@ class AggiungiLibroController {
         stato: stato,
       );
 
-      libreria.aggiungiLibro(nuovoLibro);
+      _libreria.aggiungiLibro(nuovoLibro);
     }
   }
 
@@ -133,7 +133,7 @@ class AggiungiLibroController {
     // Inserire validazione ISBN
 
     // Se il libro é giá presente, non lo aggiungo e lancio eccezione
-    if (libreria.cercaLibroPerIsbn(isbn) != null) {
+    if (_libreria.cercaLibroPerIsbn(isbn) != null) {
       status = false;
       throw Exception("Il libro con questo ISBN è già presente in libreria");
     }

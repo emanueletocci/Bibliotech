@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart'; // Per debugPrint
 
 import '../../models/libro.dart';
 import '../../services/apis/google_books_api.dart';
-import '../../models/libreria.dart'; // Importa la tua classe Libreria
+import '../../models/libreria.dart';
 
 class RicercaGoogleBooksController {
   final TextEditingController searchQueryController = TextEditingController();
   final BookApiService _apiService = BookApiService();
-  final Libreria _libreria = Libreria(); // Ottieni l'unica istanza della Libreria
+  final Libreria _libreria = Libreria(); 
 
   // Variabile contenente tutti i libri restituiti dall'API per una ricerca
   List<Libro> _searchResults = [];
@@ -56,12 +56,12 @@ class RicercaGoogleBooksController {
   }
 
   // Metodo per gestire l'aggiunta del libro alla libreria. Il metodo prende in input un oggetto Libro fornito dall'API
-  Future<void> handleAggiungi(Libro libro) async {
+  void handleAggiungi(Libro libro) {
     // Il libro 'libro' è stato creato dal factory Libro.fromGoogleBooksJson
     try {
       // Controllo se il libro è già presente in libreria 
       if (_libreria.cercaLibroPerIsbn(libro.isbn) != null) {
-        throw Exception('"${libro.titolo}" è già presente nella tua libreria.');
+        throw Exception('Il libro è già presente nella libreria!');
       }
       _libreria.aggiungiLibro(libro);
 
@@ -72,7 +72,4 @@ class RicercaGoogleBooksController {
     }
   }
 
-  void dispose() {
-    searchQueryController.dispose();
-  }
 }
