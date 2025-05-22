@@ -1,10 +1,13 @@
 // views/ricerca_google_books_view.dart
 
 import 'package:flutter/material.dart';
-import '../../services/controllers/aggiungi_libro_api_controller.dart'; 
-import '../../components/libro_cover_widget.dart'; 
+// Mantengo il tuo import originale. Assicurati che AggiungiLibroApiController
+// sia effettivamente la classe che hai rinominato da RicercaGoogleBooksController.
+// Se non lo è, potresti avere un errore di tipo in runtime.
+import '../../services/controllers/aggiungi_libro_api_controller.dart';
+import '../../components/libro_cover_widget.dart';
 import '../../screens/main_view.dart';
-import '../../models/libro.dart'; 
+import '../../models/libro.dart'; // Importa il modello Libro, necessario per il tipo nel ListView.builder
 
 class RicercaGoogleBooksView extends StatefulWidget {
   const RicercaGoogleBooksView({super.key});
@@ -14,66 +17,100 @@ class RicercaGoogleBooksView extends StatefulWidget {
 }
 
 class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
+  // Ho lasciato il nome del controller come 'controller' e l'istanza come 'AggiungiLibroApiController()'
+  // basandomi sull'import che mi hai fornito.
   final RicercaGoogleBooksController controller =
-      RicercaGoogleBooksController();
+      RicercaGoogleBooksController(); // Usando il nome del controller dal tuo import
 
   @override
   void initState() {
     super.initState();
-    controller.addListener(_onControllerUpdate);
-    // NUOVO: Registra il listener per i messaggi (SnackBar) dal controller
-    controller.addMessageListener((message, {bool isError = false}) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: isError ? Colors.red : Colors.green,
-          duration: const Duration(seconds: 2), // Durata standard
-        ),
-      );
-    });
+    // Non ci sono più listeners da registrare qui.
+    // L'UI si baserà su setState chiamato esplicitamente dopo le operazioni.
   }
 
   @override
   void dispose() {
-    controller.removeListener();
-    controller.removeMessageListener(); // NUOVO: Rimuovi il listener dei messaggi
     controller.dispose();
     super.dispose();
   }
 
-  void _onControllerUpdate() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  // Metodo per gestire la ricerca dei libri. Ora gestisce setState e i messaggi.
+  Future<void> _handleSearchBooks() async {
+    // Il controller aggiorna _isLoading a true e _searchResults a [],
+    // quindi chiamiamo setState per riflettere questi cambiamenti immediatamente.
+    setState(() {
+      controller.searchBooks(); // La chiamata è già asincrona, ma qui la eseguiamo subito
+    });
 
-  void _handleAggiungiLibro(Libro libroToAdd) async { // Ho rinominato il parametro per chiarezza
     try {
-      // Chiama il metodo del controller, passandogli il libro
-      await controller.handleAggiungi(libroToAdd); // Ora handleAggiungi nel controller prende un Libro
-
-      // Dopo l'aggiunta, potresti voler tornare indietro o fare altro.
-      // Se il controller gestisce già i messaggi (SnackBar), non serve uno SnackBar qui.
-      // La logica di navigazione dovrebbe essere qui se vuoi tornare indietro dopo l'aggiunta.
-      // Per esempio, se l'aggiunta ha successo e vuoi tornare alla MainScreen:
-      // Navigator.of(context).pushReplacement(
-      //   MaterialPageRoute(builder: (context) => const MainScreen()),
-      // );
-
+      await controller.searchBooks(); // Esegui la ricerca nel controller
+      // Dopo la ricerca, aggiorniamo la UI per mostrare i risultati o il messaggio "Nessun risultato".
+      // La logica di "Nessun libro trovato" è ora gestita dal controller rilanciando un'eccezione
+      // o dal controllo sulla lunghezza di searchResults.
+      if (controller.searchResults.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Nessun libro trovato per la tua ricerca.'),
+            backgroundColor: Colors.blueGrey, // Colore diverso per i messaggi informativi
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e) {
-      // Il controller dovrebbe già mostrare lo SnackBar di errore tramite _onShowMessage
-      // Quindi, questo blocco catch potrebbe essere ridondante se il controller gestisce tutto.
-      // Lo lascio per farti vedere che potresti ancora catturare errori specifici della UI qui.
+      // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore
       String errorMessage = e.toString();
       const prefix = 'Exception: ';
       if (errorMessage.startsWith(prefix)) {
         errorMessage = errorMessage.substring(prefix.length);
       }
-      debugPrint('Errore catturato nella UI: $errorMessage'); // Usa debugPrint
-      // Se il controller non gestisce lo SnackBar, lo faresti qui:
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+    } finally {
+      // Indipendentemente dal successo o dall'errore, _isLoading sarà false, quindi aggiorniamo la UI.
+      setState(() {});
+    }
+  }
+
+
+  // Metodo che gestisce il click del pulsante "Aggiungi" per un libro specifico dai risultati API
+  // Ora gestisce setState, SnackBar e navigazione direttamente qui.
+  void _handleAggiungiLibro(Libro libroDaAggiungere) async {
+    try {
+      await controller.handleAggiungi(libroDaAggiungere); // Chiama il metodo del controller
+      // Se handleAggiungi() viene eseguito senza errori, mostro uno SnackBar di successo
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Libro inserito correttamente!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      // Attendo 2 secondi prima di tornare alla schermata principale
+      Future.delayed(const Duration(seconds: 2), () {
+        if (!mounted) return; // Controllo se il widget è ancora montato
+
+        Navigator.of(context).pushReplacement(
+          // Usare pushReplacement per evitare di tornare alla pagina di aggiunta API
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        ); // torno alla schermata principale se non vengono lanciate eccezioni
+      });
+    } catch (e) {
+      // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore
+      String errorMessage = e.toString();
+      const prefix = 'Exception: ';
+      if (errorMessage.startsWith(prefix)) {
+        errorMessage = errorMessage.substring(prefix.length);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+    } finally {
+      // Aggiorniamo la UI per riflettere eventuali cambiamenti (anche se l'aggiunta non cambia i searchResults)
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -93,24 +130,23 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
               controller: controller.searchQueryController,
               decoration: InputDecoration(
                 labelText: 'Cerca per titolo o ISBN',
-                suffixIcon:
-                    controller.isLoading
-                        ? const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                        : IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            controller.searchBooks();
-                          },
-                        ),
+                suffixIcon: controller.isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          _handleSearchBooks(); // Chiamiamo il nuovo metodo che gestisce setState e messaggi
+                        },
+                      ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(21),
                 ),
               ),
               onSubmitted: (_) {
-                controller.searchBooks();
+                _handleSearchBooks(); // Chiamiamo il nuovo metodo che gestisce setState e messaggi
               },
             ),
           ),
@@ -160,7 +196,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             onTap: () {
-                              // MODIFICATO: Passa il libro cliccato al metodo _handleAggiungiLibro
+                              // Chiamiamo il metodo interno della View, passandogli il libro corrente
                               _handleAggiungiLibro(book);
                             },
                           ),
