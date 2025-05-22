@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as p; // Importa per la manipolazione dei percorsi
+import 'package:path/path.dart' as p; // Manipolazione dei percorsi
 
 class FileUtility {
   // Ottiene la directory dell'applicazione

@@ -91,8 +91,9 @@ class Header extends StatelessWidget {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    showModalBottomSheet(
+                  onPressed: () async{
+                    // attendo che il bottom sheet si chiuda prima di aggiornare la UI
+                    final bool? shouldRefresh = await showModalBottomSheet(
                       context: context,
                       isScrollControlled:
                           true, // consente al popup di occupare tutto lo schermo
@@ -100,7 +101,9 @@ class Header extends StatelessWidget {
                         return const PopupAggiunta();
                       },
                     );
-                    onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
+                    if (shouldRefresh == true) {
+                      onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
+                    }
                   },
                   icon: const Icon(Icons.add, size: 25),
                   style: ElevatedButton.styleFrom(
@@ -191,7 +194,6 @@ class Body extends StatelessWidget {
                 height: 200,
                 child: Builder(
                   builder: (BuildContext context) {
-                    // 'builder' deve essere il nome del parametro
                     if (controller.libriConsigliati.isEmpty) {
                       return const Center(
                         child: Text("Nessun libro consigliato al momento."),
@@ -208,7 +210,7 @@ class Body extends StatelessWidget {
                                     150, // Altezza desiderata della copertina
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 8.0,
-                                ), // Spazio tra le copertine
+                                ), 
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: LibroCoverWidget(libro: libro),
@@ -217,7 +219,7 @@ class Body extends StatelessWidget {
                             }).toList(),
                       );
                     }
-                  }, // Chiusura corretta del Builder
+                  }, 
                 ),
               ),
               const Text(

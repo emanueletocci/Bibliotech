@@ -7,12 +7,11 @@ import '../../models/libreria.dart';
 class RicercaGoogleBooksController {
   final TextEditingController searchQueryController = TextEditingController();
   final BookApiService _apiService = BookApiService();
-  final Libreria _libreria = Libreria(); 
+  final Libreria _libreria = Libreria();
 
   // Variabile contenente tutti i libri restituiti dall'API per una ricerca
   List<Libro> _searchResults = [];
   bool _isLoading = false;
-
 
   List<Libro> get searchResults => _searchResults;
   bool get isLoading => _isLoading;
@@ -28,12 +27,18 @@ class RicercaGoogleBooksController {
     _searchResults = [];
 
     try {
-      final RegExp isbn13Regex = RegExp(r'^(?:ISBN(?:-13)?:?\s*(?=[0-9]{13}$))((978|979)[0-9]{10}|[0-9]{13})$');
-      final RegExp isbn10Regex = RegExp(r'^(?:ISBN(?:-10)?:?\s*(?=[0-9X]{10}$))([0-9]{9}[0-9X])$');
+      // Da vedere sti regex che non si capisce niente
+      final RegExp isbn13Regex = RegExp(
+        r'^(?:ISBN(?:-13)?:?\s*(?=[0-9]{13}$))((978|979)[0-9]{10}|[0-9]{13})$',
+      );
+      final RegExp isbn10Regex = RegExp(
+        r'^(?:ISBN(?:-10)?:?\s*(?=[0-9X]{10}$))([0-9]{9}[0-9X])$',
+      );
       final String cleanQuery = query.replaceAll('-', '');
 
       List<Libro> results;
-      if (isbn13Regex.hasMatch(cleanQuery) || isbn10Regex.hasMatch(cleanQuery)) {
+      if (isbn13Regex.hasMatch(cleanQuery) ||
+          isbn10Regex.hasMatch(cleanQuery)) {
         debugPrint('DEBUG: Ricerca per ISBN: $query');
         results = await _apiService.searchBooks(isbn: cleanQuery);
       } else {
@@ -42,13 +47,13 @@ class RicercaGoogleBooksController {
       }
       _searchResults = results;
       if (results.isEmpty) {
-        throw Exception('Nessun libro trovato per la tua ricerca.'); 
+        throw Exception('Nessun libro trovato per la tua ricerca.');
       }
     } catch (e) {
       debugPrint('Errore durante la ricerca su Google Books: $e');
       _searchResults = [];
       // Rilancio l'eccezione per gestirla a livello di UI
-      throw Exception('Errore durante la ricerca: ${e.toString()}'); 
+      throw Exception('Errore durante la ricerca: ${e.toString()}');
     } finally {
       _isLoading = false;
     }
@@ -57,18 +62,15 @@ class RicercaGoogleBooksController {
   // Metodo per gestire l'aggiunta del libro alla libreria. Il metodo prende in input un oggetto Libro fornito dall'API
   void handleAggiungi(Libro libro) {
     // Il libro 'libro' è stato creato dal factory Libro.fromGoogleBooksJson
-    try {
-      // Controllo se il libro è già presente in libreria 
-      if (_libreria.cercaLibroPerIsbn(libro.isbn) != null) {
-        throw Exception('Il libro è già presente nella libreria!');
-      }
-      _libreria.aggiungiLibro(libro);
 
-      debugPrint('Libro "${libro.titolo}" (ISBN: ${libro.isbn}) aggiunto con successo alla Libreria.');
-
-    } catch (e) {
-      debugPrint('Errore durante l\'aggiunta di "${libro.titolo}": ${e.toString()}');
+    // Controllo se il libro è già presente in libreria
+    if (_libreria.cercaLibroPerIsbn(libro.isbn) != null) {
+      throw Exception('Il libro è già presente nella libreria!');
     }
-  }
+    _libreria.aggiungiLibro(libro);
 
+    debugPrint(
+      'Libro "${libro.titolo}" (ISBN: ${libro.isbn}) aggiunto con successo alla Libreria.',
+    );
+  }
 }
