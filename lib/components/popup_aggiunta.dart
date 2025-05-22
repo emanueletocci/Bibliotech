@@ -1,6 +1,6 @@
 import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
 import 'package:flutter/material.dart';
-import '../../screens/aggiungi_libro/aggiungi_libro_API_view.dart';
+import '../screens/aggiungi_libro/aggiungi_libro_api_view.dart';
 
 class PopupAggiunta extends StatelessWidget {
   const PopupAggiunta({super.key});

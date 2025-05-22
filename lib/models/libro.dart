@@ -1,5 +1,5 @@
-import 'genere_libro.dart';
-import 'stato_libro.dart';
+import 'genere_libro.dart'; 
+import 'stato_libro.dart'; 
 
 class Libro {
   String titolo;
@@ -30,46 +30,64 @@ class Libro {
     this.stato,
   });
 
+  /* FORMATO API LIBRO GOOGLE BOOKS
+    {
+    "kind": "books#volume",
+    "id": "...",
+    "volumeInfo": { // <--- Contiene le informazioni principali del libro
+      "title": "Il Signore degli Anelli",
+      "authors": ["J.R.R. Tolkien"],
+      "publisher": "...",
+      "publishedDate": "1954", // Può essere solo l'anno, o una data completa
+      "description": "...",
+      "industryIdentifiers": [ // <--- Contiene gli ISBN
+        { "type": "ISBN_10", "identifier": "0345339681" },
+        { "type": "ISBN_13", "identifier": "9780345339683" }
+      ],
+      "pageCount": 1216,
+      "imageLinks": { // <--- Contiene gli URL delle copertine
+        "smallThumbnail": "http://...",
+        "thumbnail": "http://..."
+      },
+      "language": "en",
+      // ... altri campi
+    },
+    // ... altri campi di primo livello che non ci interessano
+    }
+  */
+
   // Factory constructor per creare un oggetto Libro da una risposta JSON di Google Books API
   factory Libro.fromGoogleBooksJson(Map<String, dynamic> json) {
+
+    // Accedo alla chiave 'volumeInfo' come mappa per ottenere le informazioni principali del libro
+    // 'as' é l'operatore di cast di dart, con as Tipo? si usa il cast sicuro
+    // cerco di trattare i dati all'interno di volumeInfo come una mappa, se non riesco a farlo, volumeInfo sarà null
     final volumeInfo = json['volumeInfo'] as Map<String, dynamic>?;
+
+    // Accedo alla chiave 'imageLinks' per ottenere le informazioni sulle copertine
     final imageLinks = volumeInfo?['imageLinks'] as Map<String, dynamic>?;
-    final industryIdentifiers = volumeInfo?['industryIdentifiers'] as List<dynamic>?;
 
-    String? foundIsbn10;
-    String? foundIsbn13;
-    if (industryIdentifiers != null) {
-      for (var identifier in industryIdentifiers) {
-        if (identifier['type'] == 'ISBN_10') {
-          foundIsbn10 = identifier['identifier'];
-        } else if (identifier['type'] == 'ISBN_13') {
-          foundIsbn13 = identifier['identifier'];
-        }
-      }
-    }
-
-    DateTime? parsedDate;
-    if (volumeInfo?['publishedDate'] != null) {
-      try {
-        // L'API di Google Books può restituire date in diversi formati (es. "2006", "2006-01-01")
-        // Potrebbe essere necessario un parsing più robusto o un pacchetto come 'intl'
-        parsedDate = DateTime.tryParse(volumeInfo!['publishedDate']);
-      } catch (e) {
-        print('Errore nel parsing della data: ${volumeInfo!['publishedDate']} - $e');
-      }
-    }
-
+    // Invece di gestire la logica di parsing qui, chiamiamo i metodi statici helper
     return Libro(
-      // Il titolo è richiesto, quindi usiamo un fallback se non presente dall'API (anche se improbabile)
+      // ?? é l'operatore if-null di dart... se il cast sicuro fallisce, allora imposto il titolo a 'Titolo Sconosciuto'
+      // In questo modo il titolo non sarà mai null
       titolo: volumeInfo?['title'] as String? ?? 'Titolo Sconosciuto',
-      autori: (volumeInfo?['authors'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+
+      // Chiamiamo il metodo statico _parseAuthors per estrarre e pulire la lista degli autori
+      autori: _parseAuthors(volumeInfo),
+
       numeroPagine: volumeInfo?['pageCount'] as int?,
-      // genere: mappedGenere, // Applica la mappatura del genere
+      // genere: mappedGenere, // Applica la mappatura del genere (questo rimane a tua discrezione)
       lingua: volumeInfo?['language'] as String?,
       trama: volumeInfo?['description'] as String?,
-      // L'ISBN è richiesto nel tuo modello. Usiamo ISBN-13 se disponibile, altrimenti ISBN-10, altrimenti un fallback vuoto.
-      isbn: foundIsbn13 ?? foundIsbn10 ?? '',
-      dataPubblicazione: parsedDate,
+
+      // Chiamiamo il metodo statico _parseIsbn per estrarre e prioritizzare gli ISBN
+      // L'ISBN è richiesto nel tuo modello, quindi il metodo _parseIsbn deve garantire un valore non nullo.
+      isbn: _parseIsbn(volumeInfo),
+
+      // Chiamiamo il metodo statico _parsePublishedDate per gestire il parsing della data
+
+      dataPubblicazione: _parsePublishedDate(volumeInfo),
       // Voto, Note, Stato non sono forniti dall'API, quindi li lasciamo a null
       voto: null,
       note: null,
@@ -78,5 +96,76 @@ class Libro {
       // Se vuoi salvarla localmente, dovrai scaricarla separatamente.
       copertina: imageLinks?['thumbnail'] as String?,
     );
+  }
+
+  // --- Metodi privati statici per il parsing (Nuovi blocchi di codice) ---
+
+  // Metodo statico per il parsing degli autori
+  static List<String>? _parseAuthors(Map<String, dynamic>? volumeInfo) {
+    // Se volumeInfo è null, non ci sono autori da estrarre
+    if (volumeInfo == null) return null;
+
+    // Accedo alla chiave 'authors' per ottenere la lista degli autori. 
+    // Provo a castare come List<dynamic>? per sicurezza
+    final dynamic listaAutoriEstratti = volumeInfo['authors'] as List<dynamic>?;
+
+    if (listaAutoriEstratti != null && listaAutoriEstratti is List) {
+      
+      // Mappa ogni elemento della lista a una stringa e la converte in List<String>
+      // Ho controllato se listaAutoriEstratti é effettivamente una lista per evitare errori con la funzione di mapping
+      return listaAutoriEstratti.map((e) => e.toString()).toList();
+    }
+    // Se non trovo autori o non sono nel formato corretto, ritorno null
+    return null; 
+  }
+
+  // Metodo statico per il parsing e la prioritizzazione degli ISBN
+  static String _parseIsbn(Map<String, dynamic>? volumeInfo) {
+    // Se volumeInfo è null, non ci sono ISBN da estrarre, quindi ritorno una stringa vuota come fallback
+    if (volumeInfo == null) return '';
+
+    // Accedo alla chiave 'industryIdentifiers' per ottenere gli ISBN
+    // Provo a castare come List<dynamic>? per sicurezza
+    final industryIdentifiers = volumeInfo['industryIdentifiers'] as List<dynamic>?;
+
+    String? foundIsbn10;
+    String? foundIsbn13;
+
+    if (industryIdentifiers != null) {
+      // Scorro ogni identificatore nella lista
+      for (var identifier in industryIdentifiers) {
+        // Effettuo un controllo più robusto: l'identificatore deve essere una mappa
+        // e deve contenere le chiavi 'type' e 'identifier'
+        if (identifier is Map<String, dynamic> && identifier.containsKey('type') && identifier.containsKey('identifier')) {
+          // Se il tipo è 'ISBN_10', salvo il suo valore nella variabile foundIsbn10
+          if (identifier['type'] == 'ISBN_10') {
+            foundIsbn10 = identifier['identifier'] as String?;
+          }
+          // Se il tipo è 'ISBN_13', salvo il suo valore nella variabile foundIsbn13
+          else if (identifier['type'] == 'ISBN_13') {
+            foundIsbn13 = identifier['identifier'] as String?;
+          }
+        }
+      }
+    }
+    // Restituisco l'ISBN-13 se trovato, altrimenti l'ISBN-10, altrimenti una stringa vuota
+    // ISBN-13 ha la priorità su ISBN-10
+    return foundIsbn13 ?? foundIsbn10 ?? '';
+  }
+
+  // Metodo statico per il parsing della data di pubblicazione
+  static DateTime? _parsePublishedDate(Map<String, dynamic>? volumeInfo) {
+    // Se volumeInfo è null, non c'è data di pubblicazione da estrarre
+    if (volumeInfo == null) return null;
+
+    // Estrae la stringa della data di pubblicazione
+    // Provo a castare come String? per sicurezza
+    final String? publishedDateString = volumeInfo['publishedDate'] as String?;
+
+    if (publishedDateString != null) {
+      return DateTime.tryParse(publishedDateString);
+    }
+    // Se la stringa della data era null, ritorno null
+    return null;
   }
 }
