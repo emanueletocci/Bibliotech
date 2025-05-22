@@ -10,9 +10,11 @@ import 'package:path/path.dart' as p;
 
 class AggiungiLibroController {
   final List<String> generi =
-  GenereLibro.values.map((stato) => stato.name).toList();
+      GenereLibro.values.map((stato) => stato.name).toList();
   final List<String> stati =
-  StatoLibro.values.map((stato) => stato.name.replaceAll('_', ' ')).toList();
+      StatoLibro.values
+          .map((stato) => stato.name.replaceAll('_', ' '))
+          .toList(); // Sostituisco '_' con ' '
 
   final TextEditingController titoloController = TextEditingController();
   final TextEditingController autoriController = TextEditingController();
@@ -21,7 +23,7 @@ class AggiungiLibroController {
   final TextEditingController tramaController = TextEditingController();
   final TextEditingController isbnController = TextEditingController();
   final TextEditingController dataPubblicazioneController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController votoController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
@@ -29,6 +31,8 @@ class AggiungiLibroController {
   String? statoSelezionato;
 
   final Libreria libreria = Libreria();
+
+  VoidCallback? _onUpdate; // Callback per aggiornare l'interfaccia utente
 
   String? titolo;
   List<String>? autori;
@@ -43,10 +47,24 @@ class AggiungiLibroController {
   StatoLibro? stato;
   GenereLibro? genere;
 
-  AggiungiLibroController() :
-    copertina = 'assets/images/book_placeholder.jpg',
-    isbn= '';
-  
+  AggiungiLibroController()
+    : copertina = 'assets/images/book_placeholder.jpg',
+      isbn = '';
+
+  // NUOVO: Metodo per la UI per registrarsi e ricevere aggiornamenti
+  void addListener(VoidCallback listener) {
+    _onUpdate = listener;
+  }
+
+  // NUOVO: Metodo per la UI per disregistrarsi
+  void removeListener() {
+    _onUpdate = null;
+  }
+
+  // NUOVO: Metodo interno per notificare la UI
+  void _notifyListeners() {
+    _onUpdate?.call();
+  }
 
   // Metodo per la selezione e salvataggio della copertina dalla galleria
   // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
@@ -59,11 +77,10 @@ class AggiungiLibroController {
     if (pickedFile != null) {
       final File imageFile = File(pickedFile.path);
       final String fileName = p.basename(pickedFile.path);
-      final File savedImage = await FileUtility.saveFile(
-        imageFile,
-        fileName,
-      );
-      copertina = savedImage.path; // Memorizza il percorso locale dell'immagine salvata
+      final File savedImage = await FileUtility.saveFile(imageFile, fileName);
+      copertina =
+          savedImage.path; // Memorizza il percorso locale dell'immagine salvata
+      _notifyListeners(); // Notifica la UI per aggiornare l'immagine_notifica
     } else {
       return; // Se non viene selezionata nessuna immagine, lascio il placeholder di default
     }
@@ -83,14 +100,14 @@ class AggiungiLibroController {
 
     try {
       genere = GenereLibro.values.firstWhere(
-            (genere) => genere.name == genereSelezionato,
+        (genere) => genere.name == genereSelezionato,
       );
     } catch (e) {
       genere = null;
     }
     try {
       stato = StatoLibro.values.firstWhere(
-            (stato) => stato.name == statoSelezionato,
+        (stato) => stato.name == statoSelezionato,
       );
     } catch (e) {
       stato = null;
@@ -132,7 +149,7 @@ class AggiungiLibroController {
     // Inserire validazione ISBN
 
     // Se il libro é giá presente, non lo aggiungo e lancio eccezione
-    if(libreria.cercaLibroPerIsbn(isbn) != null){
+    if (libreria.cercaLibroPerIsbn(isbn) != null) {
       status = false;
       throw Exception("Il libro con questo ISBN è già presente in libreria");
     }

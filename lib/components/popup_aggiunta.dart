@@ -1,5 +1,6 @@
 import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
 import 'package:flutter/material.dart';
+import '../../screens/aggiungi_libro/aggiungi_libro_API_view.dart';
 
 class PopupAggiunta extends StatelessWidget {
   const PopupAggiunta({super.key});
@@ -46,7 +47,7 @@ class PopupAggiunta extends StatelessWidget {
                   'Cerca nel catalogo',
                   Icons.search,
                   buttonWidth,
-                  () {},
+                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));},
                 ),
                 _buildButton(
                   'Scansiona codice',
