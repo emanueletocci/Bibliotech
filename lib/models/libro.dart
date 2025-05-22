@@ -81,19 +81,16 @@ class Libro {
       lingua: volumeInfo?['language'] as String?,
       trama: volumeInfo?['description'] as String?,
 
-      // Chiamiamo il metodo statico _parseIsbn per estrarre e prioritizzare gli ISBN
-      // L'ISBN è richiesto nel tuo modello, quindi il metodo _parseIsbn deve garantire un valore non nullo.
       isbn: _parseIsbn(volumeInfo),
 
-      // Chiamiamo il metodo statico _parsePublishedDate per gestire il parsing della data
-
       dataPubblicazione: _parsePublishedDate(volumeInfo),
-      // Voto, Note, Stato non sono forniti dall'API, quindi li lasciamo a null
+
+      // Voto, Note, Stato non sono forniti dall'API, quindi li inizializzo a null
+      // Sará poi l'utente a modificarli manualmente
       voto: null,
       note: null,
       stato: null,
-      // Usiamo l'URL della thumbnail come 'copertina' per l'API.
-      // Se vuoi salvarla localmente, dovrai scaricarla separatamente.
+      
       copertina: imageLinks?['thumbnail'] as String?,
     );
   }
