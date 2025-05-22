@@ -3,6 +3,7 @@ import '../../components/popup_aggiunta.dart';
 import '../../models/libreria.dart';
 import '../../models/libro.dart';
 import '../../components/libro_cover_widget.dart';
+import '../../services/controllers/homepage_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -13,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final HomepageController _controller;
   late final Libreria _libreria;
 
   // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
@@ -21,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _controller = HomepageController();
     _libreria = Libreria();
   }
 
@@ -41,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             libreria: _libreria,
             onLibreriaChanged: _onLibreriaChanged,
           ), // passo la libreria al widget Header
-          Body(libreria: _libreria), // passo la libreria al widget Body
+          Body(controller: _controller), // passo la libreria al widget Body
         ],
       ),
     );
@@ -142,14 +145,12 @@ class Header extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  final Libreria libreria;
-  const Body({super.key, required this.libreria});
+  final HomepageController controller;
+  const Body({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final List<Libro> libri = libreria.getLibri();
-    final List<Libro> libriConsigliati = libri.take(3).toList();
-    final List<Libro> ultimeAggiunte = libri.reversed.take(3).toList();
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -159,7 +160,6 @@ class Body extends StatelessWidget {
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              // spacing: 10, // Rimosso: Row non ha 'spacing'
               children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {},
@@ -197,17 +197,17 @@ class Body extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 150,
+                height: 200,
                 child: Builder(
                   builder: (BuildContext context) { // 'builder' deve essere il nome del parametro
-                    if (libriConsigliati.isEmpty) {
+                    if (controller.libriConsigliati.isEmpty) {
                       return const Center(
                         child: Text("Nessun libro consigliato al momento."),
                       );
                     } else {
                       return CarouselView(
                         itemExtent: 166,
-                        children: libriConsigliati.map((libro) {
+                        children: controller.libriConsigliati.map((libro) {
                           return Container(
                             width: 150, // Larghezza desiderata della copertina
                             height: 150, // Altezza desiderata della copertina
@@ -241,15 +241,15 @@ class Body extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 150,
+                height: 200,
                 child: Builder( // Usiamo Builder per poter usare if/else direttamente qui
                   builder: (BuildContext context) {
-                    if (ultimeAggiunte.isEmpty) {
+                    if (controller.ultimeAggiunte.isEmpty) {
                       return const Center(child: Text("Nessuna aggiunta recente."));
                     } else {
                       return CarouselView(
                         itemExtent: 166,
-                        children: ultimeAggiunte.map((libro) {
+                        children: controller.ultimeAggiunte.map((libro) {
                           return Container(
                             width: 150,
                             height: 150,
