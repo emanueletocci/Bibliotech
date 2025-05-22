@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../components/popup_aggiunta.dart';
-import '../../models/libreria.dart';
-import '../../models/libro.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../services/controllers/homepage_controller.dart';
 
@@ -15,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final HomepageController _controller;
-  late final Libreria _libreria;
 
   // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
   // initState si usa per inizializzare variabili di stato che richiedono un'inizializzazione
@@ -24,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _controller = HomepageController();
-    _libreria = Libreria();
   }
 
   // callaback per la gestione dello stato nei widget figli
@@ -41,10 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
         spacing: 15,
         children: <Widget>[
           Header(
-            libreria: _libreria,
             onLibreriaChanged: _onLibreriaChanged,
-          ), // passo la libreria al widget Header
-          Body(controller: _controller), // passo la libreria al widget Body
+          ), // passo il controller al widget Header
+          Body(controller: _controller), // passo il controller al widget Body
         ],
       ),
     );
@@ -52,9 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class Header extends StatelessWidget {
-  final Libreria? libreria;
   final VoidCallback onLibreriaChanged;
-  const Header({super.key, this.libreria, required this.onLibreriaChanged});
+  const Header({super.key, required this.onLibreriaChanged});
 
   @override
   Widget build(BuildContext context) {
