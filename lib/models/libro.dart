@@ -69,10 +69,45 @@ class Libro {
       'urlimg': urlimg,
       'stato': stato?.toString(),
     };
+    // copiaLibro method is now inside the Libro class
   }
 
   @override
   String toString() {
     return 'Libro{id: $id, titolo: $titolo, autori: $autori, numeroPagine: $numeroPagine, genere: $genere, lingua: $lingua, trama: $trama, isbn: $isbn, dataPubblicazione: $dataPubblicazione, voto: $voto, copertina: $copertina, note: $note, urlimg: $urlimg, stato: $stato}';
+  }
+
+  Libro copiaLibro({
+    int? id,
+    String? titolo,
+    String? autori,
+    int? numeroPagine,
+    GenereLibro? genere,
+    String? lingua,
+    String? trama,
+    String? isbn,
+    DateTime? dataPubblicazione,
+    double? voto,
+    String? copertina,
+    String? note,
+    String? urlimg,
+    StatoLibro? stato,
+  }) {
+    return Libro(
+      id: id ?? this.id,
+      titolo: titolo ?? this.titolo,
+      autori: autori ?? this.autori,
+      numeroPagine: numeroPagine ?? this.numeroPagine,
+      genere: genere ?? this.genere,
+      lingua: lingua ?? this.lingua,
+      trama: trama ?? this.trama,
+      isbn: isbn ?? this.isbn,
+      dataPubblicazione: dataPubblicazione ?? this.dataPubblicazione,
+      voto: voto ?? this.voto,
+      copertina: copertina ?? this.copertina,
+      note: note ?? this.note,
+      urlimg: urlimg ?? this.urlimg,
+      stato: stato ?? this.stato,
+    );
   }
 }

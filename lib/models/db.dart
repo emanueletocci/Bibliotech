@@ -159,3 +159,11 @@ Future<Libro> getLibro(int id) async {
     throw Exception('Libro not found');
   }
 }
+
+//prova
+Future<void> CicloSulDb(Future<void> Function(Libro libro) action) async {
+  final libriList = await getLibri();
+  for (final libro in libriList) {
+    await action(libro);
+  }
+}

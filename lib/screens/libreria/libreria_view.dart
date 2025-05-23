@@ -3,10 +3,29 @@ import 'package:bibliotech/models/libro.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-class Libreria extends StatelessWidget {
+class Libreria extends StatefulWidget {
+  @override
+  _LibreriaState createState() => _LibreriaState();
+}
+
+class _LibreriaState extends State<Libreria> {
+  List<Libro> libri = [];
+
+  @override
+  void initState() {
+    super.initState();
+    caricaLibri();
+  }
+
+  Future<void> caricaLibri() async {
+    final lista = await getLibri();
+    setState(() {
+      libri = lista;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    init();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -21,7 +40,6 @@ class Libreria extends StatelessWidget {
                   padding: EdgeInsets.all(7),
                   crossAxisCount: 2,
                   children: [
-                    //LibroContainer(path: _link),
                     LibroContainer(path: 'assets/images/book2.jpg'),
                     LibroContainer(path: 'assets/images/book3.jpg'),
                     LibroContainer(path: 'assets/images/book4.jpg'),
@@ -36,12 +54,6 @@ class Libreria extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> init() async {
-    final libro = await getLibro(1);
-    var _link = libro.urlimg;
-    //List<Libro> _libreria_iniziale = await getLibri();
   }
 }
 
@@ -131,12 +143,7 @@ class Generi extends StatelessWidget {
           child: Column(
             children: [
               Padding(padding: EdgeInsets.all(8.0)),
-              Image(
-                image: AssetImage('assets/images/cover4.jpg'),
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
+              // caricaLibri is now inside _LibreriaState
               Text('Science', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
