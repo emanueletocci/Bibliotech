@@ -23,7 +23,7 @@ class LibroCoverWidget extends StatelessWidget {
         'assets/images/book_placeholder.jpg',
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(Icons.broken_image, size: 50, color: Colors.grey), // Meno drammatico per i placeholder
+          child: Icon(Icons.broken_image, size: 50, color: Colors.grey), 
         ),
       );
     }

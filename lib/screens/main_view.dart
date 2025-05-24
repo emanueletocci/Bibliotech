@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    Libreria(),
+    LibreriaPage(),
   ];
 
   void _onTabTapped(int index) {

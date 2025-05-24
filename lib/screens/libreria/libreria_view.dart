@@ -1,34 +1,73 @@
+import 'package:bibliotech/models/libro.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../models/libreria.dart';
+import '../../components/libro_cover_widget.dart';
 
-class Libreria extends StatelessWidget {
+class LibreriaPage extends StatefulWidget {
+  const LibreriaPage({super.key});
+
+  @override
+  State<LibreriaPage> createState() => _LibreriaPageState();
+}
+
+class _LibreriaPageState extends State<LibreriaPage> {
+  @override
+  void initState() {
+    super.initState();
+    // caricaLibri();
+  }
+  /*
+  Future<void> caricaLibri() async {
+    final lista = await getLibri();
+    setState(() {
+      libri = lista;
+    });
+  }
+  */
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchBarCustom(),
-              Generi(),
-              Expanded(
-                child: GridView.count(
-                  padding: EdgeInsets.all(7),
-                  crossAxisCount: 2,
-                  children: [
-                    Libro(path: 'assets/images/book2.jpg'),
-                    Libro(path: 'assets/images/book3.jpg'),
-                    Libro(path: 'assets/images/book4.jpg'),
-                    Libro(path: 'assets/images/book5.jpg'),
-                    Libro(path: 'assets/images/book6.jpg'),
-                    Libro(path: 'assets/images/book1.jpg'),
-                  ],
-                ),
+    final libreria = context.watch<Libreria>();
+
+    // Ho rimosso lo scaffold dato che é giá presente nel widget principale
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          spacing: 15,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SearchBarCustom(),
+            Generi(),
+            Expanded(
+              child: SizedBox(
+                height: 200,
+                child:
+                    libreria.getLibri().isEmpty
+                        ? const Center(
+                          child: Text("Nessun libro presente nella libreria"),
+                        )
+                        : GridView.count(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 5.0,
+                          mainAxisSpacing: 5.0,
+                          children:
+                              libreria.getLibri().map((libro) {
+                                return Container(
+                                  width: 150,
+                                  height: 150,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: LibroCoverWidget(libro: libro),
+                                );
+                              }).toList(),
+                        ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -36,6 +75,8 @@ class Libreria extends StatelessWidget {
 }
 
 class SearchBarCustom extends StatelessWidget {
+  const SearchBarCustom({super.key});
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -43,23 +84,6 @@ class SearchBarCustom extends StatelessWidget {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(21)),
         hintText: 'Search Book',
         prefixIcon: Icon(Icons.search),
-      ),
-    );
-  }
-}
-
-class Libro extends StatelessWidget {
-  final String path;
-  const Libro({Key? key, required this.path}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => {print("prova in debug console")},
-      child: Container(
-        width: 40,
-        height: 40,
-        margin: EdgeInsets.all(4),
-        child: Image(image: AssetImage(path)),
       ),
     );
   }
@@ -121,12 +145,7 @@ class Generi extends StatelessWidget {
           child: Column(
             children: [
               Padding(padding: EdgeInsets.all(8.0)),
-              Image(
-                image: AssetImage('assets/images/cover4.jpg'),
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
+              // caricaLibri is now inside _LibreriaState
               Text('Science', style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),

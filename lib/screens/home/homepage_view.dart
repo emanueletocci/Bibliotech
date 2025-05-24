@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text("Nessun libro consigliato al momento."),
                     )
                     : CarouselView(
-                      itemExtent: 166,
+                      itemExtent: 150,
                       children:
                           libriConsigliati.map((libro) {
                             return Container(
@@ -178,10 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: LibroCoverWidget(libro: libro),
-                              ),
+                              child:LibroCoverWidget(libro: libro),
                             );
                           }).toList(),
                     ),
