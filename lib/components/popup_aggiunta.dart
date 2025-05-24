@@ -47,7 +47,12 @@ class PopupAggiunta extends StatelessWidget {
                   'Cerca nel catalogo',
                   Icons.search,
                   buttonWidth,
-                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));},
+                  () async {
+                    final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));
+                    if (result != null && result == true) {
+                      Navigator.of(context).pop(true); // Chiude il popup e ritorna true
+                    }
+                  },
                 ),
                 _buildButton(
                   'Scansiona codice',
@@ -59,7 +64,12 @@ class PopupAggiunta extends StatelessWidget {
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
-                  () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro()));},
+                  () async {
+                    final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro()));
+                    if (result != null && result == true) {
+                      Navigator.of(context).pop(true); // Chiude il popup e ritorna true
+                    }
+                  },
                 ),
               ],
             ),

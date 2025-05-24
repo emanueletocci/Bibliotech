@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -101,7 +102,7 @@ class Header extends StatelessWidget {
                         return const PopupAggiunta();
                       },
                     );
-                    if (shouldRefresh == true) {
+                    if (shouldRefresh == true || shouldRefresh == null) {
                       onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
                     }
                   },

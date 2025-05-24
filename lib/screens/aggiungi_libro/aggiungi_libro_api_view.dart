@@ -16,9 +16,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
 
   // Metodo per gestire la ricerca dei libri. Ora gestisce setState e i messaggi.
   Future<void> _handleSearchBooks() async {
-    setState(() {});
     try {
-      // Esegui la ricerca nel controller e attendi il suo completamento.
       await controller.searchBooks();
     } catch (e) {
       // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore.
@@ -60,10 +58,6 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
-    } finally {
-      if (mounted) {
-        setState(() {});
-      }
     }
   }
 

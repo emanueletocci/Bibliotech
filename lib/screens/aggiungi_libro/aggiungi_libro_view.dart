@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
-import '../main_view.dart';
 import 'dart:io';
 
 class AggiungiLibro extends StatefulWidget {
@@ -13,28 +12,20 @@ class AggiungiLibro extends StatefulWidget {
 class _AggiungiLibroState extends State<AggiungiLibro> {
   final AggiungiLibroController controller = AggiungiLibroController();
 
-  void _handleAggiungiLibro() {
-    try {
-      controller.handleAggiungi(); // Chiama il metodo per aggiungere il libro
-      // Se handleAggiungi() viene eseguito senza errori, mostro uno SnackBar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Libro inserito correttamente!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      // Attendo 2 secondi prima di tornare alla schermata principale
-      Future.delayed(const Duration(seconds: 2), () {
-        if (!mounted) return; // Controllo se il widget è ancora montato
-
-        Navigator.of(context).push(
-          // Usare pushReplacement per evitare di tornare alla pagina di aggiunta
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        ); // torno alla schermata principale se non vengono lanciate eccezioni
-
-      });
-    } catch (e) {
+void _handleAggiungiLibro() async {
+  try {
+    controller.handleAggiungi();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Libro inserito correttamente!'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    Navigator.of(context).pop(true); // Segnala successo!
+  } catch (e) {
       String errorMessage = e.toString();
       const prefix = 'Exception: ';
       if (errorMessage.startsWith(prefix)) {
@@ -46,7 +37,6 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
-    setState(() {});    // Aggiorno lo stato per riflettere eventuali modifiche sull'UI
   }
 
   @override
@@ -69,7 +59,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   onTap: () async{
                     await controller.selezionaCopertina();
                     setState(() {
-                      // Aggiorna lo stato per mostrare l'immagine selezionata
+                      // Aggiorno lo stato per mostrare l'immagine selezionata
                     });
                   },
                   child: ClipRRect(
