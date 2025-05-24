@@ -1,55 +1,59 @@
+import 'package:flutter/foundation.dart';
 import 'libro.dart';
 
-class Libreria {
-  // Implementazione del Singleton: il pattern consente di avere una sola istanza della libreria, accessibile da qualsiasi parte dell'app
-  // https://medium.com/@swe.jamirulinfo/singleton-is-a-design-pattern-in-dart-98dd947c6dd1
+class Libreria extends ChangeNotifier {
+  // Implementazione del Singleton con integrazione Provider (ChangeNotifier)
+  // Pattern che garantisce una sola istanza della libreria, con notifiche automatiche agli observer
+  // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifier
 
-  static final Libreria _instance =
-      Libreria._privateConstructor(); // si usa il named constructor 'internal'
+  static final Libreria _instance = Libreria._privateConstructor();
 
-  // chiamata al costruttore factory che restituisce l'istanza precedentemente creata
-  // chiamando Libreria() in qualsiasi parte dell'app, si ottiene sempre la stessa istanza, mediante tale costruttore
-
+  /// Costruttore factory che restituisce l'istanza singleton
+  /// Chiamando Libreria() si ottiene sempre la stessa istanza condivisa
   factory Libreria() => _instance;
 
-  // Definizione del costruttore privato 'internal'
+  /// Costruttore privato per il singleton (previene creazioni esterne)
   Libreria._privateConstructor();
 
-  // struttura dati che contiene l'insieme di libri a runtime
-  // I libri vengono ulteriormente salvati in un database all'uscita dall'app
-  final Map<String, Libro> _libri =
-      {}; // chiave: isbn, valore: libro... in questo modo i duplicati sono gestiti automaticamente
+  // Struttura dati principale per la gestione dei libri
+  // - Key: ISBN del libro (gestione duplicati automatica)
+  // - Value: Istanza del libro
+  final Map<String, Libro> _libri = {};
 
-  // Metodo per ottenere il numero totale di libri presenti in libreria
+  /// Getter che restituisce il numero totale di libri (accesso: libreria.numeroTotaleLibri)
   int get numeroTotaleLibri => _libri.length;
 
-  // get é una keyword in dart che consente di implementare un getter.
-  // Si accede come una proprietà, senza doverla chiamare come un metodo.
-
-  // Consente l'aggiunta di un libro alla libreria, se non é giá presente
+  /// Aggiunge un libro alla libreria se non presente
+  /// Notifica automaticamente i listener tramite ChangeNotifier
   void aggiungiLibro(Libro libro) {
     _libri.putIfAbsent(libro.isbn, () => libro);
+    notifyListeners(); // Trigger per il rebuild dei widget ascoltatori
   }
 
-  // Consente la rimozione di un libro specificando l'ISBN
+  /// Rimuove un libro tramite ISBN
+  /// Solleva eccezione se l'ISBN non esiste
   void rimuoviLibro(String isbn) {
     if (_libri.containsKey(isbn)) {
       _libri.remove(isbn);
+      notifyListeners();
     } else {
       throw Exception("ISBN non trovato");
     }
   }
 
-  // Consente la modifica di un libro presente in libreria
+  /// Modifica un libro esistente specificando ISBN e nuovo oggetto Libro
+  /// Utile per aggiornare metadati o stato del libro
   void modificaLibro(String isbn, Libro libro) {
     if (_libri.containsKey(isbn)) {
       _libri[isbn] = libro;
+      notifyListeners();
     } else {
       throw Exception("ISBN non trovato");
     }
   }
 
-  // Consente di cercare un libro specifico tramite il nome (case insensitive)
+  /// Ricerca per titolo (case insensitive)
+  /// Restituisce il primo libro che contiene la stringa cercata nel titolo
   Libro? cercaLibroPerNome(String nome) {
     for (var libro in _libri.values) {
       if (libro.titolo.toLowerCase().contains(nome.toLowerCase())) {
@@ -59,17 +63,19 @@ class Libreria {
     return null;
   }
 
-  // Consente di cercare un libro specifico tramite l'ISBN
+  /// Ricerca diretta tramite ISBN (O(1) complexity)
   Libro? cercaLibroPerIsbn(String isbn) {
     return _libri[isbn];
   }
 
-  // Ricerca generica (NON SO SE LASCIARLA) tramite callback
+  /// Ricerca generica con callback per filtri personalizzati
+  /// Es: cerca((libro) => libro.annoPubblicazione > 2000)
   List<Libro> cerca(bool Function(Libro) criterio) {
     return _libri.values.where(criterio).toList();
   }
 
-  // Ottengo tutti i libri presenti in libreria sotto forma di lista
+  /// Restituisce tutti i libri come lista ordinata
+  /// Utile per visualizzazioni che richiedono ListView/GridView
   List<Libro> getLibri() {
     return _libri.values.toList();
   }

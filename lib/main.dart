@@ -1,9 +1,16 @@
 import 'package:bibliotech/screens/main_view.dart';
 import 'package:flutter/material.dart';
+import 'models/libreria.dart';
 import 'themes/themes.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider<Libreria>(
+      create: (_) => Libreria(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
