@@ -205,6 +205,9 @@ class _BookDetailState extends State<BookDetail>
   }
 
   Widget bookImg() {
+    String proxyUrl = "https://corsproxy.io/?";
+    String fullUrl = "$proxyUrl${widget.libro.copertina}";
+    //print("Copertina URL: ${widget.libro.copertina}");
     return Container(
       height: 200,
       width: 175,
@@ -222,12 +225,17 @@ class _BookDetailState extends State<BookDetail>
           ),
         ],
         image: DecorationImage(
-          image: NetworkImage(
-            libro.copertina ??
-                'https://images.unsplash.com/photo-1512820790803-83ca734da794',
-          ),
-          fit: BoxFit.fitWidth,
+          image: NetworkImage(fullUrl),
+          onError: (exception, stackTrace) {},
+          fit: BoxFit.cover,
         ),
+      ),
+      child: Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/placeholder.png", fit: BoxFit.cover);
+        },
       ),
     );
   }
@@ -303,24 +311,42 @@ class _BookDetailState extends State<BookDetail>
                   "Pagine lette: ${libro.numPagineLette ?? 0} / ${libro.numeroPagine ?? 0}",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
                 ),
+                SizedBox(height: 15),
                 InputQty.int(
-                  qtyFormProps: QtyFormProps(controller: _controller_quantity),
-                  decoration: QtyDecorationProps(
-                    borderShape: BorderShapeBtn.circle,
-                    btnColor: Colors.blue,
-                    //fillColor: Colors.grey[200],
+                  qtyFormProps: QtyFormProps(
+                    controller: _controller_quantity,
+                    style: TextStyle(fontSize: 25),
                   ),
+                  decoration: QtyDecorationProps(
+                    isBordered: false,
+                    borderShape: BorderShapeBtn.circle,
+                    width: 12,
+                  ),
+
+                  //fillColor: Colors.grey[200],
                   initVal: libro.numPagineLette ?? 0,
                   maxVal: libro.numeroPagine ?? 0,
-                  minVal: 0,
+                  minVal: libro.numPagineLette ?? 0,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {
                     final numero = _controller_quantity.text;
                     if (numero != null) {
                       setState(() {
                         libro.numPagineLette = int.tryParse(numero);
+                        Libreria().modificaLibro(libro.isbn, libro);
+
+                        if (libro.numPagineLette! == libro.numeroPagine!) {
+                          // Se tutte le pagine sono lette metto stato inlettura
+                          libro.stato = StatoLibro.letto;
+                          libro.numPagineLette = libro.numeroPagine;
+                        } else if (libro.stato == StatoLibro.daLeggere &&
+                            (libro.numPagineLette != null &&
+                                libro.numPagineLette! > 0)) {
+                          // Se il libro era da leggere e ora ha pagine lette, lo metto in lettura
+                          libro.stato = StatoLibro.inLettura;
+                        }
                         Libreria().modificaLibro(libro.isbn, libro);
                       });
                     }
