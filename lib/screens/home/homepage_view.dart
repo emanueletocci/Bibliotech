@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../components/popup_aggiunta.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../services/controllers/homepage_controller.dart';
-// Rimosso import '../../models/libreria.dart';
-// Rimosso import '../../models/libro.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
   final String title;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final HomepageController _controller;
+
+  // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
+  // initState si usa per inizializzare variabili di stato che richiedono un'inizializzazione
+  // complessa, dipendente da altre variabili o oggetti (come la libreria)
+  @override
+  void initState() {
+    super.initState();
+    _controller = HomepageController();
+  }
+
+  // callaback per la gestione dello stato nei widget figli
+  // Per semplicitá il metodo viene chiamato alla chiusura del popup di aggiunta, sia nel caso in cui
+  // é stato effettivamente inserito un libro, sia nel caso in cui l'utente ha chiuso semplicemente il popup
+  void _onLibreriaChanged() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +36,10 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         spacing: 15,
         children: <Widget>[
-          const Header(),
-          const Body(),
+          Header(
+            onLibreriaChanged: _onLibreriaChanged,
+          ), // passo il controller al widget Header
+          Body(controller: _controller), // passo il controller al widget Body
         ],
       ),
     );
@@ -25,7 +47,8 @@ class HomeScreen extends StatelessWidget {
 }
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  final VoidCallback onLibreriaChanged;
+  const Header({super.key, required this.onLibreriaChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -69,18 +92,17 @@ class Header extends StatelessWidget {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () async{
-                    final bool? shouldRefresh = await showModalBottomSheet( // Modificato da dynamic a bool?
+                    // attendo che il bottom sheet si chiuda prima di aggiornare la UI
+                    final bool? shouldRefresh = await showModalBottomSheet(
                       context: context,
-                      isScrollControlled: true,
+                      isScrollControlled:
+                          true, // consente al popup di occupare tutto lo schermo
                       builder: (context) {
                         return const PopupAggiunta();
                       },
                     );
-                    // Ripristinato il controllo originale con shouldRefresh
                     if (shouldRefresh == true) {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(const SnackBar(content: Text('Operazione libro completata.')));
+                      onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
                     }
                   },
                   icon: const Icon(Icons.add, size: 25),
@@ -120,7 +142,8 @@ class Header extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  const Body({super.key});
+  final HomepageController controller;
+  const Body({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -169,9 +192,9 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 200,
-                child: Consumer<HomepageController>(
-                  builder: (BuildContext context, HomepageController homepageController, Widget? child) {
-                    if (homepageController.libriConsigliati.isEmpty) {
+                child: Builder(
+                  builder: (BuildContext context) {
+                    if (controller.libriConsigliati.isEmpty) {
                       return const Center(
                         child: Text("Nessun libro consigliato al momento."),
                       );
@@ -179,15 +202,15 @@ class Body extends StatelessWidget {
                       return CarouselView(
                         itemExtent: 166,
                         children:
-                            homepageController.libriConsigliati.map((libro) {
+                            controller.libriConsigliati.map((libro) {
                               return Container(
                                 width:
-                                    150,
+                                    150, // Larghezza desiderata della copertina
                                 height:
-                                    150,
+                                    150, // Altezza desiderata della copertina
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 8.0,
-                                ),
+                                ), 
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: LibroCoverWidget(libro: libro),
@@ -196,7 +219,7 @@ class Body extends StatelessWidget {
                             }).toList(),
                       );
                     }
-                  },
+                  }, 
                 ),
               ),
               const Text(
@@ -205,9 +228,9 @@ class Body extends StatelessWidget {
               ),
               SizedBox(
                 height: 200,
-                child: Consumer<HomepageController>(
-                  builder: (BuildContext context, HomepageController homepageController, Widget? child) {
-                    if (homepageController.ultimeAggiunte.isEmpty) {
+                child: Builder(
+                  builder: (BuildContext context) {
+                    if (controller.ultimeAggiunte.isEmpty) {
                       return const Center(
                         child: Text("Nessuna aggiunta recente."),
                       );
@@ -215,7 +238,7 @@ class Body extends StatelessWidget {
                       return CarouselView(
                         itemExtent: 166,
                         children:
-                            homepageController.ultimeAggiunte.map((libro) {
+                            controller.ultimeAggiunte.map((libro) {
                               return Container(
                                 width: 150,
                                 height: 150,

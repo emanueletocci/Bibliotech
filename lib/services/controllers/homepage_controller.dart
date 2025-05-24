@@ -1,29 +1,17 @@
-import 'package:flutter/material.dart';
 import '../../models/libreria.dart';
 import '../../models/libro.dart';
 import 'dart:math';
 
-class HomepageController extends ChangeNotifier {
+class HomepageController {
   final Libreria _libreria = Libreria();
 
    // uso la data odierna per randomizzare i libri consigliati
   late DateTime _date;
-
+  
   // mantengo una lista cache dei libri consigliati
-  List<Libro>? _cachedConsigliati;
-
+  List<Libro>? _cachedConsigliati; 
+  
   final int numLibri = 5; // Numero di libri da consigliare
-
-  HomepageController() {
-    _date = DateTime.now();
-    _cachedConsigliati = _generaLibriConsigliati();
-    _libreria.addListener(_onLibreriaChanged);
-  }
-
-  void _onLibreriaChanged() {
-    _cachedConsigliati = null;
-    notifyListeners();
-  }
 
   List<Libro> get libriConsigliati {
     final now = DateTime.now();
@@ -68,11 +56,5 @@ class HomepageController extends ChangeNotifier {
     }
     // Prendo gli ultimi 5 libri (se ci sono almeno 5 libri),
     return libri.reversed.take(min(numLibri, libri.length)).toList();
-  }
-
-  @override
-  void dispose() {
-    _libreria.removeListener(_onLibreriaChanged);
-    super.dispose();
   }
 }
