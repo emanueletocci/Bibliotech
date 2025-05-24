@@ -4,13 +4,30 @@ import 'dart:io';
 
 class LibroCoverWidget extends StatelessWidget {
   final Libro libro;
-  const LibroCoverWidget({super.key, required this.libro});
+  final VoidCallback? onTap; 
+
+  const LibroCoverWidget({
+    super.key,
+    required this.libro,
+    this.onTap, 
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    return InkWell(
+      onTap:
+          onTap ??
+          () {
+            // Comportamento di default se onTap non viene passato
+            print('Hai premuto il libro: ${libro.titolo}');
+            // Qui puoi aggiungere altre azioni, ad esempio navigazione
+          },
       borderRadius: BorderRadius.circular(8.0),
-      child: _buildCoverImage(), // Chiamiamo il metodo senza passare il libro, dato che è un membro della classe
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child:
+            _buildCoverImage(), 
+      ),
     );
   }
 
@@ -18,23 +35,32 @@ class LibroCoverWidget extends StatelessWidget {
   Widget _buildCoverImage() {
     // Caso 1: La copertina è null o vuota, o è il placeholder di default.
     // Se la copertina è null, la tratto come un placeholder
-    if (libro.copertina == null || libro.copertina!.isEmpty || libro.copertina == 'assets/images/book_placeholder.jpg') {
+    if (libro.copertina == null ||
+        libro.copertina!.isEmpty ||
+        libro.copertina == 'assets/images/book_placeholder.jpg') {
       return Image.asset(
         'assets/images/book_placeholder.jpg',
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(Icons.broken_image, size: 50, color: Colors.grey), 
-        ),
+        errorBuilder:
+            (context, error, stackTrace) => const Center(
+              child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+            ),
       );
     }
     // Caso 2: La copertina è un URL di rete
-    else if (libro.copertina!.startsWith('http://') || libro.copertina!.startsWith('https://')) {
+    else if (libro.copertina!.startsWith('http://') ||
+        libro.copertina!.startsWith('https://')) {
       return Image.network(
         libro.copertina!,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(Icons.broken_image, size: 50, color: Colors.red), // Per immagini di rete rotte
-        ),
+        errorBuilder:
+            (context, error, stackTrace) => const Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 50,
+                color: Colors.red,
+              ), // Per immagini di rete rotte
+            ),
       );
     }
     // Caso 3: Altrimenti, è un percorso di file locale
@@ -42,9 +68,14 @@ class LibroCoverWidget extends StatelessWidget {
       return Image.file(
         File(libro.copertina!),
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(Icons.broken_image, size: 50, color: Colors.red), // Per immagini locali rotte
-        ),
+        errorBuilder:
+            (context, error, stackTrace) => const Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 50,
+                color: Colors.red,
+              ), // Per immagini locali rotte
+            ),
       );
     }
   }
