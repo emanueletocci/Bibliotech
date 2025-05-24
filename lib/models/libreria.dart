@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart'; // Importa Material per ChangeNotifier
 import 'libro.dart';
 
-class Libreria {
+// Con ChangeNotifier implemento il pattern Observer, che consente di notificare i widget che ascoltano le modifiche alla libreria
+// La classe Libreria rappresenta il soggetto osservabile definito dal pattern
+
+class Libreria extends ChangeNotifier {
   // Implementazione del Singleton: il pattern consente di avere una sola istanza della libreria, accessibile da qualsiasi parte dell'app
   // https://medium.com/@swe.jamirulinfo/singleton-is-a-design-pattern-in-dart-98dd947c6dd1
 
@@ -28,13 +32,21 @@ class Libreria {
 
   // Consente l'aggiunta di un libro alla libreria, se non é giá presente
   void aggiungiLibro(Libro libro) {
+<<<<<<< Updated upstream
     _libri.putIfAbsent(libro.isbn, () => libro);
+=======
+    if (!_libri.containsKey(libro.isbn)) {
+      _libri.putIfAbsent(libro.isbn, () => libro);
+      notifyListeners();
+    }
+>>>>>>> Stashed changes
   }
 
   // Consente la rimozione di un libro specificando l'ISBN
   void rimuoviLibro(String isbn) {
     if (_libri.containsKey(isbn)) {
       _libri.remove(isbn);
+      notifyListeners();
     } else {
       throw Exception("ISBN non trovato");
     }
@@ -44,6 +56,7 @@ class Libreria {
   void modificaLibro(String isbn, Libro libro) {
     if (_libri.containsKey(isbn)) {
       _libri[isbn] = libro;
+      notifyListeners();
     } else {
       throw Exception("ISBN non trovato");
     }

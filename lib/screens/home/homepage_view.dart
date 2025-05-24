@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../components/popup_aggiunta.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../services/controllers/homepage_controller.dart';
+import '../../models/libreria.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -91,7 +93,7 @@ class Header extends StatelessWidget {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () async{
+                  onPressed: () async {
                     // attendo che il bottom sheet si chiuda prima di aggiornare la UI
                     final bool? shouldRefresh = await showModalBottomSheet(
                       context: context,
@@ -186,19 +188,21 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
-              const Text(
-                "Libri consigliati",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 200,
-                child: Builder(
-                  builder: (BuildContext context) {
-                    if (controller.libriConsigliati.isEmpty) {
-                      return const Center(
-                        child: Text("Nessun libro consigliato al momento."),
-                      );
-                    } else {
+          const Text(
+            "Libri consigliati",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 200,
+            child: Builder(
+              builder: (BuildContext context) {
+                if (controller.libriConsigliati.isEmpty) {
+                  return const Center(
+                    child: Text("Nessun libro consigliato al momento."),
+                  );
+                } else {
+                  return Consumer<Libreria>(
+                    builder: (context, libreria, child) {
                       return CarouselView(
                         itemExtent: 166,
                         children:
@@ -210,40 +214,6 @@ class Body extends StatelessWidget {
                                     150, // Altezza desiderata della copertina
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 8.0,
-                                ), 
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: LibroCoverWidget(libro: libro),
-                                ),
-                              );
-                            }).toList(),
-                      );
-                    }
-                  }, 
-                ),
-              ),
-              const Text(
-                "Ultime aggiunte",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 200,
-                child: Builder(
-                  builder: (BuildContext context) {
-                    if (controller.ultimeAggiunte.isEmpty) {
-                      return const Center(
-                        child: Text("Nessuna aggiunta recente."),
-                      );
-                    } else {
-                      return CarouselView(
-                        itemExtent: 166,
-                        children:
-                            controller.ultimeAggiunte.map((libro) {
-                              return Container(
-                                width: 150,
-                                height: 150,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -252,11 +222,43 @@ class Body extends StatelessWidget {
                               );
                             }).toList(),
                       );
-                    }
-                  },
-                ),
-              ),
-            ],
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+          const Text(
+            "Ultime aggiunte",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 200,
+            child: Builder(
+              builder: (BuildContext context) {
+                if (controller.ultimeAggiunte.isEmpty) {
+                  return const Center(child: Text("Nessuna aggiunta recente."));
+                } else {
+                  return CarouselView(
+                    itemExtent: 166,
+                    children:
+                        controller.ultimeAggiunte.map((libro) {
+                          return Container(
+                            width: 150,
+                            height: 150,
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: LibroCoverWidget(libro: libro),
+                            ),
+                          );
+                        }).toList(),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
