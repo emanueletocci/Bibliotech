@@ -3,34 +3,12 @@ import 'package:provider/provider.dart';
 import '../../components/popup_aggiunta.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../services/controllers/homepage_controller.dart';
-import '../../models/libreria.dart';
+// Rimosso import '../../models/libreria.dart';
+// Rimosso import '../../models/libro.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
   final String title;
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late final HomepageController _controller;
-
-  // Inizializzo manualmente le variabili di stato. Viene eseguito prima del build
-  // initState si usa per inizializzare variabili di stato che richiedono un'inizializzazione
-  // complessa, dipendente da altre variabili o oggetti (come la libreria)
-  @override
-  void initState() {
-    super.initState();
-    _controller = HomepageController();
-  }
-
-  // callaback per la gestione dello stato nei widget figli
-  // Per semplicitá il metodo viene chiamato alla chiusura del popup di aggiunta, sia nel caso in cui
-  // é stato effettivamente inserito un libro, sia nel caso in cui l'utente ha chiuso semplicemente il popup
-  void _onLibreriaChanged() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         spacing: 15,
         children: <Widget>[
-          Header(
-            onLibreriaChanged: _onLibreriaChanged,
-          ), // passo il controller al widget Header
-          Body(controller: _controller), // passo il controller al widget Body
+          const Header(),
+          const Body(),
         ],
       ),
     );
@@ -49,8 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class Header extends StatelessWidget {
-  final VoidCallback onLibreriaChanged;
-  const Header({super.key, required this.onLibreriaChanged});
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -93,18 +68,19 @@ class Header extends StatelessWidget {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () async {
-                    // attendo che il bottom sheet si chiuda prima di aggiornare la UI
-                    final bool? shouldRefresh = await showModalBottomSheet(
+                  onPressed: () async{
+                    final bool? shouldRefresh = await showModalBottomSheet( // Modificato da dynamic a bool?
                       context: context,
-                      isScrollControlled:
-                          true, // consente al popup di occupare tutto lo schermo
+                      isScrollControlled: true,
                       builder: (context) {
                         return const PopupAggiunta();
                       },
                     );
+                    // Ripristinato il controllo originale con shouldRefresh
                     if (shouldRefresh == true) {
-                      onLibreriaChanged(); // forzo l'aggiornamento della UI tramite callback
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(const SnackBar(content: Text('Operazione libro completata.')));
                     }
                   },
                   icon: const Icon(Icons.add, size: 25),
@@ -144,8 +120,7 @@ class Header extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  final HomepageController controller;
-  const Body({super.key, required this.controller});
+  const Body({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -188,30 +163,28 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
-          const Text(
-            "Libri consigliati",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 200,
-            child: Builder(
-              builder: (BuildContext context) {
-                if (controller.libriConsigliati.isEmpty) {
-                  return const Center(
-                    child: Text("Nessun libro consigliato al momento."),
-                  );
-                } else {
-                  return Consumer<Libreria>(
-                    builder: (context, libreria, child) {
+              const Text(
+                "Libri consigliati",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 200,
+                child: Consumer<HomepageController>(
+                  builder: (BuildContext context, HomepageController homepageController, Widget? child) {
+                    if (homepageController.libriConsigliati.isEmpty) {
+                      return const Center(
+                        child: Text("Nessun libro consigliato al momento."),
+                      );
+                    } else {
                       return CarouselView(
                         itemExtent: 166,
                         children:
-                            controller.libriConsigliati.map((libro) {
+                            homepageController.libriConsigliati.map((libro) {
                               return Container(
                                 width:
-                                    150, // Larghezza desiderata della copertina
+                                    150,
                                 height:
-                                    150, // Altezza desiderata della copertina
+                                    150,
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 8.0,
                                 ),
@@ -222,43 +195,45 @@ class Body extends StatelessWidget {
                               );
                             }).toList(),
                       );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-          const Text(
-            "Ultime aggiunte",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 200,
-            child: Builder(
-              builder: (BuildContext context) {
-                if (controller.ultimeAggiunte.isEmpty) {
-                  return const Center(child: Text("Nessuna aggiunta recente."));
-                } else {
-                  return CarouselView(
-                    itemExtent: 166,
-                    children:
-                        controller.ultimeAggiunte.map((libro) {
-                          return Container(
-                            width: 150,
-                            height: 150,
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: LibroCoverWidget(libro: libro),
-                            ),
-                          );
-                        }).toList(),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+                    }
+                  },
+                ),
+              ),
+              const Text(
+                "Ultime aggiunte",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 200,
+                child: Consumer<HomepageController>(
+                  builder: (BuildContext context, HomepageController homepageController, Widget? child) {
+                    if (homepageController.ultimeAggiunte.isEmpty) {
+                      return const Center(
+                        child: Text("Nessuna aggiunta recente."),
+                      );
+                    } else {
+                      return CarouselView(
+                        itemExtent: 166,
+                        children:
+                            homepageController.ultimeAggiunte.map((libro) {
+                              return Container(
+                                width: 150,
+                                height: 150,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: LibroCoverWidget(libro: libro),
+                                ),
+                              );
+                            }).toList(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
       ),
     );
   }

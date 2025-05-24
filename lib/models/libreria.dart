@@ -32,14 +32,10 @@ class Libreria extends ChangeNotifier {
 
   // Consente l'aggiunta di un libro alla libreria, se non é giá presente
   void aggiungiLibro(Libro libro) {
-<<<<<<< Updated upstream
-    _libri.putIfAbsent(libro.isbn, () => libro);
-=======
     if (!_libri.containsKey(libro.isbn)) {
       _libri.putIfAbsent(libro.isbn, () => libro);
       notifyListeners();
     }
->>>>>>> Stashed changes
   }
 
   // Consente la rimozione di un libro specificando l'ISBN
