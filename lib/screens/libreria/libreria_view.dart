@@ -1,9 +1,9 @@
-import 'package:bibliotech/models/libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../models/libreria.dart';
 import '../../components/libro_cover_widget.dart';
+import '../../models/genere_libro.dart';
 
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
@@ -90,67 +90,29 @@ class SearchBarCustom extends StatelessWidget {
 }
 
 class Generi extends StatelessWidget {
+  final List<String> generi =
+      GenereLibro.values.map((stato) => stato.name).toList();
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(8.0)),
-              Image(
-                image: AssetImage('assets/images/cover1.jpg'),
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
-              Text('Fantasy', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(8.0)),
-              Image(
-                image: AssetImage('assets/images/cover2.jpg'),
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
-              Text('Thriller', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(8.0)),
-              Image(
-                image: AssetImage('assets/images/cover3.jpg'),
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
-              Text('Leteraly', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20.0),
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.all(8.0)),
-              // caricaLibri is now inside _LibreriaState
-              Text('Science', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-      ],
+    return SizedBox(
+      height: 48, // altezza sufficiente per i tuoi bottoni/chip
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: generi.map((genere) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ActionChip(
+              label: Text(genere),
+              onPressed: () {
+                print('Hai selezionato: $genere');
+              },
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
+
+

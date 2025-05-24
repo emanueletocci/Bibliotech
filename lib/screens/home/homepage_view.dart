@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ultimeAggiunte.isEmpty
                     ? const Center(child: Text("Nessuna aggiunta recente."))
                     : CarouselView(
-                      itemExtent: 166,
+                      itemExtent: 150,
                       children:
                           ultimeAggiunte.map((libro) {
                             return Container(
