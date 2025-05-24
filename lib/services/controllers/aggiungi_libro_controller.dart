@@ -76,7 +76,7 @@ class AggiungiLibroController {
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
     isbn = isbnController.text.toUpperCase().trim();
-    dataPubblicazione = DateTime.tryParse(dataPubblicazioneController.text);
+    //dataPubblicazione = DateTime.tryParse(dataPubblicazioneController.text);
     voto = double.tryParse(votoController.text);
     note = noteController.text;
 
@@ -104,7 +104,7 @@ class AggiungiLibroController {
         lingua: lingua,
         trama: trama,
         isbn: isbn,
-        dataPubblicazione: dataPubblicazione,
+        //dataPubblicazione: dataPubblicazione,
         voto: voto,
         copertina: copertina,
         note: note,

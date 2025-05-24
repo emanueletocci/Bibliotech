@@ -29,7 +29,6 @@ class Libreria {
   // Consente l'aggiunta di un libro alla libreria, se non é giá presente
   void aggiungiLibro(Libro libro) {
     _libri.putIfAbsent(libro.isbn, () => libro);
-  
   }
 
   // Consente la rimozione di un libro specificando l'ISBN

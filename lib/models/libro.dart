@@ -1,19 +1,24 @@
-import 'genere_libro.dart'; 
-import 'stato_libro.dart'; 
+import 'genere_libro.dart';
+import 'stato_libro.dart';
 
 class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  GenereLibro? genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
+  GenereLibro?
+  genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
   String? lingua;
   String? trama;
   String isbn; // O isbn10 o isbn13, deciderai quale usare come 'primario'
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
+  String?
+  copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
+  int? numPagineLette;
   String? note;
   StatoLibro? stato;
+  String? publisher;
+  String? subtitle;
 
   Libro({
     required this.titolo,
@@ -28,6 +33,9 @@ class Libro {
     this.copertina,
     this.note,
     this.stato,
+    this.publisher,
+    this.subtitle,
+    this.numPagineLette = 0,
   });
 
   /* FORMATO API LIBRO GOOGLE BOOKS
@@ -58,7 +66,6 @@ class Libro {
 
   // Factory constructor per creare un oggetto Libro da una risposta JSON di Google Books API
   factory Libro.fromGoogleBooksJson(Map<String, dynamic> json) {
-
     // Accedo alla chiave 'volumeInfo' come mappa per ottenere le informazioni principali del libro
     // 'as' é l'operatore di cast di dart, con as Tipo? si usa il cast sicuro
     // cerco di trattare i dati all'interno di volumeInfo come una mappa, se non riesco a farlo, volumeInfo sarà null
@@ -77,11 +84,12 @@ class Libro {
       autori: _parseAuthors(volumeInfo),
 
       numeroPagine: volumeInfo?['pageCount'] as int?,
-      // genere: mappedGenere, // Applica la mappatura del genere (questo rimane a tua discrezione)
 
-      
+      // genere: mappedGenere, // Applica la mappatura del genere (questo rimane a tua discrezione)
       lingua: volumeInfo?['language'] as String?,
       trama: volumeInfo?['description'] as String?,
+      subtitle: volumeInfo?['subtitle'] as String?,
+      publisher: volumeInfo?['publisher'] as String?,
 
       isbn: _parseIsbn(volumeInfo),
 
@@ -104,18 +112,17 @@ class Libro {
     // Se volumeInfo è null, non ci sono autori da estrarre
     if (volumeInfo == null) return null;
 
-    // Accedo alla chiave 'authors' per ottenere la lista degli autori. 
+    // Accedo alla chiave 'authors' per ottenere la lista degli autori.
     // Provo a castare come List<dynamic>? per sicurezza
     final dynamic listaAutoriEstratti = volumeInfo['authors'] as List<dynamic>?;
 
     if (listaAutoriEstratti != null && listaAutoriEstratti is List) {
-      
       // Mappa ogni elemento della lista a una stringa e la converte in List<String>
       // Ho controllato se listaAutoriEstratti é effettivamente una lista per evitare errori con la funzione di mapping
       return listaAutoriEstratti.map((e) => e.toString()).toList();
     }
     // Se non trovo autori o non sono nel formato corretto, ritorno null
-    return null; 
+    return null;
   }
 
   // Metodo statico per il parsing e la prioritizzazione degli ISBN
@@ -125,7 +132,8 @@ class Libro {
 
     // Accedo alla chiave 'industryIdentifiers' per ottenere gli ISBN
     // Provo a castare come List<dynamic>? per sicurezza
-    final industryIdentifiers = volumeInfo['industryIdentifiers'] as List<dynamic>?;
+    final industryIdentifiers =
+        volumeInfo['industryIdentifiers'] as List<dynamic>?;
 
     String? foundIsbn10;
     String? foundIsbn13;
@@ -135,7 +143,9 @@ class Libro {
       for (var identifier in industryIdentifiers) {
         // Effettuo un controllo più robusto: l'identificatore deve essere una mappa
         // e deve contenere le chiavi 'type' e 'identifier'
-        if (identifier is Map<String, dynamic> && identifier.containsKey('type') && identifier.containsKey('identifier')) {
+        if (identifier is Map<String, dynamic> &&
+            identifier.containsKey('type') &&
+            identifier.containsKey('identifier')) {
           // Se il tipo è 'ISBN_10', salvo il suo valore nella variabile foundIsbn10
           if (identifier['type'] == 'ISBN_10') {
             foundIsbn10 = identifier['identifier'] as String?;
@@ -154,17 +164,22 @@ class Libro {
 
   // Metodo statico per il parsing della data di pubblicazione
   static DateTime? _parsePublishedDate(Map<String, dynamic>? volumeInfo) {
-    // Se volumeInfo è null, non c'è data di pubblicazione da estrarre
     if (volumeInfo == null) return null;
 
-    // Estrae la stringa della data di pubblicazione
-    // Provo a castare come String? per sicurezza
     final String? publishedDateString = volumeInfo['publishedDate'] as String?;
-
     if (publishedDateString != null) {
-      return DateTime.tryParse(publishedDateString);
+      try {
+        return publishedDateString.length > 4
+            ? DateTime.parse(publishedDateString)
+            : DateTime(
+              int.parse(publishedDateString),
+              1,
+              1,
+            ); // Se la data è solo l'anno, restituisco il primo gennaio di quell'anno
+      } catch (_) {
+        return null; // Se il parsing fallisce, ritorna null
+      }
     }
-    // Se la stringa della data era null, ritorno null
     return null;
   }
 }
