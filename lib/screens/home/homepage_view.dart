@@ -6,8 +6,7 @@ import '../../services/controllers/homepage_controller.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.title});
-  final String title;
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SingleChildScrollView(
       child: Column(
+        spacing: 15,
         children: <Widget>[
           _buildHeader(context),
           _buildBody(context, controller),
@@ -122,10 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
+        spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
             child: Row(
+              spacing: 20,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton.icon(
@@ -155,7 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
           const Text(
             "Libri consigliati",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -185,7 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           }).toList(),
                     ),
           ),
-          const SizedBox(height: 20),
           const Text(
             "Ultime aggiunte",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
