@@ -90,29 +90,54 @@ class SearchBarCustom extends StatelessWidget {
 }
 
 class Generi extends StatelessWidget {
-  final List<String> generi =
-      GenereLibro.values.map((stato) => stato.name).toList();
+  const Generi({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48, // altezza sufficiente per i tuoi bottoni/chip
+      height: 100,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: generi.map((genere) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ActionChip(
-              label: Text(genere),
-              onPressed: () {
-                print('Hai selezionato: $genere');
-              },
-            ),
-          );
-        }).toList(),
+        children:
+            GenereLibro.values.map((genere) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  spacing: 5,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Container per l'immagine
+                    GestureDetector(
+                      // Inserire QUI il filtro
+                      onTap: (){print("Filtro per genere: ${genere.titolo}");},
+                      child: Container(
+                        width: 50,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            genere.percorsoImmagine,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(genere.titolo, textAlign: TextAlign.center),
+                  ],
+                ),
+              );
+            }).toList(),
       ),
     );
   }
 }
-
-
