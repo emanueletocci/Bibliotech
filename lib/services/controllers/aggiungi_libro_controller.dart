@@ -30,7 +30,7 @@ class AggiungiLibroController {
   String? genereSelezionato;
   String? statoSelezionato;
 
-  final Libreria _libreria = Libreria();
+  final Libreria _libreria;
 
   String? titolo;
   List<String>? autori;
@@ -45,7 +45,7 @@ class AggiungiLibroController {
   StatoLibro? stato;
   GenereLibro? genere;
 
-  AggiungiLibroController()
+  AggiungiLibroController(this._libreria)
     : copertina = 'assets/images/book_placeholder.jpg',
       isbn = '';
 

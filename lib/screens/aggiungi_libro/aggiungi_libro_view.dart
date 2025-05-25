@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import 'dart:io';
+import '../../models/libreria.dart';
 
 class AggiungiLibro extends StatefulWidget {
   const AggiungiLibro({super.key});
@@ -10,37 +12,10 @@ class AggiungiLibro extends StatefulWidget {
 }
 
 class _AggiungiLibroState extends State<AggiungiLibro> {
-  final AggiungiLibroController controller = AggiungiLibroController();
-
-void _handleAggiungiLibro() async {
-  try {
-    controller.handleAggiungi();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Libro inserito correttamente!'),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await Future.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
-    Navigator.of(context).pop(true); // Segnala successo!
-  } catch (e) {
-      String errorMessage = e.toString();
-      const prefix = 'Exception: ';
-      if (errorMessage.startsWith(prefix)) {
-        // Rimuovo il prefisso "Exception: " dal messaggio di errore
-        errorMessage = errorMessage.substring(prefix.length);
-      }
-      // Se viene lanciata un'eccezione, mostro un messaggio di errore
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final libreria = context.watch<Libreria>();
+    final controller = AggiungiLibroController(libreria);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Aggiungi un nuovo libro!"),
@@ -56,7 +31,7 @@ void _handleAggiungiLibro() async {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap: () async{
+                  onTap: () async {
                     await controller.selezionaCopertina();
                     setState(() {
                       // Aggiorno lo stato per mostrare l'immagine selezionata
@@ -77,16 +52,16 @@ void _handleAggiungiLibro() async {
                               controller.copertina,
                               fit: BoxFit.cover,
                             );
-                          // Non si puó usare Image.file con gli elementi presenti in assets per cui
-                          // devo controllare manualmente se l'immagine è il placeholder di default
-                          } else if (controller.copertina == 'assets/images/book_placeholder.jpg'){
+                            // Non si puó usare Image.file con gli elementi presenti in assets per cui
+                            // devo controllare manualmente se l'immagine è il placeholder di default
+                          } else if (controller.copertina ==
+                              'assets/images/book_placeholder.jpg') {
                             // Mostra il placeholder di default
                             return Image.asset(
                               controller.copertina,
                               fit: BoxFit.cover,
                             );
-                          }
-                          else {
+                          } else {
                             // È un percorso locale! Crea un oggetto File e mostra l'immagine locale
                             final File localImageFile = File(
                               controller.copertina,
@@ -177,8 +152,7 @@ void _handleAggiungiLibro() async {
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed:
-                      _handleAggiungiLibro, 
+                  onPressed: () => _handleAggiungiLibro(controller),
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
@@ -192,5 +166,32 @@ void _handleAggiungiLibro() async {
         ),
       ),
     );
+  }
+
+  void _handleAggiungiLibro(AggiungiLibroController controller) async {
+    try {
+      controller.handleAggiungi();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Libro inserito correttamente!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      Navigator.of(context).pop(true); // Segnala successo!
+    } catch (e) {
+      String errorMessage = e.toString();
+      const prefix = 'Exception: ';
+      if (errorMessage.startsWith(prefix)) {
+        // Rimuovo il prefisso "Exception: " dal messaggio di errore
+        errorMessage = errorMessage.substring(prefix.length);
+      }
+      // Se viene lanciata un'eccezione, mostro un messaggio di errore
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+    }
   }
 }
