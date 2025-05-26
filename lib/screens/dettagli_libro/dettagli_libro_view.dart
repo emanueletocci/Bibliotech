@@ -26,7 +26,6 @@ class _BookDetailState extends State<BookDetail>
   late TabController _tabControllerDetail;
   late Libro libro;
   late Libreria? libreria;
-  late bool isFavorite;
 
   @override
   void initState() {
@@ -37,9 +36,6 @@ class _BookDetailState extends State<BookDetail>
     );
     // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
-
-    // Inizializzo lo stato dei toggle buttons
-    isFavorite = false;
   }
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
@@ -121,7 +117,7 @@ class _BookDetailState extends State<BookDetail>
                               .ellipsis, // Mostro "..." se il testo è troppo lungo
                     ),
                     Text(
-                      libro.autori?.join(', ') ?? "Autore sconosciuto",
+                      libro.getAutoriString(),
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     // Mostro le stelle della valutazione solo se il libro ha un voto
@@ -136,14 +132,16 @@ class _BookDetailState extends State<BookDetail>
                         ),
                       ),
                     // Toggle Buttons per preferiti
+
                     IconButton(
                       icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.red : Colors.grey,
+                        libro.preferito ? Icons.favorite : Icons.favorite_border,
+                        color: libro.preferito ? Colors.red : Colors.grey,
                       ),
                       onPressed: () {
                         setState(() {
-                          isFavorite = !isFavorite;
+                          // Inverte lo stato del libro come preferito
+                          libro.preferito = !libro.preferito;
                         });
                       },
                     ),
@@ -178,7 +176,7 @@ class _BookDetailState extends State<BookDetail>
 
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
-    final haRecensione = libro.voto != null;
+    final haVoto = libro.voto != null;
     final isInLibreria = libreria?.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
@@ -232,7 +230,7 @@ class _BookDetailState extends State<BookDetail>
               child: Text("Abbandona lettura"),
             ),
           );
-          if (!haRecensione) {
+          if (!haVoto) {
             buttons.add(
               ElevatedButton(
                 onPressed: () => (),
@@ -252,7 +250,7 @@ class _BookDetailState extends State<BookDetail>
               child: Text("Riprendi lettura"),
             ),
           );
-          if (!haRecensione) {
+          if (!haVoto) {
             buttons.add(
               ElevatedButton(
                 onPressed: () => (),
@@ -306,54 +304,40 @@ class _BookDetailState extends State<BookDetail>
   // Se un campo del model é null, non mostro nulla
   List<Widget> buildInfoBlocks(Libro libro) {
     return [
-      // Titolo (sempre presente)
+
       InfoBlock(label: "Titolo", value: libro.titolo),
 
-      // Autori (solo se presenti)
-      if (libro.autori != null && libro.autori!.isNotEmpty)
-        InfoBlock(label: "Autore", value: libro.autori!.join(', ')),
-
-      // Pagine (solo se presente)
+      // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
+      InfoBlock(label: "Autori", value: libro.getAutoriString()),
+      
       if (libro.numeroPagine != null)
         InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
 
-      // Genere (solo se presente)
       if (libro.genere != null)
         InfoBlock(label: "Genere", value: libro.genere!.toString()),
 
-      // ISBN (sempre presente?)
       InfoBlock(label: "ISBN", value: libro.isbn),
 
-      // Data di pubblicazione (solo se presente)
       if (libro.dataPubblicazione != null)
         InfoBlock(
           label: "Data di pubblicazione",
           value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
         ),
 
-      // Produttore (solo se presente)
       if (libro.publisher != null)
         InfoBlock(label: "Produttore", value: libro.publisher!),
 
-      // Lingua (solo se presente)
-      if (libro.lingua != null)
+      if (libro.lingua != null && libro.lingua!.isNotEmpty)
         InfoBlock(label: "Lingua", value: libro.lingua!),
 
-      // Trama (solo se presente)
       if (libro.trama != null && libro.trama!.isNotEmpty)
         InfoBlock(label: "Trama", value: libro.trama!),
 
-      // Note (solo se presente)
       if (libro.note != null && libro.note!.isNotEmpty)
         InfoBlock(label: "Note", value: libro.note!),
 
-      // Stato (solo se presente)
       if (libro.stato != null)
         InfoBlock(label: "Stato", value: libro.stato!.titolo),
-
-      // Voto (solo se presente)
-      if (libro.voto != null)
-        InfoBlock(label: "Voto", value: libro.voto!.toString()),
     ];
   }
 }
@@ -377,11 +361,11 @@ class InfoBlock extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey[700],
+              
             ),
           ),
           SizedBox(height: 4),
-          Text(value, style: TextStyle(fontSize: 16, color: Colors.black)),
+          Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[700])),
         ],
       ),
     );

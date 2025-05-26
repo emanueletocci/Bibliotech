@@ -17,11 +17,17 @@ class AggiungiLibro extends StatefulWidget {
 class _AggiungiLibroState extends State<AggiungiLibro> {
   late AggiungiLibroController controller;
   bool _isControllerInitialized = false;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = false; // Inizializzo lo stato del preferito a false
+  }
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
   // viene eseguito subito dopo initState e prima di build
   // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -69,6 +75,21 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   ),
                 ),
               ),
+              Center(
+                child: IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                    size: 35,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isFavorite = !isFavorite;
+                      controller.isPreferito = isFavorite;
+                    });
+                  },
+                ),
+              ),
               TextField(
                 controller: controller.titoloController,
                 decoration: const InputDecoration(labelText: 'Titolo*'),
@@ -104,6 +125,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               TextField(
                 controller: controller.linguaController,
                 decoration: const InputDecoration(labelText: 'Lingua'),
+                keyboardType: TextInputType.text,
               ),
               TextField(
                 controller: controller.tramaController,

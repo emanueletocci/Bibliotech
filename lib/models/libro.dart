@@ -60,6 +60,15 @@ class Libro {
     }
   */
 
+  // Metodo per ottenere una stringa formattata degli autori
+  String getAutoriString() {
+    if (autori != null && autori!.isNotEmpty) {
+      return autori!.join(', ');
+    }
+    return "Autori sconosciuti";
+  }
+
+
   // Factory constructor per creare un oggetto Libro da una risposta JSON di Google Books API
   factory Libro.fromGoogleBooksJson(Map<String, dynamic> json) {
     // Accedo alla chiave 'volumeInfo' come mappa per ottenere le informazioni principali del libro

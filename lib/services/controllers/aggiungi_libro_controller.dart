@@ -40,6 +40,8 @@ class AggiungiLibroController {
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
+  // Imposto preferito a false di default
+  bool isPreferito = false;
 
   AggiungiLibroController(this._libreria)
     : copertina = 'assets/images/book_placeholder.jpg',
@@ -66,8 +68,14 @@ class AggiungiLibroController {
 
   // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
   void handleAggiungi() {
+    // Recupero i valori dai controller e li pulisco
     titolo = titoloController.text.trim();
-    autori = autoriController.text.split(',').map((e) => e.trim()).toList();
+    autori = autoriController.text
+      .split(',')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty) // Filtro le liste per rimuovere eventuali stringhe vuote
+      .toList();
+      
     numeroPagine = int.tryParse(numeroPagineController.text);
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
@@ -92,6 +100,7 @@ class AggiungiLibroController {
         copertina: copertina,
         note: note,
         stato: stato,
+        preferito: isPreferito, 
       );
 
       _libreria.aggiungiLibro(nuovoLibro);
