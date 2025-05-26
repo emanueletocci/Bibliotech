@@ -17,4 +17,9 @@ enum GenereLibro {
   final String percorsoImmagine;
 
   const GenereLibro(this.titolo, this.percorsoImmagine);
+
+  @override
+  String toString() {
+    return titolo;
+  }
 }

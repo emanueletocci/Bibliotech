@@ -8,4 +8,9 @@ enum StatoLibro {
   final String titolo;
 
   const StatoLibro(this.titolo);
+
+  @override
+  String toString() {
+    return titolo;
+  }
 }

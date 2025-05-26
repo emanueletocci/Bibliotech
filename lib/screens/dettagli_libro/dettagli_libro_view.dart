@@ -145,7 +145,7 @@ class _BookDetailState extends State<BookDetail>
                       },
                       children: const [
                         Icon(Icons.favorite),
-                        Icon(Icons.bookmark),
+                        Icon(Icons.shopping_cart),
                       ],
                     ),
                   ],
