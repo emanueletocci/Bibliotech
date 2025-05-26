@@ -48,8 +48,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
         );
       }
     } finally {
-      if(mounted)
-        setState(() {}); // Mostro i risultati della ricerca;
+      if (mounted) setState(() {}); // Mostro i risultati della ricerca;
     }
   }
 
@@ -122,7 +121,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                 itemCount: controller.searchResults.length,
                 itemBuilder: (context, index) {
                   final book =
-                      controller.searchResults[index]; // <--- IL LIBRO È QUI!
+                      controller.searchResults[index]; 
                   return Card(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 8.0,
@@ -148,7 +147,12 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                       ),
                       onTap: () {
                         //_handleAggiungiLibro(book);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail(libro: book)));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookDetail(libro: book),
+                          ),
+                        );
                       },
                     ),
                   );

@@ -69,7 +69,8 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
         child: Icon(Icons.edit),
       ),
 
-      body: Column(
+      body: SafeArea(
+        child:       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           bookSummary(),
@@ -90,21 +91,24 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
           ),
         ],
       ),
+    )
     );
   }
 
   Widget bookSummary() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: EdgeInsets.all(20),
       child: Column(
+        spacing: 15,
         children: [
           Row(
+            spacing: 15,
             children: [
               bookImg(),
-              SizedBox(width: 20),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       libro.titolo,
@@ -113,12 +117,10 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
                     Text(
                       libro.autori?.join(', ') ?? "Autore sconosciuto",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-                    SizedBox(height: 10),
                     if (libro.voto != null)
                       Align(
                         alignment: Alignment.centerLeft,
@@ -134,7 +136,6 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
               ),
             ],
           ),
-          SizedBox(height: 15),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -158,7 +159,7 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
   // - Se il libro è "In lettura", mostro "Aggiorna pagine lette", "Abbandona" e "Aggiungi recensione"
   // - Se il libro è "Letto" o "Abbandonato", mostro "Aggiungi recensione"
 
-  
+
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
     final haRecensione = libro.voto != null;
@@ -244,7 +245,7 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
   Widget bookImg() {
     return Container(
       width: 175,
-      height: 250,
+      height: 225,
       child: LibroCoverWidget(libro: libro),
     );
   }

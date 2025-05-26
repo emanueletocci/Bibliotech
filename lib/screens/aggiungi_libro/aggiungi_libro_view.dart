@@ -1,7 +1,9 @@
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
+import '../../models/libro.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import 'dart:io';
 import '../../models/libreria.dart';
@@ -54,41 +56,15 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                       // Aggiorno lo stato per mostrare l'immagine selezionata
                     });
                   },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: SizedBox(
-                      height: 200,
-                      width: 140,
-                      child: Builder(
-                        builder: (context) {
-                          // Mostra l'immagine se disponibile, altrimenti un placeholder
-                          if ((controller.copertina.startsWith('http://')) ||
-                              (controller.copertina.startsWith('https://'))) {
-                            // È un URL remoto! Mostra l'immagine remota
-                            return Image.network(
-                              controller.copertina,
-                              fit: BoxFit.cover,
-                            );
-                            // Non si puó usare Image.file con gli elementi presenti in assets per cui
-                            // devo controllare manualmente se l'immagine è il placeholder di default
-                          } else if (controller.copertina ==
-                              'assets/images/book_placeholder.jpg') {
-                            // Mostra il placeholder di default
-                            return Image.asset(
-                              controller.copertina,
-                              fit: BoxFit.cover,
-                            );
-                          } else {
-                            // È un percorso locale! Crea un oggetto File e mostra l'immagine locale
-                            final File localImageFile = File(
-                              controller.copertina,
-                            );
-                            return Image.file(
-                              localImageFile,
-                              fit: BoxFit.cover,
-                            );
-                          }
-                        },
+                  child: SizedBox(
+                    width: 150,
+                    height: 200,
+                    child: LibroCoverWidget(
+                      // Creo un'istanza temporanea del libro... mi interessa solo la copertina
+                      libro: Libro(
+                        isbn: controller.isbnController.text,
+                        copertina: controller.copertina,
+                        titolo: '',
                       ),
                     ),
                   ),
