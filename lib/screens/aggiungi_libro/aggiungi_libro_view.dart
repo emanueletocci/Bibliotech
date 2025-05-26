@@ -12,10 +12,27 @@ class AggiungiLibro extends StatefulWidget {
 }
 
 class _AggiungiLibroState extends State<AggiungiLibro> {
+  late AggiungiLibroController controller;
+  bool _isControllerInitialized = false;
+
+
+  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
+  // viene eseguito subito dopo initState e prima di build
+  // In questo modo la libreria e il controller non vengono ricreati ad ogni build
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isControllerInitialized) {
+      final libreria = context.watch<Libreria>();
+      controller = AggiungiLibroController(libreria);
+      _isControllerInitialized = true;
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final libreria = context.watch<Libreria>();
-    final controller = AggiungiLibroController(libreria);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Aggiungi un nuovo libro!"),

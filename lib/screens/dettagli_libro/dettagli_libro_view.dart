@@ -12,11 +12,15 @@ class BookDetail extends StatefulWidget {
   const BookDetail({super.key, required this.libro});
 
   @override
-  _BookDetailState createState() => _BookDetailState();
+  State<BookDetail> createState() => _BookDetailState();
 }
 
+// Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
+// in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
+// In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
 class _BookDetailState extends State<BookDetail>
     with SingleTickerProviderStateMixin {
+  // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
 
@@ -44,22 +48,40 @@ class _BookDetailState extends State<BookDetail>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(libro.titolo, style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.purple,
+        title: Text('Dettagli libro', style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.black, // Cambia colore al click
+            ),
+            onPressed: () {
+              setState(() {
+                ////gestione prefeiti
+              });
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           bookSummary(),
+
+          // Tab bar per info e note
           TabBar(
             controller: _tabControllerDetail,
             tabs: [Tab(text: "Info"), Tab(text: "Note")],
           ),
+
+          // Contenuto info e note
           Expanded(
+          // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
             child: TabBarView(
               controller: _tabControllerDetail,
               children: [infoSection(), noteSection()],
@@ -332,24 +354,22 @@ class _BookDetailState extends State<BookDetail>
                 ElevatedButton(
                   onPressed: () {
                     final numero = _controller_quantity.text;
-                    if (numero != null) {
-                      setState(() {
-                        libro.numPagineLette = int.tryParse(numero);
-                        Libreria().modificaLibro(libro.isbn, libro);
+                    setState(() {
+                      libro.numPagineLette = int.tryParse(numero);
+                      Libreria().modificaLibro(libro.isbn, libro);
 
-                        if (libro.numPagineLette! == libro.numeroPagine!) {
-                          // Se tutte le pagine sono lette metto stato inlettura
-                          libro.stato = StatoLibro.letto;
-                          libro.numPagineLette = libro.numeroPagine;
-                        } else if (libro.stato == StatoLibro.daLeggere &&
-                            (libro.numPagineLette != null &&
-                                libro.numPagineLette! > 0)) {
-                          // Se il libro era da leggere e ora ha pagine lette, lo metto in lettura
-                          libro.stato = StatoLibro.inLettura;
-                        }
-                        Libreria().modificaLibro(libro.isbn, libro);
-                      });
-                    }
+                      if (libro.numPagineLette! == libro.numeroPagine!) {
+                        // Se tutte le pagine sono lette metto stato inlettura
+                        libro.stato = StatoLibro.letto;
+                        libro.numPagineLette = libro.numeroPagine;
+                      } else if (libro.stato == StatoLibro.daLeggere &&
+                          (libro.numPagineLette != null &&
+                              libro.numPagineLette! > 0)) {
+                        // Se il libro era da leggere e ora ha pagine lette, lo metto in lettura
+                        libro.stato = StatoLibro.inLettura;
+                      }
+                      Libreria().modificaLibro(libro.isbn, libro);
+                    });
                     Navigator.pop(context);
                   },
                   child: Text("Salva"),
