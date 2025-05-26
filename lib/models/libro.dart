@@ -14,7 +14,6 @@ class Libro {
   double? voto;
   String?
   copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
-  int? numPagineLette;
   String? note;
   StatoLibro? stato;
   String? publisher;
@@ -33,7 +32,6 @@ class Libro {
     this.note,
     this.stato,
     this.publisher,
-    this.numPagineLette = 0,
   });
 
   /* FORMATO API LIBRO GOOGLE BOOKS
@@ -102,7 +100,7 @@ class Libro {
     );
   }
 
-  // --- Metodi privati statici per il parsing (Nuovi blocchi di codice) ---
+  // --- Metodi privati statici per il parsing ---
 
   // Metodo statico per il parsing degli autori
   static List<String>? _parseAuthors(Map<String, dynamic>? volumeInfo) {

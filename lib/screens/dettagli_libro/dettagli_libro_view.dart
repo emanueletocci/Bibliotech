@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../models/libro.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating/flutter_rating.dart';
-import 'package:input_quantity/input_quantity.dart';
 import '../../components/libro_cover_widget.dart';
 
 class BookDetail extends StatefulWidget {
@@ -116,8 +115,10 @@ class _BookDetailState extends State<BookDetail>
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                        maxLines: 2, // Mostra al massimo 2 righe
-                        overflow: TextOverflow.ellipsis, // Mostro "..." se il testo è troppo lungo
+                      maxLines: 2, // Mostra al massimo 2 righe
+                      overflow:
+                          TextOverflow
+                              .ellipsis, // Mostro "..." se il testo è troppo lungo
                     ),
                     Text(
                       libro.autori?.join(', ') ?? "Autore sconosciuto",
@@ -212,12 +213,6 @@ class _BookDetailState extends State<BookDetail>
         case StatoLibro.inLettura:
           buttons.add(
             ElevatedButton(
-              onPressed: () => (),
-              child: Text("Aggiorna pagine lette"),
-            ),
-          );
-          buttons.add(
-            ElevatedButton(
               onPressed: () {
                 setState(() {
                   libro.stato = StatoLibro.abbandonato;
@@ -276,32 +271,7 @@ class _BookDetailState extends State<BookDetail>
       child: Column(
         spacing: 3,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InfoBlock(label: "Titolo", value: libro.titolo),
-          InfoBlock(
-            label: "Autore",
-            value: libro.autori?.join(', ') ?? "Sconosciuto",
-          ),
-          InfoBlock(
-            label: "Pagine",
-            value: libro.numeroPagine?.toString() ?? "N/A",
-          ),
-          InfoBlock(label: "Genere", value: libro.genere?.toString() ?? "N/A"),
-          InfoBlock(label: "ISBN", value: libro.isbn),
-          InfoBlock(
-            label: "Data di pubblicazione",
-            value:
-                libro.dataPubblicazione != null
-                    ? DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!)
-                    : "N/A",
-          ),
-          InfoBlock(label: "Produttore", value: libro.publisher ?? "N/A"),
-          InfoBlock(label: "Lingua", value: libro.lingua ?? "N/A"),
-          InfoBlock(
-            label: "Trama",
-            value: libro.trama ?? "Nessuna trama disponibile.",
-          ),
-        ],
+        children: buildInfoBlocks(libro),
       ),
     );
   }
@@ -320,8 +290,64 @@ class _BookDetailState extends State<BookDetail>
       ),
     );
   }
+
+  // Metodo helper per costruire i blocchi di informazioni relativi al libro, basato sui campi disponibili
+  // Se un campo del model é null, non mostro nulla
+  List<Widget> buildInfoBlocks(Libro libro) {
+    return [
+      // Titolo (sempre presente)
+      InfoBlock(label: "Titolo", value: libro.titolo),
+
+      // Autori (solo se presenti)
+      if (libro.autori != null && libro.autori!.isNotEmpty)
+        InfoBlock(label: "Autore", value: libro.autori!.join(', ')),
+
+      // Pagine (solo se presente)
+      if (libro.numeroPagine != null)
+        InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
+
+      // Genere (solo se presente)
+      if (libro.genere != null)
+        InfoBlock(label: "Genere", value: libro.genere!.toString()),
+
+      // ISBN (sempre presente?)
+      InfoBlock(label: "ISBN", value: libro.isbn),
+
+      // Data di pubblicazione (solo se presente)
+      if (libro.dataPubblicazione != null)
+        InfoBlock(
+          label: "Data di pubblicazione",
+          value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
+        ),
+
+      // Produttore (solo se presente)
+      if (libro.publisher != null)
+        InfoBlock(label: "Produttore", value: libro.publisher!),
+
+      // Lingua (solo se presente)
+      if (libro.lingua != null)
+        InfoBlock(label: "Lingua", value: libro.lingua!),
+
+      // Trama (solo se presente)
+      if (libro.trama != null && libro.trama!.isNotEmpty)
+        InfoBlock(label: "Trama", value: libro.trama!),
+
+      // Note (solo se presente)
+      if (libro.note != null && libro.note!.isNotEmpty)
+        InfoBlock(label: "Note", value: libro.note!),
+
+      // Stato (solo se presente)
+      if (libro.stato != null)
+        InfoBlock(label: "Stato", value: libro.stato!.titolo),
+
+      // Voto (solo se presente)
+      if (libro.voto != null)
+        InfoBlock(label: "Voto", value: libro.voto!.toString()),
+    ];
+  }
 }
 
+// Widget per mostrare un blocco di informazioni con etichetta e valore
 class InfoBlock extends StatelessWidget {
   final String label;
   final String value;
