@@ -5,6 +5,8 @@ import '../../models/libreria.dart';
 import '../../services/controllers/homepage_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../dettagli_libro/dettagli_libro_view.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -178,7 +180,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                               ),
-                              child:LibroCoverWidget(libro: libro),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => BookDetail(libro: libro),
+                                    ),
+                                  );
+                                  debugPrint(
+                                    'Hai premuto il libro: ${libro.titolo}',
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: LibroCoverWidget(libro: libro),
+                              ),
                             );
                           }).toList(),
                     ),

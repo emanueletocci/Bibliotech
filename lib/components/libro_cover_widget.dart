@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/libro.dart';
 import 'dart:io';
-import '../screens/dettagli_libro/dettagli_libro_view.dart';
 
 class LibroCoverWidget extends StatelessWidget {
   final Libro libro;
@@ -15,26 +14,11 @@ class LibroCoverWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap:
-          onTap ??
-          () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => BookDetail(libro: libro),
-            ));
-
-            // Comportamento di default se onTap non viene passato
-            print('Hai premuto il libro: ${libro.titolo}');
-            
-            // Qui puoi aggiungere altre azioni, ad esempio navigazione
-          },
-      borderRadius: BorderRadius.circular(8.0),
-      child: ClipRRect(
+    return ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child:
             _buildCoverImage(), 
-      ),
-    );
+      );
   }
 
   // Metodo helper per costruire l'immagine della copertina

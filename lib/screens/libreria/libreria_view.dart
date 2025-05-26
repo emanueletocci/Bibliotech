@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../models/libreria.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
+import '../dettagli_libro/dettagli_libro_view.dart';
 
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
@@ -61,7 +62,23 @@ class _LibreriaPageState extends State<LibreriaPage> {
                                   margin: const EdgeInsets.symmetric(
                                     horizontal: 8.0,
                                   ),
-                                  child: LibroCoverWidget(libro: libro),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  BookDetail(libro: libro),
+                                        ),
+                                      );
+                                      debugPrint(
+                                        'Hai premuto il libro: ${libro.titolo}',
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: LibroCoverWidget(libro: libro),
+                                  ),
                                 );
                               }).toList(),
                         ),
@@ -109,7 +126,9 @@ class Generi extends StatelessWidget {
                     // Container per l'immagine
                     GestureDetector(
                       // Inserire QUI il filtro
-                      onTap: (){print("Filtro per genere: ${genere.titolo}");},
+                      onTap: () {
+                        print("Filtro per genere: ${genere.titolo}");
+                      },
                       child: Container(
                         width: 50,
                         height: 70,

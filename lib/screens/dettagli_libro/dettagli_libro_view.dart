@@ -5,6 +5,7 @@ import '../../models/libro.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:input_quantity/input_quantity.dart';
+import '../../components/libro_cover_widget.dart';
 
 class BookDetail extends StatefulWidget {
   final Libro libro;
@@ -227,45 +228,14 @@ class _BookDetailState extends State<BookDetail>
   }
 
   Widget bookImg() {
-    String proxyUrl = "https://corsproxy.io/?";
-    String fullUrl = "$proxyUrl${widget.libro.copertina}";
-    //print("Copertina URL: ${widget.libro.copertina}");
-    return Container(
-      height: 200,
-      width: 175,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(50),
-          bottomLeft: Radius.circular(50),
-        ),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 10),
-            blurRadius: 33,
-            color: Colors.black12,
-          ),
-        ],
-        image: DecorationImage(
-          image: NetworkImage(fullUrl),
-          onError: (exception, stackTrace) {},
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Image.network(
-        fullUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Image.asset("assets/placeholder.png", fit: BoxFit.cover);
-        },
-      ),
-    );
+    return LibroCoverWidget(libro: libro);
   }
 
   Widget infoSection() {
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: Column(
+        spacing: 5,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InfoBlock(label: "Titolo", value: libro.titolo),
