@@ -69,6 +69,16 @@ class _BookDetailState extends State<BookDetail>
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+
+          // Inserire codice per abilitare la modifica dei campi del libro
+          
+          setState(() {});
+        },
+        child: Icon(Icons.edit),
+      ),
+      
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -170,6 +180,8 @@ class _BookDetailState extends State<BookDetail>
         StatoLibro.inLettura => "In lettura",
         StatoLibro.letto => "Letto",
         StatoLibro.abbandonato => "Abbandonato",
+        // TODO: Handle this case.
+        StatoLibro.daAcquistare => throw UnimplementedError(),
       };
 
       buttons.add(ElevatedButton(onPressed: null, child: Text(statoLabel)));

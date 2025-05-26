@@ -10,11 +10,11 @@ import 'package:path/path.dart' as p;
 
 class AggiungiLibroController {
   final List<String> generi =
-      GenereLibro.values.map((stato) => stato.name).toList();
-  final List<String> stati =
-      StatoLibro.values
-          .map((stato) => stato.name.replaceAll('_', ' '))
-          .toList(); // Sostituisco '_' con ' '
+      GenereLibro.values.map((genere) => genere.name).toList();
+
+
+  final List<StatoLibro> stati =
+      StatoLibro.values.toList();
 
   final TextEditingController titoloController = TextEditingController();
   final TextEditingController autoriController = TextEditingController();
@@ -28,7 +28,7 @@ class AggiungiLibroController {
   final TextEditingController noteController = TextEditingController();
 
   String? genereSelezionato;
-  String? statoSelezionato;
+  StatoLibro? statoSelezionato;
 
   final Libreria _libreria;
 

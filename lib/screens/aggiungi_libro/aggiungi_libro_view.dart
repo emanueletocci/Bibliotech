@@ -1,3 +1,4 @@
+import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
@@ -15,7 +16,6 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
   late AggiungiLibroController controller;
   bool _isControllerInitialized = false;
 
-
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
   // viene eseguito subito dopo initState e prima di build
   // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
@@ -29,7 +29,6 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
       _isControllerInitialized = true;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,14 +150,18 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                 controller: controller.noteController,
                 decoration: const InputDecoration(labelText: 'Note personali'),
               ),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<StatoLibro>(
                 decoration: const InputDecoration(labelText: 'Stato'),
-                value: controller.statoSelezionato,
+                value:
+                    controller
+                        .statoSelezionato, 
                 items:
                     controller.stati
                         .map(
-                          (cat) =>
-                              DropdownMenuItem(value: cat, child: Text(cat)),
+                          (stato) => DropdownMenuItem<StatoLibro>(
+                            value: stato,
+                            child: Text(stato.titolo),
+                          ),
                         )
                         .toList(),
                 onChanged: (val) {
@@ -167,6 +170,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   });
                 },
               ),
+
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () => _handleAggiungiLibro(controller),
