@@ -30,11 +30,11 @@ class Libreria extends ChangeNotifier {
     notifyListeners(); // Trigger per il rebuild dei widget ascoltatori
   }
 
-  /// Rimuove un libro tramite ISBN
+  /// Rimuove un libro 
   /// Solleva eccezione se l'ISBN non esiste
-  void rimuoviLibro(String isbn) {
-    if (_libri.containsKey(isbn)) {
-      _libri.remove(isbn);
+  void rimuoviLibro(Libro libro) {
+    if (_libri.containsKey(libro.isbn)) {
+      _libri.remove(libro.isbn);
       notifyListeners();
     } else {
       throw Exception("ISBN non trovato");

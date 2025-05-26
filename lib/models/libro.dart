@@ -5,15 +5,13 @@ class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  GenereLibro?
-  genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
+  GenereLibro? genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
   String? lingua;
   String? trama;
   String isbn; // O isbn10 o isbn13, deciderai quale usare come 'primario'
   DateTime? dataPubblicazione;
   double? voto;
-  String?
-  copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
+  String? copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
   String? note;
   StatoLibro? stato;
   String? publisher;

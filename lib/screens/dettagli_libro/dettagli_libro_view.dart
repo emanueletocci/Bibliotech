@@ -200,6 +200,19 @@ class _BookDetailState extends State<BookDetail>
         ),
       );
     } else {
+            buttons.add(
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple,
+            foregroundColor: Colors.white,
+          ),
+          label: Text("Rimuovi dalla libreria"),
+          icon: Icon(Icons.remove, color: Colors.white),
+          onPressed: () {
+            libreria?.rimuoviLibro(libro);
+          },
+        ),
+      );
       // Gestione dei pulsanti in base allo stato del libro (solo se il libro è in libreria)
       switch (stato) {
         case StatoLibro.daLeggere:
