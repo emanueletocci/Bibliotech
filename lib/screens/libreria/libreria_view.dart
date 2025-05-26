@@ -69,7 +69,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
                                         MaterialPageRoute(
                                           builder:
                                               (context) =>
-                                                  BookDetail(libro: libro),
+                                                  DettagliLibro(libro: libro),
                                         ),
                                       );
                                       debugPrint(

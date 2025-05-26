@@ -68,6 +68,14 @@ class Libro {
     return "Autori sconosciuti";
   }
 
+  // Metodo per ottenere una stringa formattata delle note inserite dall'utente
+  String getNoteString() {
+    if(note == null || note!.isEmpty) {
+      return "Nessuna nota disponibile";
+    }
+    return note!;
+  }
+
 
   // Factory constructor per creare un oggetto Libro da una risposta JSON di Google Books API
   factory Libro.fromGoogleBooksJson(Map<String, dynamic> json) {

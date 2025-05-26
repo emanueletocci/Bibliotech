@@ -2,30 +2,37 @@ import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import '../../components/libro_cover_widget.dart';
+import '../../services/controllers/dettagli_libro_controller.dart';
 
-class BookDetail extends StatefulWidget {
+class DettagliLibro extends StatefulWidget {
   final Libro libro;
 
-  const BookDetail({super.key, required this.libro});
+  const DettagliLibro({super.key, required this.libro});
 
   @override
-  State<BookDetail> createState() => _BookDetailState();
+  State<DettagliLibro> createState() => _DettagliLibroState();
 }
 
 // Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
 // in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
 // In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
 
-class _BookDetailState extends State<BookDetail>
+class _DettagliLibroState extends State<DettagliLibro>
     with SingleTickerProviderStateMixin {
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
   late Libreria? libreria;
+  late DettagliLibroController _controller;
+
+  // Variabile per gestire la modalità di modifica
+  // Quando é true, i campi del libro sono editabili e vengono mostrati anche quelli nascosti
+  bool isEditing = false;
 
   @override
   void initState() {
@@ -36,6 +43,7 @@ class _BookDetailState extends State<BookDetail>
     );
     // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
+    _controller = DettagliLibroController(libro);
   }
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
@@ -58,7 +66,9 @@ class _BookDetailState extends State<BookDetail>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Inserire codice per abilitare la modifica dei campi del libro
-          setState(() {});
+          setState(() {
+            isEditing = !isEditing; // toggle della modalità di modifica
+          });
         },
         child: Icon(Icons.edit),
       ),
@@ -131,11 +141,13 @@ class _BookDetailState extends State<BookDetail>
                           onRatingChanged: (rating) {}, // rating fisso
                         ),
                       ),
-                    // Toggle Buttons per preferiti
 
+                    // Toggle Buttons per preferiti
                     IconButton(
                       icon: Icon(
-                        libro.preferito ? Icons.favorite : Icons.favorite_border,
+                        libro.preferito
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         color: libro.preferito ? Colors.red : Colors.grey,
                       ),
                       onPressed: () {
@@ -180,6 +192,23 @@ class _BookDetailState extends State<BookDetail>
     final isInLibreria = libreria?.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
+    if (isEditing) {
+      buttons.add(
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+          ),
+          label: Text("Aggiorna libro"),
+          icon: Icon(Icons.edit, color: Colors.white),
+          onPressed: () {
+            // DA AGGIORNARE... PENSO DI SPOSTARE TUTTA LA LOGICA NEL CONTROLLER IN MODO DA NON USARE
+            // DIRETTAMENTE IL MODELLO FORNITO DAL PROVIDER
+            libreria?.aggiungiLibro(libro);
+          },
+        ),
+      );
+    }
     // Se il libro non è presente nella libreria, aggiungo solo il pulsante per aggiungerlo
     if (!isInLibreria) {
       buttons.add(
@@ -199,7 +228,7 @@ class _BookDetailState extends State<BookDetail>
       buttons.add(
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
+            backgroundColor: Colors.red,
             foregroundColor: Colors.white,
           ),
           label: Text("Rimuovi dalla libreria"),
@@ -292,7 +321,7 @@ class _BookDetailState extends State<BookDetail>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            libro.note ?? "Nessuna nota disponibile.",
+            libro.getNoteString(),
             style: TextStyle(fontSize: 16),
           ),
         ],
@@ -303,42 +332,125 @@ class _BookDetailState extends State<BookDetail>
   // Metodo helper per costruire i blocchi di informazioni relativi al libro, basato sui campi disponibili
   // Se un campo del model é null, non mostro nulla
   List<Widget> buildInfoBlocks(Libro libro) {
-    return [
+    if (isEditing) {
+      return [
+              TextField(
+                controller: _controller.titoloController,
+                decoration: const InputDecoration(labelText: 'Titolo*'),
+              ),
+              TextField(
+                controller: _controller.autoriController,
+                decoration: const InputDecoration(labelText: 'Autori'),
+              ),
+              TextField(
+                controller: _controller.numeroPagineController,
+                decoration: const InputDecoration(labelText: 'Numero Pagine'),
+                keyboardType: TextInputType.number,
+              ),
+              DropdownButtonFormField<GenereLibro>(
+                decoration: const InputDecoration(labelText: 'Genere'),
+                value: _controller.genereSelezionato,
+                items:
+                    _controller.generi
+                        .map(
+                          (genere) => DropdownMenuItem<GenereLibro>(
+                            value: genere,
+                            child: Text(genere.titolo),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (val) {
+                  setState(() {
+                    _controller.genereSelezionato = val;
+                  });
+                },
+              ),
 
-      InfoBlock(label: "Titolo", value: libro.titolo),
+              TextField(
+                controller: _controller.linguaController,
+                decoration: const InputDecoration(labelText: 'Lingua'),
+                keyboardType: TextInputType.text,
+              ),
+              TextField(
+                controller: _controller.tramaController,
+                decoration: const InputDecoration(labelText: 'Trama'),
+              ),
+              TextField(
+                controller: _controller.isbnController,
+                decoration: const InputDecoration(labelText: 'ISBN*'),
+              ),
+              TextField(
+                controller: _controller.dataPubblicazioneController,
+                decoration: const InputDecoration(
+                  labelText: 'Data Pubblicazione',
+                ),
+                keyboardType: TextInputType.datetime,
+              ),
+              TextField(
+                controller: _controller.votoController,
+                decoration: const InputDecoration(labelText: 'Voto'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: _controller.noteController,
+                decoration: const InputDecoration(labelText: 'Note personali'),
+              ),
+              DropdownButtonFormField<StatoLibro>(
+                decoration: const InputDecoration(labelText: 'Stato'),
+                value: _controller.statoSelezionato,
+                items:
+                    _controller.stati
+                        .map(
+                          (stato) => DropdownMenuItem<StatoLibro>(
+                            value: stato,
+                            child: Text(stato.titolo),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (val) {
+                  setState(() {
+                    _controller.statoSelezionato = val;
+                  });
+                },
+              ),
+      ];
+    } else {
+      return [
+        InfoBlock(label: "Titolo", value: libro.titolo),
 
-      // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
-      InfoBlock(label: "Autori", value: libro.getAutoriString()),
-      
-      if (libro.numeroPagine != null)
-        InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
+        // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
+        InfoBlock(label: "Autori", value: libro.getAutoriString()),
 
-      if (libro.genere != null)
-        InfoBlock(label: "Genere", value: libro.genere!.toString()),
+        if (libro.numeroPagine != null)
+          InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
 
-      InfoBlock(label: "ISBN", value: libro.isbn),
+        if (libro.genere != null)
+          InfoBlock(label: "Genere", value: libro.genere!.toString()),
 
-      if (libro.dataPubblicazione != null)
-        InfoBlock(
-          label: "Data di pubblicazione",
-          value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
-        ),
+        InfoBlock(label: "ISBN", value: libro.isbn),
 
-      if (libro.publisher != null)
-        InfoBlock(label: "Produttore", value: libro.publisher!),
+        if (libro.dataPubblicazione != null)
+          InfoBlock(
+            label: "Data di pubblicazione",
+            value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
+          ),
 
-      if (libro.lingua != null && libro.lingua!.isNotEmpty)
-        InfoBlock(label: "Lingua", value: libro.lingua!),
+        if (libro.publisher != null)
+          InfoBlock(label: "Produttore", value: libro.publisher!),
 
-      if (libro.trama != null && libro.trama!.isNotEmpty)
-        InfoBlock(label: "Trama", value: libro.trama!),
+        if (libro.lingua != null && libro.lingua!.isNotEmpty)
+          InfoBlock(label: "Lingua", value: libro.lingua!),
 
-      if (libro.note != null && libro.note!.isNotEmpty)
-        InfoBlock(label: "Note", value: libro.note!),
+        if (libro.trama != null && libro.trama!.isNotEmpty)
+          InfoBlock(label: "Trama", value: libro.trama!),
 
-      if (libro.stato != null)
-        InfoBlock(label: "Stato", value: libro.stato!.titolo),
-    ];
+        if (libro.note != null && libro.note!.isNotEmpty)
+          InfoBlock(label: "Note", value: libro.note!),
+
+        if (libro.stato != null)
+          InfoBlock(label: "Stato", value: libro.stato!.titolo),
+      ];
+    }
   }
 }
 
@@ -358,11 +470,7 @@ class InfoBlock extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              
-            ),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 4),
           Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[700])),

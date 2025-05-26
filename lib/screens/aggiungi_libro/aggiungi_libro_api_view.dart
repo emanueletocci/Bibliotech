@@ -150,7 +150,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookDetail(libro: book),
+                            builder: (context) => DettagliLibro(libro: book),
                           ),
                         );
                       },

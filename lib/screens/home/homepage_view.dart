@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder:
-                                          (context) => BookDetail(libro: libro),
+                                          (context) => DettagliLibro(libro: libro),
                                     ),
                                   );
                                   debugPrint(
