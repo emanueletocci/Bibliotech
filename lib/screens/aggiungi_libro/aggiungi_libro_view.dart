@@ -5,7 +5,6 @@ import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
-import 'dart:io';
 import '../../models/libreria.dart';
 
 class AggiungiLibro extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/libro.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating/flutter_rating.dart';
@@ -19,11 +20,14 @@ class BookDetail extends StatefulWidget {
 // Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
 // in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
 // In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
+
 class _BookDetailState extends State<BookDetail>
     with SingleTickerProviderStateMixin {
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
+  late Libreria? libreria;
+  late List<bool> selected;
 
   @override
   void initState() {
@@ -34,6 +38,19 @@ class _BookDetailState extends State<BookDetail>
     );
     // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
+
+    // Inizializzo lo stato dei toggle buttons
+    selected = [false, false];
+  }
+
+  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
+  // viene eseguito subito dopo initState e prima di build
+  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    libreria = context.watch<Libreria>();
   }
 
   @override
@@ -42,28 +59,10 @@ class _BookDetailState extends State<BookDetail>
       appBar: AppBar(
         title: Text('Dettagli libro', style: TextStyle(color: Colors.white)),
         backgroundColor: Theme.of(context).primaryColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.favorite,
-              color: Colors.black, // Cambia colore al click
-            ),
-            onPressed: () {
-              setState(() {
-                ////gestione prefeiti
-              });
-            },
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Inserire codice per abilitare la modifica dei campi del libro
-
           setState(() {});
         },
         child: Icon(Icons.edit),
@@ -95,6 +94,7 @@ class _BookDetailState extends State<BookDetail>
     );
   }
 
+  // Copertina + dettagli in grassetto
   Widget bookSummary() {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -108,19 +108,22 @@ class _BookDetailState extends State<BookDetail>
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       libro.titolo,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                        maxLines: 2, // Mostra al massimo 2 righe
+                        overflow: TextOverflow.ellipsis, // Mostro "..." se il testo è troppo lungo
                     ),
                     Text(
                       libro.autori?.join(', ') ?? "Autore sconosciuto",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
+                    // Mostro le stelle della valutazione solo se il libro ha un voto
                     if (libro.voto != null)
                       Align(
                         alignment: Alignment.centerLeft,
@@ -131,14 +134,32 @@ class _BookDetailState extends State<BookDetail>
                           onRatingChanged: (rating) {}, // rating fisso
                         ),
                       ),
+                    // Toggle Buttons per preferiti e wishlist
+                    ToggleButtons(
+                      isSelected: selected,
+                      renderBorder: false,
+                      onPressed: (int index) {
+                        setState(() {
+                          selected[index] = !selected[index];
+                        });
+                      },
+                      children: const [
+                        Icon(Icons.favorite),
+                        Icon(Icons.bookmark),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ],
           ),
+
+          // Wrap é un layout widget che permette di disporre i figli in righe e colonne,
+          // permettendo di andare a capo quando non c'è spazio sufficiente...
+          // Gestisce automaticamente l'overflow
           Wrap(
-            spacing: 10,
-            runSpacing: 10,
+            spacing: 10, // spazio tra i figli sulla stessa riga
+            runSpacing: 10, // spazio tra le righe
             alignment: WrapAlignment.center,
             children: buildActionButtons(),
           ),
@@ -150,99 +171,99 @@ class _BookDetailState extends State<BookDetail>
   ///posso fare percentuale lettura per ogni libro nella libreria
   //totali libri letti, abbandonati e inlettura e da incominciare
   ///e mostrare un grafico a torta con le percentuali
-  ///statistiche recensioni
-  ///
-
-  //mostro pulsanti diversi a seconda dello stato del libro:
-  // - Se il libro non ha stato, mostro "Aggiungi alla biblioteca"
-  // - Se il libro è "Da leggere", "Aggiorna pagine lette"
+  ///statistiche recensioni... //mostro pulsanti diversi a seconda dello stato del libro:
+  // - Se il libro non é presente in Libreria, mostro "Aggiungi alla biblioteca"
   // - Se il libro è "In lettura", mostro "Aggiorna pagine lette", "Abbandona" e "Aggiungi recensione"
   // - Se il libro è "Letto" o "Abbandonato", mostro "Aggiungi recensione"
+  // I pulsanti preferiti e wishlist (da acquistare) li lascio sempre visibili come toggle
 
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
     final haRecensione = libro.voto != null;
+    final isInLibreria = libreria?.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
-    if (stato == null) {
+    // Se il libro non è presente nella libreria, aggiungo solo il pulsante per aggiungerlo
+    if (!isInLibreria) {
       buttons.add(
-        ElevatedButton(
+        ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.purple,
             foregroundColor: Colors.white,
           ),
-          child: Text("Aggiungi alla biblioteca"),
+          label: Text("Aggiungi alla libreria"),
+          icon: Icon(Icons.add_circle_outline, color: Colors.white),
           onPressed: () {
-            setState(() {
-              libro.stato = StatoLibro.daLeggere;
-            });
+            libreria?.aggiungiLibro(libro);
           },
         ),
       );
     } else {
-      if (stato == StatoLibro.daLeggere) {
-        buttons.add(
-          ElevatedButton(
-            onPressed: () => mostraBottomSheetPagine(),
-            child: Text("Inizia la lettura"),
-          ),
-        );
-      }
-
-      if (stato == StatoLibro.inLettura) {
-        buttons.add(
-          ElevatedButton(
-            onPressed: () => mostraBottomSheetPagine(),
-            child: Text("Aggiorna pagine lette"),
-          ),
-        );
-
-        buttons.add(
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                libro.stato = StatoLibro.abbandonato;
-              });
-            },
-            child: Text("Abbandona"),
-          ),
-        );
-
-        if (!haRecensione) {
+      // Gestione dei pulsanti in base allo stato del libro (solo se il libro è in libreria)
+      switch (stato) {
+        case StatoLibro.daLeggere:
           buttons.add(
             ElevatedButton(
-              onPressed: () => mostraBottomSheetRating(),
-              child: Text("Aggiungi recensione"),
+              onPressed: () => (),
+              child: Text("Inizia la lettura"),
             ),
           );
-        }
-      }
-      if (stato == StatoLibro.abbandonato) {
-        buttons.add(
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                libro.stato = StatoLibro.inLettura;
-              });
-            },
-            child: Text("Riprendi lettura"),
-          ),
-        );
-        if (!haRecensione) {
+          break;
+        case StatoLibro.inLettura:
           buttons.add(
             ElevatedButton(
-              onPressed: () => mostraBottomSheetRating(),
-              child: Text("Aggiungi recensione"),
+              onPressed: () => (),
+              child: Text("Aggiorna pagine lette"),
             ),
           );
-        }
+          buttons.add(
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  libro.stato = StatoLibro.abbandonato;
+                });
+              },
+              child: Text("Abbandona lettura"),
+            ),
+          );
+          if (!haRecensione) {
+            buttons.add(
+              ElevatedButton(
+                onPressed: () => (),
+                child: Text("Aggiungi recensione"),
+              ),
+            );
+          }
+          break;
+        case StatoLibro.abbandonato:
+          buttons.add(
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  libro.stato = StatoLibro.inLettura;
+                });
+              },
+              child: Text("Riprendi lettura"),
+            ),
+          );
+          if (!haRecensione) {
+            buttons.add(
+              ElevatedButton(
+                onPressed: () => (),
+                child: Text("Aggiungi recensione"),
+              ),
+            );
+          }
+          break;
+        default:
+          break;
       }
     }
     return buttons;
   }
 
   Widget bookImg() {
-    return Container(
+    return SizedBox(
       width: 175,
       height: 225,
       child: LibroCoverWidget(libro: libro),
@@ -297,109 +318,6 @@ class _BookDetailState extends State<BookDetail>
           ),
         ],
       ),
-    );
-  }
-
-  void mostraBottomSheetPagine() {
-    final TextEditingController _controller_quantity = TextEditingController();
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: 300,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Aggiorna pagine lette",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Pagine lette: ${libro.numPagineLette ?? 0} / ${libro.numeroPagine ?? 0}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-                ),
-                SizedBox(height: 15),
-                InputQty.int(
-                  qtyFormProps: QtyFormProps(
-                    controller: _controller_quantity,
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  decoration: QtyDecorationProps(
-                    isBordered: false,
-                    borderShape: BorderShapeBtn.circle,
-                    width: 12,
-                  ),
-
-                  //fillColor: Colors.grey[200],
-                  initVal: libro.numPagineLette ?? 0,
-                  maxVal: libro.numeroPagine ?? 0,
-                  minVal: libro.numPagineLette ?? 0,
-                ),
-                SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: () {
-                    final numero = _controller_quantity.text;
-                    setState(() {
-                      libro.numPagineLette = int.tryParse(numero);
-                      Libreria().modificaLibro(libro.isbn, libro);
-
-                      if (libro.numPagineLette! == libro.numeroPagine!) {
-                        // Se tutte le pagine sono lette metto stato inlettura
-                        libro.stato = StatoLibro.letto;
-                        libro.numPagineLette = libro.numeroPagine;
-                      } else if (libro.stato == StatoLibro.daLeggere &&
-                          (libro.numPagineLette != null &&
-                              libro.numPagineLette! > 0)) {
-                        // Se il libro era da leggere e ora ha pagine lette, lo metto in lettura
-                        libro.stato = StatoLibro.inLettura;
-                      }
-                      Libreria().modificaLibro(libro.isbn, libro);
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text("Salva"),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void mostraBottomSheetRating() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Inserisci il tuo voto",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  return IconButton(
-                    icon: Icon(Icons.star, color: Colors.amber),
-                    onPressed: () {
-                      setState(() {
-                        libro.voto = index + 1.0;
-                      });
-                      Navigator.pop(context);
-                    },
-                  );
-                }),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
