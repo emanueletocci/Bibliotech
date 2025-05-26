@@ -26,7 +26,7 @@ class _BookDetailState extends State<BookDetail>
   late TabController _tabControllerDetail;
   late Libro libro;
   late Libreria? libreria;
-  late List<bool> selected;
+  late bool isFavorite;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _BookDetailState extends State<BookDetail>
     libro = widget.libro;
 
     // Inizializzo lo stato dei toggle buttons
-    selected = [false, false];
+    isFavorite = false;
   }
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
@@ -135,19 +135,17 @@ class _BookDetailState extends State<BookDetail>
                           onRatingChanged: (rating) {}, // rating fisso
                         ),
                       ),
-                    // Toggle Buttons per preferiti e wishlist
-                    ToggleButtons(
-                      isSelected: selected,
-                      renderBorder: false,
-                      onPressed: (int index) {
+                    // Toggle Buttons per preferiti
+                    IconButton(
+                      icon: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: () {
                         setState(() {
-                          selected[index] = !selected[index];
+                          isFavorite = !isFavorite;
                         });
                       },
-                      children: const [
-                        Icon(Icons.favorite),
-                        Icon(Icons.shopping_cart),
-                      ],
                     ),
                   ],
                 ),
@@ -200,7 +198,7 @@ class _BookDetailState extends State<BookDetail>
         ),
       );
     } else {
-            buttons.add(
+      buttons.add(
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.purple,
