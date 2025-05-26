@@ -15,6 +15,7 @@ class Libro {
   String? note;
   StatoLibro? stato;
   String? publisher;
+  bool preferito;
 
   Libro({
     required this.titolo,
@@ -30,6 +31,7 @@ class Libro {
     this.note,
     this.stato,
     this.publisher,
+    this.preferito = false, // Imposto preferito a false di default
   });
 
   /* FORMATO API LIBRO GOOGLE BOOKS
