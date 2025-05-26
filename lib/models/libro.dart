@@ -18,7 +18,6 @@ class Libro {
   String? note;
   StatoLibro? stato;
   String? publisher;
-  String? subtitle;
 
   Libro({
     required this.titolo,
@@ -34,7 +33,6 @@ class Libro {
     this.note,
     this.stato,
     this.publisher,
-    this.subtitle,
     this.numPagineLette = 0,
   });
 
@@ -88,7 +86,6 @@ class Libro {
       // genere: mappedGenere, // Applica la mappatura del genere (questo rimane a tua discrezione)
       lingua: volumeInfo?['language'] as String?,
       trama: volumeInfo?['description'] as String?,
-      subtitle: volumeInfo?['subtitle'] as String?,
       publisher: volumeInfo?['publisher'] as String?,
 
       isbn: _parseIsbn(volumeInfo),

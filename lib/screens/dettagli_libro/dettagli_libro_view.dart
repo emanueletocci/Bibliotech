@@ -19,7 +19,8 @@ class BookDetail extends StatefulWidget {
 // Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
 // in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
 // In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
-class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateMixin {
+class _BookDetailState extends State<BookDetail>
+    with SingleTickerProviderStateMixin {
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
@@ -34,7 +35,6 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
     // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,28 +70,28 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
       ),
 
       body: SafeArea(
-        child:       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          bookSummary(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            bookSummary(),
 
-          // Tab bar per info e note
-          TabBar(
-            controller: _tabControllerDetail,
-            tabs: [Tab(text: "Info"), Tab(text: "Note")],
-          ),
-
-          // Contenuto info e note
-          Expanded(
-            // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
-            child: TabBarView(
+            // Tab bar per info e note
+            TabBar(
               controller: _tabControllerDetail,
-              children: [infoSection(), noteSection()],
+              tabs: [Tab(text: "Info"), Tab(text: "Note")],
             ),
-          ),
-        ],
+
+            // Contenuto info e note
+            Expanded(
+              // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
+              child: TabBarView(
+                controller: _tabControllerDetail,
+                children: [infoSection(), noteSection()],
+              ),
+            ),
+          ],
+        ),
       ),
-    )
     );
   }
 
@@ -158,7 +158,6 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
   // - Se il libro è "Da leggere", "Aggiorna pagine lette"
   // - Se il libro è "In lettura", mostro "Aggiorna pagine lette", "Abbandona" e "Aggiungi recensione"
   // - Se il libro è "Letto" o "Abbandonato", mostro "Aggiungi recensione"
-
 
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
@@ -252,9 +251,9 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
 
   Widget infoSection() {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: EdgeInsets.all(20),
       child: Column(
-        spacing: 5,
+        spacing: 3,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InfoBlock(label: "Titolo", value: libro.titolo),
@@ -276,7 +275,6 @@ class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateM
                     : "N/A",
           ),
           InfoBlock(label: "Produttore", value: libro.publisher ?? "N/A"),
-          InfoBlock(label: "Sottotitolo", value: libro.subtitle ?? "N/A"),
           InfoBlock(label: "Lingua", value: libro.lingua ?? "N/A"),
           InfoBlock(
             label: "Trama",
