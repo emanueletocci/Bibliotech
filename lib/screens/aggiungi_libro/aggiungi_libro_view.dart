@@ -18,7 +18,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
   // viene eseguito subito dopo initState e prima di build
-  // In questo modo la libreria e il controller non vengono ricreati ad ogni build
+  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
 
   @override
   void didChangeDependencies() {
