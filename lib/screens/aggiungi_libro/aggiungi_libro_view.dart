@@ -1,6 +1,7 @@
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/genere_libro.dart';
 import '../../services/controllers/aggiungi_libro_controller.dart';
 import 'dart:io';
 import '../../models/libreria.dart';
@@ -106,14 +107,16 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                 decoration: const InputDecoration(labelText: 'Numero Pagine'),
                 keyboardType: TextInputType.number,
               ),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Categoria'),
+              DropdownButtonFormField<GenereLibro>(
+                decoration: const InputDecoration(labelText: 'Genere'),
                 value: controller.genereSelezionato,
                 items:
                     controller.generi
                         .map(
-                          (cat) =>
-                              DropdownMenuItem(value: cat, child: Text(cat)),
+                          (genere) => DropdownMenuItem<GenereLibro>(
+                            value: genere,
+                            child: Text(genere.titolo),
+                          ),
                         )
                         .toList(),
                 onChanged: (val) {
@@ -122,6 +125,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   });
                 },
               ),
+
               TextField(
                 controller: controller.linguaController,
                 decoration: const InputDecoration(labelText: 'Lingua'),
@@ -152,9 +156,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
               ),
               DropdownButtonFormField<StatoLibro>(
                 decoration: const InputDecoration(labelText: 'Stato'),
-                value:
-                    controller
-                        .statoSelezionato, 
+                value: controller.statoSelezionato,
                 items:
                     controller.stati
                         .map(

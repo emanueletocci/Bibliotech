@@ -7,7 +7,10 @@ import '../../models/libreria.dart';
 class RicercaGoogleBooksController {
   final TextEditingController searchQueryController = TextEditingController();
   final BookApiService _apiService = BookApiService();
-  final Libreria _libreria = Libreria();
+  final Libreria _libreria;
+
+  // Il controller prende in input la libreria fornita dalla vista tramite il Provider
+  RicercaGoogleBooksController(this._libreria);
 
   // Variabile contenente tutti i libri restituiti dall'API per una ricerca
   List<Libro> _searchResults = [];

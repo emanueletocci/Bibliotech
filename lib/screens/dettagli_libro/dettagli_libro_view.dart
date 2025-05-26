@@ -19,8 +19,7 @@ class BookDetail extends StatefulWidget {
 // Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
 // in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
 // In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
-class _BookDetailState extends State<BookDetail>
-    with SingleTickerProviderStateMixin {
+class _BookDetailState extends State<BookDetail> with SingleTickerProviderStateMixin {
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
@@ -28,22 +27,14 @@ class _BookDetailState extends State<BookDetail>
   @override
   void initState() {
     super.initState();
-    _tabControllerDetail = TabController(length: 2, vsync: this);
-
-    final libroSalvato = Libreria().cercaLibroPerIsbn(widget.libro.isbn);
-    if (libroSalvato == null) {
-      Libreria().aggiungiLibro(widget.libro);
-      libro = widget.libro;
-    } else {
-      libro = libroSalvato;
-    }
+    _tabControllerDetail = TabController(
+      length: 2, // Due tab: Info e Note
+      vsync: this, // Fornisce il parametro vsync per l'animazione
+    );
+    // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
+    libro = widget.libro;
   }
 
-  @override
-  void dispose() {
-    _tabControllerDetail.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +62,13 @@ class _BookDetailState extends State<BookDetail>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
           // Inserire codice per abilitare la modifica dei campi del libro
-          
+
           setState(() {});
         },
         child: Icon(Icons.edit),
       ),
-      
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -92,7 +82,7 @@ class _BookDetailState extends State<BookDetail>
 
           // Contenuto info e note
           Expanded(
-          // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
+            // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
             child: TabBarView(
               controller: _tabControllerDetail,
               children: [infoSection(), noteSection()],
@@ -156,16 +146,32 @@ class _BookDetailState extends State<BookDetail>
     );
   }
 
+  ///posso fare percentuale lettura per ogni libro nella libreria
+  //totali libri letti, abbandonati e inlettura e da incominciare
+  ///e mostrare un grafico a torta con le percentuali
+  ///statistiche recensioni
+  ///
+
+  //mostro pulsanti diversi a seconda dello stato del libro:
+  // - Se il libro non ha stato, mostro "Aggiungi alla biblioteca"
+  // - Se il libro è "Da leggere", "Aggiorna pagine lette"
+  // - Se il libro è "In lettura", mostro "Aggiorna pagine lette", "Abbandona" e "Aggiungi recensione"
+  // - Se il libro è "Letto" o "Abbandonato", mostro "Aggiungi recensione"
+
+  
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
     final haRecensione = libro.voto != null;
     List<Widget> buttons = [];
 
     if (stato == null) {
-      // Stato nullo: mostra pulsante per iniziare a seguire il libro
       buttons.add(
         ElevatedButton(
-          child: Text("Segna come 'Da leggere'"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple,
+            foregroundColor: Colors.white,
+          ),
+          child: Text("Aggiungi alla biblioteca"),
           onPressed: () {
             setState(() {
               libro.stato = StatoLibro.daLeggere;
@@ -174,24 +180,11 @@ class _BookDetailState extends State<BookDetail>
         ),
       );
     } else {
-      // Mostra stato attuale
-      String statoLabel = switch (stato) {
-        StatoLibro.daLeggere => "Da leggere",
-        StatoLibro.inLettura => "In lettura",
-        StatoLibro.letto => "Letto",
-        StatoLibro.abbandonato => "Abbandonato",
-        // TODO: Handle this case.
-        StatoLibro.daAcquistare => throw UnimplementedError(),
-      };
-
-      buttons.add(ElevatedButton(onPressed: null, child: Text(statoLabel)));
-
-      // Azioni aggiuntive per stato specifico
       if (stato == StatoLibro.daLeggere) {
         buttons.add(
           ElevatedButton(
             onPressed: () => mostraBottomSheetPagine(),
-            child: Text("Aggiorna pagine lette"),
+            child: Text("Inizia la lettura"),
           ),
         );
       }
@@ -224,23 +217,36 @@ class _BookDetailState extends State<BookDetail>
           );
         }
       }
-
-      if ((stato == StatoLibro.letto || stato == StatoLibro.abbandonato) &&
-          !haRecensione) {
+      if (stato == StatoLibro.abbandonato) {
         buttons.add(
           ElevatedButton(
-            onPressed: () => mostraBottomSheetRating(),
-            child: Text("Aggiungi recensione"),
+            onPressed: () {
+              setState(() {
+                libro.stato = StatoLibro.inLettura;
+              });
+            },
+            child: Text("Riprendi lettura"),
           ),
         );
+        if (!haRecensione) {
+          buttons.add(
+            ElevatedButton(
+              onPressed: () => mostraBottomSheetRating(),
+              child: Text("Aggiungi recensione"),
+            ),
+          );
+        }
       }
     }
-
     return buttons;
   }
 
   Widget bookImg() {
-    return LibroCoverWidget(libro: libro);
+    return Container(
+      width: 175,
+      height: 250,
+      child: LibroCoverWidget(libro: libro),
+    );
   }
 
   Widget infoSection() {

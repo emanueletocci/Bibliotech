@@ -1,7 +1,10 @@
+import 'package:bibliotech/screens/dettagli_libro/dettagli_libro_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../services/controllers/aggiungi_libro_api_controller.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/libro.dart';
+import '../../models/libreria.dart';
 
 class RicercaGoogleBooksView extends StatefulWidget {
   const RicercaGoogleBooksView({super.key});
@@ -11,10 +14,23 @@ class RicercaGoogleBooksView extends StatefulWidget {
 }
 
 class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
-  final RicercaGoogleBooksController controller =
-      RicercaGoogleBooksController();
+  late RicercaGoogleBooksController controller;
+  bool _isControllerInitialized = false;
 
-  // Metodo per gestire la ricerca dei libri. Ora gestisce setState e i messaggi.
+  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
+  // viene eseguito subito dopo initState e prima di build
+  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isControllerInitialized) {
+      final libreria = context.watch<Libreria>();
+      controller = RicercaGoogleBooksController(libreria);
+      _isControllerInitialized = true;
+    }
+  }
+
+  // Metodo per gestire la ricerca dei libri.
   Future<void> _handleSearchBooks() async {
     try {
       await controller.searchBooks();
@@ -32,7 +48,8 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
         );
       }
     } finally {
-      setState(() {});
+      if(mounted)
+        setState(() {}); // Mostro i risultati della ricerca;
     }
   }
 
@@ -130,7 +147,8 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () {
-                        _handleAggiungiLibro(book);
+                        //_handleAggiungiLibro(book);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetail(libro: book)));
                       },
                     ),
                   );

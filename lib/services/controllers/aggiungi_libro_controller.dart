@@ -9,12 +9,8 @@ import '../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
 class AggiungiLibroController {
-  final List<String> generi =
-      GenereLibro.values.map((genere) => genere.name).toList();
-
-
-  final List<StatoLibro> stati =
-      StatoLibro.values.toList();
+  final List<GenereLibro> generi = GenereLibro.values.toList();
+  final List<StatoLibro> stati = StatoLibro.values.toList();
 
   final TextEditingController titoloController = TextEditingController();
   final TextEditingController autoriController = TextEditingController();
@@ -27,7 +23,7 @@ class AggiungiLibroController {
   final TextEditingController votoController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
-  String? genereSelezionato;
+  GenereLibro? genereSelezionato;
   StatoLibro? statoSelezionato;
 
   final Libreria _libreria;
@@ -76,24 +72,11 @@ class AggiungiLibroController {
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
     isbn = isbnController.text.toUpperCase().trim();
-    //dataPubblicazione = DateTime.tryParse(dataPubblicazioneController.text);
+    dataPubblicazione = DateTime.tryParse(dataPubblicazioneController.text);
     voto = double.tryParse(votoController.text);
     note = noteController.text;
-
-    try {
-      genere = GenereLibro.values.firstWhere(
-        (genere) => genere.name == genereSelezionato,
-      );
-    } catch (e) {
-      genere = null;
-    }
-    try {
-      stato = StatoLibro.values.firstWhere(
-        (stato) => stato.name == statoSelezionato,
-      );
-    } catch (e) {
-      stato = null;
-    }
+    genere = genereSelezionato;
+    stato = statoSelezionato;
 
     if (controllaCampi()) {
       Libro nuovoLibro = Libro(
@@ -104,7 +87,7 @@ class AggiungiLibroController {
         lingua: lingua,
         trama: trama,
         isbn: isbn,
-        //dataPubblicazione: dataPubblicazione,
+        dataPubblicazione: dataPubblicazione,
         voto: voto,
         copertina: copertina,
         note: note,
