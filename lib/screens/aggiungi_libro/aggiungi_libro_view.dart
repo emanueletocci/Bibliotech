@@ -8,7 +8,9 @@ import '../../services/controllers/aggiungi_libro_controller.dart';
 import '../../models/libreria.dart';
 
 class AggiungiLibro extends StatefulWidget {
-  const AggiungiLibro({super.key});
+  final Libro? libroDaModificare;
+
+  const AggiungiLibro({super.key, this.libroDaModificare});
 
   @override
   State<AggiungiLibro> createState() => _AggiungiLibroState();
@@ -33,7 +35,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
     super.didChangeDependencies();
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
-      controller = AggiungiLibroController(libreria);
+      controller = AggiungiLibroController(libreria, widget.libroDaModificare);
       _isControllerInitialized = true;
     }
   }
@@ -200,7 +202,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
       );
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
-      Navigator.of(context).pop(true); // Segnala successo!
+      Navigator.of(context).pop(true); // Segnalo successo!
     } catch (e) {
       String errorMessage = e.toString();
       const prefix = 'Exception: ';

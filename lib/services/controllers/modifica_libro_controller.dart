@@ -8,7 +8,7 @@ import 'dart:io';
 import '../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
-class AggiungiLibroController {
+class ModificaLibroController {
   final List<GenereLibro> generi = GenereLibro.values.toList();
   final List<StatoLibro> stati = StatoLibro.values.toList();
 
@@ -33,55 +33,19 @@ class AggiungiLibroController {
   int? numeroPagine;
   String? lingua;
   String? trama;
-  String isbn = '';
+  String isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String copertina = 'assets/images/book_placeholder.jpg';
+  String copertina;
   String? note;
   StatoLibro? stato;
   GenereLibro? genere;
   // Imposto preferito a false di default
   bool isPreferito = false;
 
-  // Flag booleano per distinguere tra aggiunta e modifica
-  bool _isEditable = false;
-  Libro? _libroDaModificare;
-
-  // Costruttore con parametro opzionale per modificare un libro esistente
-  // Se il parametro é presente, inizializza i campi con i valori del libro da modificare
-  // Il controller gestisce quindi la modifica del libro
-  AggiungiLibroController(this._libreria, [Libro? libroDaModificare]) {
-    if (libroDaModificare != null) {
-      _libroDaModificare = libroDaModificare;
-      _initFields(libroDaModificare);
-      copertina = libroDaModificare.copertina!;
-      _isEditable =
-          true; // Imposto il flag per indicare che si sta modificando un libro
-    } else {
-      copertina =
-          'assets/images/book_placeholder.jpg'; // Imposto un placeholder di default
+  ModificaLibroController(this._libreria)
+    : copertina = 'assets/images/book_placeholder.jpg',
       isbn = '';
-      _isEditable =
-          false; // Imposto il flag per indicare che si sta aggiungendo un  nuovo libro
-    }
-  }
-
-  // Se il libro é presente, inizializza i campi con i valori del libro da modificare
-  void _initFields(Libro libro) {
-    titoloController.text = libro.titolo;
-    autoriController.text = libro.autori?.join(', ') ?? '';
-    numeroPagineController.text = libro.numeroPagine?.toString() ?? '';
-    linguaController.text = libro.lingua ?? '';
-    tramaController.text = libro.trama ?? '';
-    isbnController.text = libro.isbn;
-    dataPubblicazioneController.text =
-        libro.dataPubblicazione?.toString() ?? '';
-    votoController.text = libro.voto?.toString() ?? '';
-    noteController.text = libro.note ?? '';
-    genereSelezionato = libro.genere;
-    statoSelezionato = libro.stato;
-    isPreferito = libro.preferito;
-  }
 
   // Metodo per la selezione e salvataggio della copertina dalla galleria
   // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
@@ -106,15 +70,12 @@ class AggiungiLibroController {
   void handleAggiungi() {
     // Recupero i valori dai controller e li pulisco
     titolo = titoloController.text.trim();
-    autori =
-        autoriController.text
-            .split(',')
-            .map((e) => e.trim())
-            .where(
-              (e) => e.isNotEmpty,
-            ) // Filtro le liste per rimuovere eventuali stringhe vuote
-            .toList();
-
+    autori = autoriController.text
+      .split(',')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty) // Filtro le liste per rimuovere eventuali stringhe vuote
+      .toList();
+      
     numeroPagine = int.tryParse(numeroPagineController.text);
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
@@ -125,31 +86,23 @@ class AggiungiLibroController {
     genere = genereSelezionato;
     stato = statoSelezionato;
 
-    if (!controllaCampi()) {
-      return; // Se i campi non sono validi, esco direttamente
-    }
+    if (controllaCampi()) {
+      Libro nuovoLibro = Libro(
+        titolo: titolo!,
+        autori: autori,
+        numeroPagine: numeroPagine,
+        genere: genere,
+        lingua: lingua,
+        trama: trama,
+        isbn: isbn,
+        dataPubblicazione: dataPubblicazione,
+        voto: voto,
+        copertina: copertina,
+        note: note,
+        stato: stato,
+        preferito: isPreferito, 
+      );
 
-    Libro nuovoLibro = Libro(
-      titolo: titolo!,
-      autori: autori,
-      numeroPagine: numeroPagine,
-      genere: genere,
-      lingua: lingua,
-      trama: trama,
-      isbn: isbn,
-      dataPubblicazione: dataPubblicazione,
-      voto: voto,
-      copertina: copertina,
-      note: note,
-      stato: stato,
-      preferito: isPreferito,
-    );
-
-    if (_libroDaModificare != null) {
-      // Se il libro da modificare é presente, lo aggiorno
-      _libreria.modificaLibro(_libroDaModificare!, nuovoLibro);
-    } else {
-      // Altrimenti lo aggiungo come nuovo libro
       _libreria.aggiungiLibro(nuovoLibro);
     }
   }
@@ -169,21 +122,10 @@ class AggiungiLibroController {
 
     // Inserire validazione ISBN
 
-    if (_isEditable) {
-      // Modalitá modifica
-      if(isbn != _libroDaModificare!.isbn){
-        // Se il nuovo ISBN è diverso, verifico che non esista già un libro con quel ISBN
-        if(_libreria.cercaLibroPerIsbn(isbn) != null) {
-          status = false;
-          throw Exception("Il libro con questo ISBN è già presente in libreria");
-        }
-      }
-    } else {
-      // Modalitá aggiunta
-      if (_libreria.cercaLibroPerIsbn(isbn) != null) {  
-        status = false;
-        throw Exception("Il libro con questo ISBN è già presente in libreria");
-      }
+    // Se il libro é giá presente, non lo aggiungo e lancio eccezione
+    if (_libreria.cercaLibroPerIsbn(isbn) != null) {
+      status = false;
+      throw Exception("Il libro con questo ISBN è già presente in libreria");
     }
 
     return status;

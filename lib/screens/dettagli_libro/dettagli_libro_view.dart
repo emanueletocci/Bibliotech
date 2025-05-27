@@ -1,13 +1,12 @@
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
+import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../models/genere_libro.dart';
-import '../../models/libro.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../models/libro.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import '../../components/libro_cover_widget.dart';
-import '../../services/controllers/dettagli_libro_controller.dart';
 
 class DettagliLibro extends StatefulWidget {
   final Libro libro;
@@ -27,8 +26,7 @@ class _DettagliLibroState extends State<DettagliLibro>
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;
   late Libro libro;
-  late Libreria? libreria;
-  late DettagliLibroController _controller;
+  late Libreria libreria;
 
   // Variabile per gestire la modalità di modifica
   // Quando é true, i campi del libro sono editabili e vengono mostrati anche quelli nascosti
@@ -43,7 +41,6 @@ class _DettagliLibroState extends State<DettagliLibro>
     );
     // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
-    _controller = DettagliLibroController(libro);
   }
 
   // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
@@ -69,6 +66,10 @@ class _DettagliLibroState extends State<DettagliLibro>
           setState(() {
             isEditing = !isEditing; // toggle della modalità di modifica
           });
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AggiungiLibro(libroDaModificare: libro,)),
+          );
         },
         child: Icon(Icons.edit),
       ),
@@ -189,7 +190,7 @@ class _DettagliLibroState extends State<DettagliLibro>
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
     final haVoto = libro.voto != null;
-    final isInLibreria = libreria?.cercaLibroPerIsbn(libro.isbn) != null;
+    final isInLibreria = libreria.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
     if (isEditing) {
@@ -204,7 +205,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           onPressed: () {
             // DA AGGIORNARE... PENSO DI SPOSTARE TUTTA LA LOGICA NEL CONTROLLER IN MODO DA NON USARE
             // DIRETTAMENTE IL MODELLO FORNITO DAL PROVIDER
-            libreria?.aggiungiLibro(libro);
+            libreria.aggiungiLibro(libro);
           },
         ),
       );
@@ -220,7 +221,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline, color: Colors.white),
           onPressed: () {
-            libreria?.aggiungiLibro(libro);
+            libreria.aggiungiLibro(libro);
           },
         ),
       );
@@ -234,7 +235,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove, color: Colors.white),
           onPressed: () {
-            libreria?.rimuoviLibro(libro);
+            libreria.rimuoviLibro(libro);
           },
         ),
       );
@@ -319,138 +320,51 @@ class _DettagliLibroState extends State<DettagliLibro>
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            libro.getNoteString(),
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
+        children: [Text(libro.getNoteString(), style: TextStyle(fontSize: 16))],
       ),
     );
   }
 
   // Metodo helper per costruire i blocchi di informazioni relativi al libro, basato sui campi disponibili
   // Se un campo del model é null, non mostro nulla
+
   List<Widget> buildInfoBlocks(Libro libro) {
-    if (isEditing) {
-      return [
-              TextField(
-                controller: _controller.titoloController,
-                decoration: const InputDecoration(labelText: 'Titolo*'),
-              ),
-              TextField(
-                controller: _controller.autoriController,
-                decoration: const InputDecoration(labelText: 'Autori'),
-              ),
-              TextField(
-                controller: _controller.numeroPagineController,
-                decoration: const InputDecoration(labelText: 'Numero Pagine'),
-                keyboardType: TextInputType.number,
-              ),
-              DropdownButtonFormField<GenereLibro>(
-                decoration: const InputDecoration(labelText: 'Genere'),
-                value: _controller.genereSelezionato,
-                items:
-                    _controller.generi
-                        .map(
-                          (genere) => DropdownMenuItem<GenereLibro>(
-                            value: genere,
-                            child: Text(genere.titolo),
-                          ),
-                        )
-                        .toList(),
-                onChanged: (val) {
-                  setState(() {
-                    _controller.genereSelezionato = val;
-                  });
-                },
-              ),
+    // Se la modalitá di modifica é attiva, mostro i campi modificabili (tutti quelli del model Libro)
+    return [
+      InfoBlock(label: "Titolo", value: libro.titolo),
 
-              TextField(
-                controller: _controller.linguaController,
-                decoration: const InputDecoration(labelText: 'Lingua'),
-                keyboardType: TextInputType.text,
-              ),
-              TextField(
-                controller: _controller.tramaController,
-                decoration: const InputDecoration(labelText: 'Trama'),
-              ),
-              TextField(
-                controller: _controller.isbnController,
-                decoration: const InputDecoration(labelText: 'ISBN*'),
-              ),
-              TextField(
-                controller: _controller.dataPubblicazioneController,
-                decoration: const InputDecoration(
-                  labelText: 'Data Pubblicazione',
-                ),
-                keyboardType: TextInputType.datetime,
-              ),
-              TextField(
-                controller: _controller.votoController,
-                decoration: const InputDecoration(labelText: 'Voto'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: _controller.noteController,
-                decoration: const InputDecoration(labelText: 'Note personali'),
-              ),
-              DropdownButtonFormField<StatoLibro>(
-                decoration: const InputDecoration(labelText: 'Stato'),
-                value: _controller.statoSelezionato,
-                items:
-                    _controller.stati
-                        .map(
-                          (stato) => DropdownMenuItem<StatoLibro>(
-                            value: stato,
-                            child: Text(stato.titolo),
-                          ),
-                        )
-                        .toList(),
-                onChanged: (val) {
-                  setState(() {
-                    _controller.statoSelezionato = val;
-                  });
-                },
-              ),
-      ];
-    } else {
-      return [
-        InfoBlock(label: "Titolo", value: libro.titolo),
+      // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
+      InfoBlock(label: "Autori", value: libro.getAutoriString()),
 
-        // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
-        InfoBlock(label: "Autori", value: libro.getAutoriString()),
+      if (libro.numeroPagine != null)
+        InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
 
-        if (libro.numeroPagine != null)
-          InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
+      if (libro.genere != null)
+        InfoBlock(label: "Genere", value: libro.genere!.toString()),
 
-        if (libro.genere != null)
-          InfoBlock(label: "Genere", value: libro.genere!.toString()),
+      InfoBlock(label: "ISBN", value: libro.isbn),
 
-        InfoBlock(label: "ISBN", value: libro.isbn),
+      if (libro.dataPubblicazione != null)
+        InfoBlock(
+          label: "Data di pubblicazione",
+          value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
+        ),
 
-        if (libro.dataPubblicazione != null)
-          InfoBlock(
-            label: "Data di pubblicazione",
-            value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
-          ),
+      if (libro.publisher != null)
+        InfoBlock(label: "Produttore", value: libro.publisher!),
 
-        if (libro.publisher != null)
-          InfoBlock(label: "Produttore", value: libro.publisher!),
+      if (libro.lingua != null && libro.lingua!.isNotEmpty)
+        InfoBlock(label: "Lingua", value: libro.lingua!),
 
-        if (libro.lingua != null && libro.lingua!.isNotEmpty)
-          InfoBlock(label: "Lingua", value: libro.lingua!),
+      if (libro.trama != null && libro.trama!.isNotEmpty)
+        InfoBlock(label: "Trama", value: libro.trama!),
 
-        if (libro.trama != null && libro.trama!.isNotEmpty)
-          InfoBlock(label: "Trama", value: libro.trama!),
+      if (libro.note != null && libro.note!.isNotEmpty)
+        InfoBlock(label: "Note", value: libro.note!),
 
-        if (libro.note != null && libro.note!.isNotEmpty)
-          InfoBlock(label: "Note", value: libro.note!),
-
-        if (libro.stato != null)
-          InfoBlock(label: "Stato", value: libro.stato!.titolo),
-      ];
-    }
+      if (libro.stato != null)
+        InfoBlock(label: "Stato", value: libro.stato!.titolo),
+    ];
   }
 }
 

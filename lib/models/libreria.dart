@@ -43,12 +43,12 @@ class Libreria extends ChangeNotifier {
 
   /// Modifica un libro esistente specificando ISBN e nuovo oggetto Libro
   /// Utile per aggiornare metadati o stato del libro
-  void modificaLibro(String isbn, Libro libro) {
-    if (_libri.containsKey(isbn)) {
-      _libri[isbn] = libro;
+  void modificaLibro(Libro vecchioLibro, Libro nuovoLibro) {
+    if (_libri.containsKey(vecchioLibro.isbn)) {
+      _libri[vecchioLibro.isbn] = nuovoLibro;
       notifyListeners();
     } else {
-      throw Exception("ISBN non trovato");
+      throw Exception("Libro non trovato per la modifica");
     }
   }
 
