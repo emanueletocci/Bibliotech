@@ -46,6 +46,7 @@ dependencies:
   http: ^1.4.0
   provider: ^6.1.5
   curved_labeled_navigation_bar: ^2.0.6 #latest version
+  sqflite_common_ffi: ^2.3.5
 
 dev_dependencies:
   flutter_test:
