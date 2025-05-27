@@ -3,7 +3,8 @@
  * implementate in file separati e richiamate qui, al fine di mantenere il codice piú ordinato ed evitare di innestare scaffold.
 */
 
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'home/homepage_view.dart';
 import 'libreria/libreria_view.dart';
@@ -43,7 +44,18 @@ class _MainScreenState extends State<MainScreen> {
         index: _selectedIndex,
         onTap: _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
         animationDuration: const Duration(milliseconds: 300),
-        items: [Icon(Icons.home), Icon(Icons.book)],
+        items: [
+          CurvedNavigationBarItem(
+            child: Icon(Icons.home, size: 30, color: Colors.white),
+            label: 'Home',
+            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          CurvedNavigationBarItem(
+            child: Icon(Icons.library_books, size: 30, color: Colors.white,),
+            label: 'Libreria',
+            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
