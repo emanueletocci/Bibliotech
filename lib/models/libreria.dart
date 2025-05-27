@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'libro.dart';
+import '../services/dao/db.dart';
 
 class Libreria extends ChangeNotifier {
   // Implementazione del Singleton con integrazione Provider (ChangeNotifier)
@@ -8,11 +9,11 @@ class Libreria extends ChangeNotifier {
 
   static final Libreria _instance = Libreria._privateConstructor();
 
-  /// Costruttore factory che restituisce l'istanza singleton
-  /// Chiamando Libreria() si ottiene sempre la stessa istanza condivisa
+  // Costruttore factory che restituisce l'istanza singleton
+  // Chiamando Libreria() si ottiene sempre la stessa istanza condivisa
   factory Libreria() => _instance;
 
-  /// Costruttore privato per il singleton (previene creazioni esterne)
+  // Costruttore privato per il singleton (previene creazioni esterne)
   Libreria._privateConstructor();
 
   // Struttura dati principale per la gestione dei libri
@@ -20,28 +21,59 @@ class Libreria extends ChangeNotifier {
   // - Value: Istanza del libro
   final Map<String, Libro> _libri = {};
 
-  /// Getter che restituisce il numero totale di libri (accesso: libreria.numeroTotaleLibri)
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
+  // Variabile per tenere traccia dell'inizializzazione della mappa interna e gestire il caricamento
+  // automatico dei libri all'avvio dell'app a partire dal database
+  bool _isInitialized = false;
+
+  // Getter che restituisce il numero totale di libri (accesso: libreria.numeroTotaleLibri)
+  // I getter si chiamano come proprietá, utilizzando la dot notation
   int get numeroTotaleLibri => _libri.length;
 
-  /// Aggiunge un libro alla libreria se non presente
-  /// Notifica automaticamente i listener tramite ChangeNotifier
-  void aggiungiLibro(Libro libro) {
-    _libri.putIfAbsent(libro.isbn, () => libro);
-    notifyListeners(); // Trigger per il rebuild dei widget ascoltatori
+  // -- METODI DI UTILITÁ
+
+  // Per garantire coerenza tra dati in memoria e nel database si é deciso di implementare prima la
+  // inserimento nel db e solo dopo l'aggiornamento della mappa interna.
+  // Questo approccio garantisce che la mappa interna sia sempre sincronizzata con il database in quanto,
+  // se l'inserimento nel database fallisce, non si aggiorna la mappa interna.
+
+  // Metodo di inizializzazione che carica i libri dal database nella mappa interna
+  Future<void> init() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+    final libri = await _dbHelper.getAllLibri();
+    _libri.addAll({for (var l in libri) l.isbn: l});
+    notifyListeners();
   }
 
-  /// Rimuove un libro 
-  /// Solleva eccezione se l'ISBN non esiste
-  void rimuoviLibro(Libro libro) {
-    if (_libri.containsKey(libro.isbn)) {
-      _libri.remove(libro.isbn);
+  // Aggiunge un libro alla libreria se non presente
+  Future<void> aggiungiLibro(Libro libro) async {
+    try {
+      //Provo a inserire nel database. Uso await per attendere il completamento dell'operazione
+      await _dbHelper.insertLibro(libro);
+      //Solo se il database ha successo, aggiorno la mappa interna
+      _libri.putIfAbsent(libro.isbn, () => libro);
       notifyListeners();
-    } else {
+    } catch (e) {
+      debugPrint('Errore inserimento libro: $e');
+    }
+  }
+
+  Future<void> rimuoviLibro(Libro libro) async {
+    try {
+      await _dbHelper.deleteLibro(libro.isbn);
+      if (_libri.containsKey(libro.isbn)) {
+        _libri.remove(libro.isbn);
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore rimozione libro: $e');
       throw Exception("ISBN non trovato");
     }
   }
 
-  // Metodo helper per la modifica di un libro. Dato che uso una mappa, 
+  // Metodo helper per la modifica di un libro. Dato che uso una mappa,
   // in realtá rimuovo il vecchio libro e aggiungo quello nuovo.
   // senza dover modificare manualmente le chiavi della mappa
   void modificaLibro(Libro vecchioLibro, Libro nuovoLibro) {
@@ -60,7 +92,6 @@ class Libreria extends ChangeNotifier {
     return null;
   }
 
-  /// Ricerca diretta tramite ISBN (O(1) complexity)
   Libro? cercaLibroPerIsbn(String isbn) {
     return _libri[isbn];
   }

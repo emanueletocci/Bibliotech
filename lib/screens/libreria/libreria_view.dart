@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import '../../models/libreria.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
