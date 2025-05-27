@@ -46,12 +46,14 @@ class _MainScreenState extends State<MainScreen> {
         animationDuration: const Duration(milliseconds: 300),
         items: [
           CurvedNavigationBarItem(
-            child: Icon(Icons.home, size: 30),
+            child: Icon(Icons.home, size: 30, color: Colors.white),
             label: 'Home',
+            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.library_books, size: 30),
+            child: Icon(Icons.library_books, size: 30, color: Colors.white,),
             label: 'Libreria',
+            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ],
       ),

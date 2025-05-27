@@ -5,13 +5,15 @@ class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  GenereLibro? genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
+  GenereLibro?
+  genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
   String? lingua;
   String? trama;
   String isbn; // O isbn10 o isbn13, deciderai quale usare come 'primario'
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
+  String?
+  copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
   String? note;
   StatoLibro? stato;
   String? publisher;
@@ -70,12 +72,74 @@ class Libro {
 
   // Metodo per ottenere una stringa formattata delle note inserite dall'utente
   String getNoteString() {
-    if(note == null || note!.isEmpty) {
+    if (note == null || note!.isEmpty) {
       return "Nessuna nota disponibile";
     }
     return note!;
   }
 
+  //  -- Metodi necessari per SQLite --
+
+  Map<String, dynamic> toMap() {
+    return {
+      'isbn': isbn,
+      'titolo': titolo,
+      'autori': autori?.join(
+        ',',
+      ), // Salva la lista come stringa separata da virgole
+      'numeroPagine': numeroPagine,
+      'genere':
+          genere
+              ?.toString(), // Prelevo direttamente il 'titolo' dell'enumerazione
+      'lingua': lingua,
+      'trama': trama,
+      'dataPubblicazione': dataPubblicazione?.toIso8601String(),
+      'voto': voto,
+      'copertina': copertina,
+      'note': note,
+      'stato':
+          stato
+              ?.toString(), // Prelevo direttamente il 'titolo' dell'enumerazione
+      'publisher': publisher,
+      'preferito':
+          preferito ? 1 : 0, // SQLite non ha booleani, quindi devo usare interi
+    };
+  }
+
+  // Factory constructor per creare un oggetto Libro da una mappa
+  factory Libro.fromMap(Map<String, dynamic> map) {
+    return Libro(
+      titolo: map['titolo'] as String,
+      autori: (map['autori'] as String?)?.split(',').toList(),
+      numeroPagine: map['numeroPagine'] as int?,
+      genere:
+          map['genere'] != null
+              ? GenereLibro.values.firstWhere(
+                (g) => g.toString() == map['genere'],
+              )
+              : null,
+      lingua: map['lingua'] as String?,
+      trama: map['trama'] as String?,
+      isbn: map['isbn'] as String,
+      dataPubblicazione:
+          map['dataPubblicazione'] != null
+              ? DateTime.parse(map['dataPubblicazione'] as String)
+              : null,
+      voto: (map['voto'] as num?)?.toDouble(),
+      copertina: map['copertina'] as String?,
+      note: map['note'] as String?,
+      stato:
+          map['stato'] != null
+              ? StatoLibro.values.firstWhere(
+                (s) => s.toString() == map['stato'],
+              )
+              : null,
+      publisher: map['publisher'] as String?,
+      preferito: (map['preferito'] as int?) == 1,
+    );
+  }
+
+  // -- Metodi necessari per l'API --
 
   // Factory constructor per creare un oggetto Libro da una risposta JSON di Google Books API
   factory Libro.fromGoogleBooksJson(Map<String, dynamic> json) {

@@ -4,10 +4,16 @@ import 'models/libreria.dart';
 import 'themes/themes.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final libreria = Libreria();
+  
+  // Inizializz la libreria caricando i libri dal database
+  await libreria.init(); 
+
   runApp(
     ChangeNotifierProvider<Libreria>(
-      create: (_) => Libreria(),
+      create: (_) => libreria,
       child: MyApp(),
     ),
   );
