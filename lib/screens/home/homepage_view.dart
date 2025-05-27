@@ -61,14 +61,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           child: Column(
+            spacing: 20,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SafeArea(
                 child: Text(
-                  "Welcome!",
+                  "Welcome to Bibliotech!",
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
