@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.blind, size: 25),
+                  icon: const Icon(Icons.shopping_cart, size: 25),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
@@ -173,31 +173,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     : CarouselView(
                       itemExtent: 150,
                       children:
-                          libriConsigliati.map((libro) {
-                            return Container(
-                              width: 150,
-                              height: 150,
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => DettagliLibro(libro: libro),
-                                    ),
-                                  );
-                                  debugPrint(
-                                    'Hai premuto il libro: ${libro.titolo}',
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: LibroCoverWidget(libro: libro),
-                              ),
-                            );
-                          }).toList(),
+                          libriConsigliati
+                              .map(
+                                (libro) => Container(
+                                  width: 150,
+                                  height: 150,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: LibroCoverWidget(libro: libro),
+                                ),
+                              )
+                              .toList(),
+                      onTap: (int index) {
+                        final libro = libriConsigliati[index];
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DettagliLibro(libro: libro),
+                          ),
+                        );
+                        debugPrint('Hai premuto il libro: ${libro.titolo}');
+                      },
                     ),
           ),
           const Text(
@@ -212,19 +209,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     : CarouselView(
                       itemExtent: 150,
                       children:
-                          ultimeAggiunte.map((libro) {
-                            return Container(
-                              width: 150,
-                              height: 150,
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: LibroCoverWidget(libro: libro),
-                              ),
-                            );
-                          }).toList(),
+                          ultimeAggiunte
+                              .map(
+                                (libro) => Container(
+                                  width: 150,
+                                  height: 150,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: LibroCoverWidget(libro: libro),
+                                ),
+                              )
+                              .toList(),
+                      onTap: (int index) {
+                        final libro = ultimeAggiunte[index];
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DettagliLibro(libro: libro),
+                          ),
+                        );
+                        debugPrint('Hai premuto il libro: ${libro.titolo}');
+                      },
                     ),
           ),
         ],
