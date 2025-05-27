@@ -57,12 +57,12 @@ class _DettagliLibroState extends State<DettagliLibro>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dettagli libro', style: TextStyle(color: Colors.white)),
+        title: Text('Dettagli libro'),
         backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Inserire codice per abilitare la modifica dei campi del libro
           setState(() {
             isEditing = !isEditing; // toggle della modalità di modifica
           });
@@ -190,33 +190,16 @@ class _DettagliLibroState extends State<DettagliLibro>
     final isInLibreria = libreria.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
-    if (isEditing) {
-      buttons.add(
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            foregroundColor: Colors.white,
-          ),
-          label: Text("Aggiorna libro"),
-          icon: Icon(Icons.edit, color: Colors.white),
-          onPressed: () {
-            // DA AGGIORNARE... PENSO DI SPOSTARE TUTTA LA LOGICA NEL CONTROLLER IN MODO DA NON USARE
-            // DIRETTAMENTE IL MODELLO FORNITO DAL PROVIDER
-            libreria.aggiungiLibro(libro);
-          },
-        ),
-      );
-    }
     // Se il libro non è presente nella libreria, aggiungo solo il pulsante per aggiungerlo
     if (!isInLibreria) {
       buttons.add(
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Colors.white,
           ),
           label: Text("Aggiungi alla libreria"),
-          icon: Icon(Icons.add_circle_outline, color: Colors.white),
+          icon: Icon(Icons.add_circle_outline),
           onPressed: () {
             libreria.aggiungiLibro(libro);
           },
@@ -226,11 +209,11 @@ class _DettagliLibroState extends State<DettagliLibro>
       buttons.add(
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
             foregroundColor: Colors.white,
           ),
           label: Text("Rimuovi dalla libreria"),
-          icon: Icon(Icons.remove, color: Colors.white),
+          icon: Icon(Icons.remove),
           onPressed: () {
             libreria.rimuoviLibro(libro);
           },
@@ -384,7 +367,7 @@ class InfoBlock extends StatelessWidget {
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 4),
-          Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+          Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
         ],
       ),
     );

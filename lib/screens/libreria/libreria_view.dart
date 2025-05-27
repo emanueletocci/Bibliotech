@@ -133,7 +133,7 @@ class Generi extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black12,
+                              color: Theme.of(context).colorScheme.shadow,
                               blurRadius: 4,
                               offset: Offset(0, 2),
                             ),

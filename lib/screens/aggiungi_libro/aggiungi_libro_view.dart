@@ -37,7 +37,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Aggiungi un nuovo libro!"),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -170,8 +170,8 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple.shade100,
-                    foregroundColor: Colors.deepPurple.shade800,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Colors.white,
                   ),
                 ),
               ),

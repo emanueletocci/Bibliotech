@@ -42,15 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           height: 250,
           width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Color(0xFF8F5CFF),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(70),
               bottomLeft: Radius.circular(150),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.blueGrey,
+                color: Colors.grey,
                 spreadRadius: 1,
                 blurRadius: 15,
                 offset: Offset(0, 3),

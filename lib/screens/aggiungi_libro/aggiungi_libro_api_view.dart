@@ -43,7 +43,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+          SnackBar(content: Text(errorMessage), backgroundColor: Theme.of(context).colorScheme.error),
         );
       }
     } finally {
@@ -56,7 +56,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cerca su Google Books'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
       body: Column(
