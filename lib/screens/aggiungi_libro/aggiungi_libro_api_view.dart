@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/controllers/aggiungi_libro_api_controller.dart';
 import '../../components/libro_cover_widget.dart';
-import '../../models/libro.dart';
 import '../../models/libreria.dart';
 
 class RicercaGoogleBooksView extends StatefulWidget {
@@ -49,31 +48,6 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
       }
     } finally {
       if (mounted) setState(() {}); // Mostro i risultati della ricerca;
-    }
-  }
-
-  // Metodo che gestisce l'aggiunta del libro (fornito dall'API) alla libreria
-  void _handleAggiungiLibro(Libro libroDaAggiungere) {
-    try {
-      controller.handleAggiungi(libroDaAggiungere);
-      // Se handleAggiungi() viene eseguito senza errori, mostro uno SnackBar di successo.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Libro inserito correttamente!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore.
-      String errorMessage = e.toString();
-      const prefix = 'Exception: ';
-      if (errorMessage.startsWith(prefix)) {
-        errorMessage = errorMessage.substring(prefix.length);
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
     }
   }
 

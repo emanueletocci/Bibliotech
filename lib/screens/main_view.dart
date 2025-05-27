@@ -3,6 +3,8 @@
  * implementate in file separati e richiamate qui, al fine di mantenere il codice piú ordinato ed evitare di innestare scaffold.
 */
 
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'home/homepage_view.dart';
 import 'libreria/libreria_view.dart';
@@ -36,21 +38,20 @@ class _MainScreenState extends State<MainScreen> {
         index: _selectedIndex,  // mostro solo la schermata corrispondente a questo indice
         children: _pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,  
+        color: Theme.of(context).colorScheme.primary,
+        index: _selectedIndex,
         onTap: _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+        animationDuration: const Duration(milliseconds: 300),
+        items: [
+          CurvedNavigationBarItem(
+            child: Icon(Icons.home, size: 30),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
+          CurvedNavigationBarItem(
+            child: Icon(Icons.library_books, size: 30),
             label: 'Libreria',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Statistiche',
           ),
         ],
       ),
