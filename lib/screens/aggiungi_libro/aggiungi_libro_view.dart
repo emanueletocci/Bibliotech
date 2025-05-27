@@ -27,21 +27,13 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
     isFavorite = false; // Inizializzo lo stato del preferito a false
   }
 
-  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
-  // viene eseguito subito dopo initState e prima di build
-  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
       controller = AggiungiLibroController(libreria, widget.libroDaModificare);
       _isControllerInitialized = true;
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Aggiungi un nuovo libro!"),

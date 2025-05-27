@@ -31,8 +31,6 @@ class _LibreriaPageState extends State<LibreriaPage> {
   @override
   Widget build(BuildContext context) {
     final libreria = context.watch<Libreria>();
-
-    // Ho rimosso lo scaffold dato che é giá presente nel widget principale
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(16.0),
