@@ -41,15 +41,12 @@ class Libreria extends ChangeNotifier {
     }
   }
 
-  /// Modifica un libro esistente specificando ISBN e nuovo oggetto Libro
-  /// Utile per aggiornare metadati o stato del libro
+  // Metodo helper per la modifica di un libro. Dato che uso una mappa, 
+  // in realtá rimuovo il vecchio libro e aggiungo quello nuovo.
+  // senza dover modificare manualmente le chiavi della mappa
   void modificaLibro(Libro vecchioLibro, Libro nuovoLibro) {
-    if (_libri.containsKey(vecchioLibro.isbn)) {
-      _libri[vecchioLibro.isbn] = nuovoLibro;
-      notifyListeners();
-    } else {
-      throw Exception("Libro non trovato per la modifica");
-    }
+    rimuoviLibro(vecchioLibro);
+    aggiungiLibro(nuovoLibro);
   }
 
   /// Ricerca per titolo (case insensitive)

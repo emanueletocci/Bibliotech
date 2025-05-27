@@ -152,10 +152,7 @@ class _DettagliLibroState extends State<DettagliLibro>
                         color: libro.preferito ? Colors.red : Colors.grey,
                       ),
                       onPressed: () {
-                        setState(() {
-                          // Inverte lo stato del libro come preferito
-                          libro.preferito = !libro.preferito;
-                        });
+                        // void
                       },
                     ),
                   ],
