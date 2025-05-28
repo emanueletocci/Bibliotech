@@ -163,8 +163,9 @@ class Libro {
       // Cerca la prima corrispondenza valida tra le categorie
       for (final categoria in categorieDaControllare) {
         genere = _mapCategoriaToGenere(categoria);
-        if (genere != null)
+        if (genere != null) {
           break; // Se trovo corrispondenza, esco direttamente
+        }
       }
     }
 

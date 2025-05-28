@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/libreria.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
+import '../../models/stato_libro.dart';
 import '../dettagli_libro/dettagli_libro_view.dart';
 
 class LibreriaPage extends StatefulWidget {
@@ -31,43 +32,50 @@ static AppBar buildAppBar(BuildContext context) {
 static Drawer? buildDrawer(BuildContext context) {
   return Drawer(
     child: ListView(
-      padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
           ),
-          child: Text('Filtri', style: TextStyle(color: Colors.white)),
+          child: Text(
+            'Filtri',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
         ),
+        // Come in js lo spread operator consente di inserire un array all'interno di un altro array
+        // in questo caso sto creando un'unica lista contenente il drawer header e tutti i listTIle
         ListTile(
-          leading: Icon(Icons.bookmark),
-          title: Text('Da leggere'),
-          onTap: () {
-            Navigator.pop(context); // Chiudi il drawer
-            // Applica il filtro
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.book),
-          title: Text('In lettura'),
-          onTap: () {
-            Navigator.pop(context);
-            // Applica il filtro
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.check),
-          title: Text('Letto'),
+          leading: Icon(Icons.all_inclusive),
+          title: const Text('Mostra tutti i libri'),
           onTap: () {
             Navigator.pop(context);
-            // Applica il filtro
+            // Azione filtro da implementare
           },
         ),
-        // Aggiungi altri filtri se vuoi
+        ...StatoLibro.values.map((stato) => ListTile(
+          leading: Icon(stato.icona),
+          title: Text(stato.titolo),
+          onTap: () {
+            Navigator.pop(context);
+            // Azione filtro da implementare
+          },
+        )),
+        ListTile(
+          leading: Icon(Icons.favorite),
+          title: const Text('Preferiti'),
+          onTap: () {
+            Navigator.pop(context);
+            // Azione filtro da implementare
+          },
+        ),        
       ],
     ),
   );
 }
+
 
 
   @override
