@@ -8,6 +8,68 @@ import '../dettagli_libro/dettagli_libro_view.dart';
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
 
+  // Metodo statico per costruire l'AppBar della pagina Libreria
+  // Lo uso in mainScreen per inserire l'AppBar corretta all'interno dello scaffold
+  // evintando in questo modo di utilizzare scaffold innestati
+
+static AppBar buildAppBar(BuildContext context) {
+  return AppBar(
+    title: const Text('Libreria'),
+    actions: [
+      Builder(
+        builder: (context) => IconButton(
+          icon: Icon(Icons.filter_list),
+          onPressed: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+static Drawer? buildDrawer(BuildContext context) {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          child: Text('Filtri', style: TextStyle(color: Colors.white)),
+        ),
+        ListTile(
+          leading: Icon(Icons.bookmark),
+          title: Text('Da leggere'),
+          onTap: () {
+            Navigator.pop(context); // Chiudi il drawer
+            // Applica il filtro
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.book),
+          title: Text('In lettura'),
+          onTap: () {
+            Navigator.pop(context);
+            // Applica il filtro
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.check),
+          title: Text('Letto'),
+          onTap: () {
+            Navigator.pop(context);
+            // Applica il filtro
+          },
+        ),
+        // Aggiungi altri filtri se vuoi
+      ],
+    ),
+  );
+}
+
+
   @override
   State<LibreriaPage> createState() => _LibreriaPageState();
 }

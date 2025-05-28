@@ -20,10 +20,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    HomeScreen(),
-    LibreriaPage(),
-  ];
+  final List<Widget> _pages = [HomeScreen(), LibreriaPage()];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -34,27 +31,39 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _getAppBar(),  // ottengo l'AppBar in base alla schermata selezionata
+      appBar:
+          _getAppBar(), // ottengo l'AppBar in base alla schermata selezionata
+      endDrawer: _getDrawer(), // ottengo il Drawer in base alla schermata selezionata
       body: IndexedStack(
-        index: _selectedIndex,  // mostro solo la schermata corrispondente a questo indice
+        index:
+            _selectedIndex, // mostro solo la schermata corrispondente a questo indice
         children: _pages,
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.transparent,  
+        backgroundColor: Colors.transparent,
         color: Theme.of(context).colorScheme.primary,
         index: _selectedIndex,
-        onTap: _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
+        onTap:
+            _onTabTapped, // il parametro index (tab corrente) viene passato automaticamente,
         animationDuration: const Duration(milliseconds: 300),
         items: [
           CurvedNavigationBarItem(
             child: Icon(Icons.home, size: 30, color: Colors.white),
             label: 'Home',
-            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+            labelStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.library_books, size: 30, color: Colors.white,),
+            child: Icon(Icons.library_books, size: 30, color: Colors.white),
             label: 'Libreria',
-            labelStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+            labelStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -62,7 +71,8 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            isScrollControlled: true,  // consente al popup di occupare tutto lo schermo
+            isScrollControlled:
+                true, // consente al popup di occupare tutto lo schermo
             builder: (context) {
               return const PopupAggiunta();
             },
@@ -75,20 +85,17 @@ class _MainScreenState extends State<MainScreen> {
 
   // Metodo helper per ottenere l'AppBar in base alla schermata selezionata (l'appbar deve comparire solamente nella schermata Libreria)
   AppBar? _getAppBar() {
-  if (_selectedIndex == 1) {
-    return AppBar(
-      title: const Text('Libreria'),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.filter_list),
-          onPressed: () {
-            // Apri il Drawer o mostra i filtri
-          },
-        ),
-      ],
-    );
+    if (_selectedIndex == 1) {
+      return LibreriaPage.buildAppBar(context);
+    }
+    return null;
   }
-  return null;
-}
 
+  // Metodo helper per ottenere il Drawer in base alla schermata selezionata (il drawer deve comparire solamente nella schermata Libreria)
+  Drawer? _getDrawer() {
+    if (_selectedIndex == 1) {
+      return LibreriaPage.buildDrawer(context);
+    }
+    return null;
+  }
 }
