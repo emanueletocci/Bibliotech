@@ -9,11 +9,11 @@ class Libro {
   genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
   String? lingua;
   String? trama;
-  String isbn; // O isbn10 o isbn13, deciderai quale usare come 'primario'
+  String isbn;
   DateTime? dataPubblicazione;
   double? voto;
   String?
-  copertina; // conterrà il percorso locale dell'immagine o un percorso di rete
+  copertina; // conterrà il percorso locale dell'immagine locale o un percorso di rete
   String? note;
   StatoLibro? stato;
   String? publisher;
@@ -151,12 +151,28 @@ class Libro {
     // Accedo alla chiave 'imageLinks' per ottenere le informazioni sulle copertine
     final imageLinks = volumeInfo?['imageLinks'] as Map<String, dynamic>?;
 
-    // Invece di gestire la logica di parsing qui, chiamiamo i metodi statici helper
+    // Accedo alla chiave 'categories' per ottenere le categorie del libro scelto
+    final List<dynamic>? categories =
+        volumeInfo?['categories'] as List<dynamic>?;
+    GenereLibro? genere;
+
+    if (categories != null && categories.isNotEmpty) {
+      // Prendo le prime 3 categorie e cerco le corrispondenze
+      final categorieDaControllare =
+          categories.take(3).map((c) => c.toString().toLowerCase()).toList();
+      // Cerca la prima corrispondenza valida tra le categorie
+      for (final categoria in categorieDaControllare) {
+        genere = _mapCategoriaToGenere(categoria);
+        if (genere != null)
+          break; // Se trovo corrispondenza, esco direttamente
+      }
+    }
+
     return Libro(
       // ?? é l'operatore if-null di dart... se il cast sicuro fallisce, allora imposto il titolo a 'Titolo Sconosciuto'
       // In questo modo il titolo non sarà mai null
       titolo: volumeInfo?['title'] as String? ?? 'Titolo Sconosciuto',
-
+      genere: genere,
       // Chiamiamo il metodo statico _parseAuthors per estrarre e pulire la lista degli autori
       autori: _parseAuthors(volumeInfo),
 
@@ -181,7 +197,56 @@ class Libro {
     );
   }
 
-  // --- Metodi privati statici per il parsing ---
+  // Metodo statico per mappare le categorie di Google Books ai generi interni definiti nell'app
+  static GenereLibro? _mapCategoriaToGenere(String categoria) {
+    categoria = categoria.toLowerCase();
+
+    // Mappa di corrispondenza tra sottostringhe e generi
+    // Provo a mappare le categorie di Google Books principali ai generi definiti nell'app
+    // Sicuramente qualche categoria non sarà presente, quindi ritorno null. In tal caso l'utente
+    // dovrá impostare manualmente il genere del libro
+
+    final mappaGeneri = {
+      ['fantasy']: GenereLibro.fantasy,
+      ['science fiction', 'sci-fi', 'sciencefiction', 'scifi']:
+          GenereLibro.fantascienza,
+      ['biography', 'biografia']: GenereLibro.biografia,
+      ['poetry', 'poesia']: GenereLibro.poesia,
+      ['thriller']: GenereLibro.thriller,
+      ['horror']: GenereLibro.horror,
+      ['mystery', 'crime', 'giallo']: GenereLibro.giallo,
+      ['historical', 'storico', 'history']: GenereLibro.storico,
+      ['classic', 'classico']: GenereLibro.classico,
+      ['graphic novel', 'comics', 'fumetti', 'graphicnovel']:
+          GenereLibro.graphicNovel,
+      [
+        'education',
+        'instruction',
+        'istruzione',
+        'educational',
+        'scuola',
+        'computers',
+      ]: GenereLibro.istruzione,
+      ['fiction', 'romanzo', 'novel']: GenereLibro.romanzo,
+      ['essay', 'non-fiction', 'saggio', 'nonfiction']: GenereLibro.saggio,
+      ['children', 'bambini', 'ragazzi', 'kids', 'child']: GenereLibro.bambini,
+      ['cooking', 'cucina', 'ricette', 'recipe']: GenereLibro.cucina,
+      ['travel', 'viaggi', 'guide', 'travel guide']: GenereLibro.viaggi,
+      ['art', 'arte', 'photography', 'fotografia']: GenereLibro.arte,
+      ['health', 'salute', 'fitness', 'wellness']: GenereLibro.salute,
+      ['business', 'economia', 'finance', 'finanza']: GenereLibro.economia,
+    };
+
+    for (final entry in mappaGeneri.entries) {
+      // controllo se la key contiene almeno una delle sottostringhe della categoria
+      // Eg. categoria = "science fiction adventure"; entry.key = ['science fiction', 'sci-fi']
+      // Eg. Restituisco true perché categoria contiene 'science fiction'
+      if (entry.key.any((k) => categoria.contains(k))) {
+        return entry.value;
+      }
+    }
+    return GenereLibro.noCategoria; // Se non trovo corrispondenza, imposto a "Nessuna Categoria"
+  }
 
   // Metodo statico per il parsing degli autori
   static List<String>? _parseAuthors(Map<String, dynamic>? volumeInfo) {
