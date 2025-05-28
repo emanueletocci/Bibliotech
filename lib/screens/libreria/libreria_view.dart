@@ -13,23 +13,30 @@ class LibreriaPage extends StatefulWidget {
 }
 
 class _LibreriaPageState extends State<LibreriaPage> {
+  // Variabile per tenere traccia del genere selezionato
+  // Se null, nessun genere è selezionato e si mostrano tutti i libri
+  GenereLibro? genereSelezionato;
+
   @override
   void initState() {
     super.initState();
-    // caricaLibri();
   }
-  /*
-  Future<void> caricaLibri() async {
-    final lista = await getLibri();
+
+  // Callback per l'aggiornamento dello stato in base al genere selezionato
+  void filtraPerGenere(GenereLibro? genere) {
     setState(() {
-      libri = lista;
+      genereSelezionato = genere;
     });
   }
-  */
 
   @override
   Widget build(BuildContext context) {
     final libreria = context.watch<Libreria>();
+
+    // Ottengo la lista di libri filtrati. 
+    // Se il genere non è selezionato, prendo automaticamente tutti i libri
+    final libriFiltrati = libreria.getLibriPerGenere(genereSelezionato);
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(16.0),
@@ -38,12 +45,15 @@ class _LibreriaPageState extends State<LibreriaPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SearchBarCustom(),
-            Generi(),
+            Generi(
+              genereSelezionato: genereSelezionato,
+              onGenereSelezionato: filtraPerGenere,
+              ),
             Expanded(
               child: SizedBox(
                 height: 200,
                 child:
-                    libreria.getLibri().isEmpty
+                    libriFiltrati.isEmpty
                         ? const Center(
                           child: Text("Nessun libro presente nella libreria"),
                         )
@@ -52,7 +62,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
                           crossAxisSpacing: 5.0,
                           mainAxisSpacing: 5.0,
                           children:
-                              libreria.getLibri().map((libro) {
+                              libriFiltrati.map((libro) {
                                 return Container(
                                   width: 150,
                                   height: 150,
@@ -104,7 +114,14 @@ class SearchBarCustom extends StatelessWidget {
 }
 
 class Generi extends StatelessWidget {
-  const Generi({super.key});
+  final GenereLibro? genereSelezionato;
+  final Function(GenereLibro?) onGenereSelezionato;
+
+  const Generi({
+    super.key,
+    required this.genereSelezionato,
+    required this.onGenereSelezionato,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -112,48 +129,61 @@ class Generi extends StatelessWidget {
       height: 100,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children:
-            GenereLibro.values.map((genere) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  spacing: 5,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Container per l'immagine
-                    GestureDetector(
-                      // Inserire QUI il filtro
-                      onTap: () {
-                        print("Filtro per genere: ${genere.titolo}");
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.shadow,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+        children: GenereLibro.values.map((genere) {
+          final isSelected = genereSelezionato == genere;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => onGenereSelezionato(genere),
+                  child: Container(
+                    width: 50,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.shadow,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            genere.percorsoImmagine,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      ],
+                      border: isSelected
+                          ? Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            )
+                          : null,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        genere.percorsoImmagine,
+                        fit: BoxFit.cover,
+                        color: isSelected ? null : Colors.black.withAlpha(50),
+                        colorBlendMode: isSelected ? null : BlendMode.darken,
                       ),
                     ),
-                    Text(genere.titolo, textAlign: TextAlign.center),
-                  ],
+                  ),
                 ),
-              );
-            }).toList(),
+                Text(
+                  genere.titolo,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
 }
+

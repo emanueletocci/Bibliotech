@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'genere_libro.dart';
 import 'libro.dart';
 import '../services/dao/db.dart';
 
@@ -81,8 +82,8 @@ class Libreria extends ChangeNotifier {
     aggiungiLibro(nuovoLibro);
   }
 
-  /// Ricerca per titolo (case insensitive)
-  /// Restituisce il primo libro che contiene la stringa cercata nel titolo
+  // Ricerca per titolo (case insensitive)
+  // Restituisce il primo libro che contiene la stringa cercata nel titolo
   Libro? cercaLibroPerNome(String nome) {
     for (var libro in _libri.values) {
       if (libro.titolo.toLowerCase().contains(nome.toLowerCase())) {
@@ -96,14 +97,23 @@ class Libreria extends ChangeNotifier {
     return _libri[isbn];
   }
 
-  /// Ricerca generica con callback per filtri personalizzati
-  /// Es: cerca((libro) => libro.annoPubblicazione > 2000)
+  // Ricerca generica con callback per filtri personalizzati (tipo java lambda)
+  // Es: cerca((libro) => libro.annoPubblicazione > 2000)
   List<Libro> cerca(bool Function(Libro) criterio) {
     return _libri.values.where(criterio).toList();
   }
 
-  /// Restituisce tutti i libri come lista ordinata
-  /// Utile per visualizzazioni che richiedono ListView/GridView
+  // Restituisce i libri in base al genere specificato
+  List<Libro> getLibriPerGenere(GenereLibro? genere) {
+    if (genere == null) {
+      return getLibri(); // Restituisco tutti i libri se il genere è null
+    }
+    return cerca((libro) => libro.genere == genere);
+  }
+
+
+  // Restituisce tutti i libri come lista ordinata
+  // Utile per visualizzazioni che richiedono ListView/GridView
   List<Libro> getLibri() {
     return _libri.values.toList();
   }
