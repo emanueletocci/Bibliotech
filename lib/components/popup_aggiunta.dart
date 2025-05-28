@@ -48,24 +48,18 @@ class PopupAggiunta extends StatelessWidget {
                   Icons.search,
                   buttonWidth,
                   () async {
-                    final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));
+                    final result = await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));
                     if (result != null && result == true) {
                       Navigator.of(context).pop(true); // Chiude il popup e ritorna true
                     }
                   },
                 ),
                 _buildButton(
-                  'Scansiona codice',
-                  Icons.qr_code,
-                  buttonWidth,
-                  () {},
-                ),
-                _buildButton(
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
                   () async {
-                    final result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AggiungiLibro()));
+                    final result = await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AggiungiLibro()));
                     if (result != null && result == true) {
                       Navigator.of(context).pop(true); // Chiude il popup e ritorna true
                     }
