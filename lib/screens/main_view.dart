@@ -34,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _getAppBar(),  // ottengo l'AppBar in base alla schermata selezionata
       body: IndexedStack(
         index: _selectedIndex,  // mostro solo la schermata corrispondente a questo indice
         children: _pages,
@@ -71,4 +72,23 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
+  // Metodo helper per ottenere l'AppBar in base alla schermata selezionata (l'appbar deve comparire solamente nella schermata Libreria)
+  AppBar? _getAppBar() {
+  if (_selectedIndex == 1) {
+    return AppBar(
+      title: const Text('Libreria'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.filter_list),
+          onPressed: () {
+            // Apri il Drawer o mostra i filtri
+          },
+        ),
+      ],
+    );
+  }
+  return null;
+}
+
 }
