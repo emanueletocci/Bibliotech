@@ -1,3 +1,4 @@
+import 'package:bibliotech/components/ui_helpers.dart';
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
@@ -59,61 +60,6 @@ class _DettagliLibroState extends State<DettagliLibro>
     super.didChangeDependencies();
     libreria = context.watch<Libreria>();
     controller = DettagliLibroController(libreria,libro);
-  }
-
-
-  void _handleAggiungiLibro(DettagliLibroController controller) async {
-    try {
-      controller.handleAggiungiLibro();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Libro inserito correttamente!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 2));
-      if (!mounted) return;
-      Navigator.of(context).pop(true); // Segnalo successo!
-    } catch (e) {
-      String errorMessage = e.toString();
-      const prefix = 'Exception: ';
-      if (errorMessage.startsWith(prefix)) {
-        // Rimuovo il prefisso "Exception: " dal messaggio di errore
-        errorMessage = errorMessage.substring(prefix.length);
-      }
-      // Se viene lanciata un'eccezione, mostro un messaggio di errore
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  void _handleRimuoviLibro(DettagliLibroController controller) async {
-    try {
-      controller.handleRimuoviLibro();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Libro rimosso correttamente!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 2));
-      if (!mounted) return;
-      Navigator.of(context).pop(true); // Segnalo successo!
-    } catch (e) {
-      String errorMessage = e.toString();
-      const prefix = 'Exception: ';
-      if (errorMessage.startsWith(prefix)) {
-        // Rimuovo il prefisso "Exception: " dal messaggio di errore
-        errorMessage = errorMessage.substring(prefix.length);
-      }
-      // Se viene lanciata un'eccezione, mostro un messaggio di errore
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
-    }
   }
 
   @override
@@ -263,8 +209,12 @@ class _DettagliLibroState extends State<DettagliLibro>
           ),
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline),
-          onPressed: () {
-            _handleAggiungiLibro(controller);
+          onPressed: () async { 
+            await handleControllerOperation(
+              context: context, 
+              operation: () async => controller.handleAggiungiLibro(), 
+              successMessage: "Libro rimosso correttamente!", 
+              errorMessagePrefix: "Exception:");
           },
         ),
       );
@@ -277,8 +227,12 @@ class _DettagliLibroState extends State<DettagliLibro>
           ),
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove),
-          onPressed: () {
-            _handleRimuoviLibro(controller);
+          onPressed: () async { 
+            await handleControllerOperation(
+              context: context, 
+              operation: () async => controller.handleRimuoviLibro(), 
+              successMessage: "Libro rimosso correttamente!", 
+              errorMessagePrefix: "Exception:");
           },
         ),
       );
