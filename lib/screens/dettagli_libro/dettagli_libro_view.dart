@@ -1,29 +1,29 @@
 import 'package:bibliotech/components/feedback.dart';
-import 'package:bibliotech/models/libreria.dart';
-import 'package:bibliotech/models/stato_libro.dart';
+import 'package:bibliotech/models/libreria_model.dart';
+import 'package:bibliotech/models/stato_libro_model.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
 import 'package:bibliotech/services/controllers/aggiunta/dettagli_libro_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../models/libro.dart';
+import '../../models/libro_model.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import '../../components/libro_cover_widget.dart';
 
-class DettagliLibro extends StatefulWidget {
+class DettagliLibroView extends StatefulWidget {
   final Libro libro;
 
-  const DettagliLibro({super.key, required this.libro});
+  const DettagliLibroView({super.key, required this.libro});
 
   @override
-  State<DettagliLibro> createState() => _DettagliLibroState();
+  State<DettagliLibroView> createState() => _DettagliLibroViewState();
 }
 
 // Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
 // in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
 // In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
 
-class _DettagliLibroState extends State<DettagliLibro>
+class _DettagliLibroViewState extends State<DettagliLibroView>
     with SingleTickerProviderStateMixin {
   // Controller per le tab del dettaglio libro
   late TabController _tabControllerDetail;

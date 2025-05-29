@@ -1,9 +1,9 @@
 import 'package:bibliotech/services/controllers/aggiunta/aggiunta_base_controller.dart';
 import 'package:flutter/material.dart';
-import '../../../models/genere_libro.dart';
-import '../../../models/stato_libro.dart';
-import '../../../models/libro.dart';
-import '../../../models/libreria.dart';
+import '../../../models/genere_libro_model.dart';
+import '../../../models/stato_libro_model.dart';
+import '../../../models/libro_model.dart';
+import '../../../models/libreria_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../utilities/file_utility.dart';

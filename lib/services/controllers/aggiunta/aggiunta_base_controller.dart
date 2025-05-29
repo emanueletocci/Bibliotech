@@ -1,7 +1,7 @@
 
 
-import '../../../models/genere_libro.dart';
-import '../../../models/stato_libro.dart';
+import '../../../models/genere_libro_model.dart';
+import '../../../models/stato_libro_model.dart';
 import 'package:isbn/isbn.dart';
 
 abstract class GenericController {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../models/libro.dart';
+import '../../models/libro_model.dart';
 import 'package:flutter/foundation.dart'; 
 
 class BookApiService {

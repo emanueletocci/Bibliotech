@@ -5,8 +5,8 @@
  */
 
 import 'package:bibliotech/services/controllers/aggiunta/aggiunta_base_controller.dart';
-import '../../../models/libreria.dart';
-import '../../../models/libro.dart';
+import '../../../models/libreria_model.dart';
+import '../../../models/libro_model.dart';
 
 class DettagliLibroController extends GenericController{
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/libro.dart';
+import '../models/libro_model.dart';
 import 'dart:io';
 
 class LibroCoverWidget extends StatelessWidget {

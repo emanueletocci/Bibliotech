@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:isbn/isbn.dart';
 
-import '../../models/libro.dart';
+import '../../models/libro_model.dart';
 import '../apis/google_books_api.dart';
 
 class RicercaGoogleBooksController{

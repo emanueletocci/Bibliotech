@@ -1,5 +1,5 @@
-import 'genere_libro.dart';
-import 'stato_libro.dart';
+import 'genere_libro_model.dart';
+import 'stato_libro_model.dart';
 
 class Libro {
   String titolo;

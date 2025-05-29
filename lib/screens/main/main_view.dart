@@ -6,21 +6,21 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
-import 'home/homepage_view.dart';
-import 'libreria/libreria_view.dart';
-import '../components/popup_aggiunta.dart';
+import 'tabs/homepage_tab.dart';
+import 'tabs/libreria_tab.dart';
+import '../../components/popup_aggiunta.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class MainView extends StatefulWidget {
+  const MainView({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainView> createState() => _MainViewState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainViewState extends State<MainView> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [HomeScreen(), LibreriaPage()];
+  final List<Widget> _pages = [HomepageTab(), LibreriaTab()];
 
   void _onTabTapped(int index) {
     setState(() {

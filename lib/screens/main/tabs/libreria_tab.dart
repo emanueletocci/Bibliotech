@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/libreria.dart';
-import '../../components/libro_cover_widget.dart';
-import '../../models/genere_libro.dart';
-import '../../models/stato_libro.dart';
-import '../dettagli_libro/dettagli_libro_view.dart';
+import '../../../models/libreria_model.dart';
+import '../../../components/libro_cover_widget.dart';
+import '../../../models/genere_libro_model.dart';
+import '../../../models/stato_libro_model.dart';
+import '../../dettagli_libro/dettagli_libro_view.dart';
 
-class LibreriaPage extends StatefulWidget {
-  const LibreriaPage({super.key});
+class LibreriaTab extends StatefulWidget {
+  const LibreriaTab({super.key});
 
   @override
-  State<LibreriaPage> createState() => _LibreriaPageState();
+  State<LibreriaTab> createState() => _LibreriaTabState();
 }
 
-class _LibreriaPageState extends State<LibreriaPage> {
+class _LibreriaTabState extends State<LibreriaTab> {
   // Variabile per tenere traccia del genere selezionato
   // Se null, nessun genere è selezionato e si mostrano tutti i libri
   GenereLibro? _genereSelezionato;
@@ -105,7 +105,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
                                   MaterialPageRoute(
                                     builder:
                                         (context) =>
-                                            DettagliLibro(libro: libro),
+                                            DettagliLibroView(libro: libro),
                                   ),
                                 );
                                 debugPrint(

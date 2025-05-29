@@ -1,12 +1,12 @@
-import 'package:bibliotech/models/stato_libro.dart';
+import 'package:bibliotech/models/stato_libro_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../components/feedback.dart';
-import '../../models/genere_libro.dart';
-import '../../models/libro.dart';
+import '../../models/genere_libro_model.dart';
+import '../../models/libro_model.dart';
 import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
-import '../../models/libreria.dart';
+import '../../models/libreria_model.dart';
 
 class AggiuntaModificaLibroManualeView extends StatefulWidget {
   final Libro? libroDaModificare;

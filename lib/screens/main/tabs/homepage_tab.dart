@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../components/popup_aggiunta.dart';
-import '../../components/libro_cover_widget.dart';
-import '../../models/libreria.dart';
-import '../../services/controllers/homepage_controller.dart';
+import '../../../components/popup_aggiunta.dart';
+import '../../../components/libro_cover_widget.dart';
+import '../../../models/libreria_model.dart';
+import '../../../services/controllers/homepage_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../dettagli_libro/dettagli_libro_view.dart';
+import '../../dettagli_libro/dettagli_libro_view.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomepageTab extends StatefulWidget {
+  const HomepageTab({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomepageTab> createState() => _HomepageTabState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomepageTabState extends State<HomepageTab> {
   @override
   void initState() {
     super.initState();
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DettagliLibro(libro: libro),
+                            builder: (context) => DettagliLibroView(libro: libro),
                           ),
                         );
                         debugPrint('Hai premuto il libro: ${libro.titolo}');
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DettagliLibro(libro: libro),
+                            builder: (context) => DettagliLibroView(libro: libro),
                           ),
                         );
                         debugPrint('Hai premuto il libro: ${libro.titolo}');

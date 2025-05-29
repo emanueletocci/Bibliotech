@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:bibliotech/screens/main_view.dart';
+import 'package:bibliotech/screens/main/main_view.dart';
 import 'package:flutter/material.dart';
-import 'models/libreria.dart';
+import 'models/libreria_model.dart';
 import 'themes/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotech',
       theme: appTheme,
-      home: const MainScreen(),
+      home: const MainView(),
     );
   }
 }
