@@ -5,7 +5,6 @@ import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
 import '../../models/stato_libro.dart';
 import '../dettagli_libro/dettagli_libro_view.dart';
-import 'package:scroll_to_hide/scroll_to_hide.dart';
 
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
@@ -21,18 +20,9 @@ class _LibreriaPageState extends State<LibreriaPage> {
   StatoLibro? _statoSelezionato;
   bool _soloPreferiti = false;
 
-  // Controller necessario a nascondere i filtri quando si scorre verso il basso
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   // Callback per l'aggiornamento dello stato in base al genere selezionato
@@ -67,60 +57,59 @@ class _LibreriaPageState extends State<LibreriaPage> {
       child: Container(
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
-          controller: _scrollController,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Questa sezione deve essere nascondibile quando si scorre verso il basso
-              ScrollToHide(
-                scrollController: _scrollController,
-                hideDirection: Axis.vertical,
-                child: SezioneFiltri(
-                  genereSelezionato: _genereSelezionato,
-                  statoSelezionato: _statoSelezionato,
-                  filtraPerGenere: _filtraPerGenere,
-                  filtraPerStato: _filtraPerStato,
-                  soloPreferiti: _soloPreferiti,
-                  filtraPerPreferiti: _filtraPerPreferiti,
-                ),
+              SezioneFiltri(
+                genereSelezionato: _genereSelezionato,
+                statoSelezionato: _statoSelezionato,
+                filtraPerGenere: _filtraPerGenere,
+                filtraPerStato: _filtraPerStato,
+                soloPreferiti: _soloPreferiti,
+                filtraPerPreferiti: _filtraPerPreferiti,
               ),
-                      libriFiltrati.isEmpty
-                          ? const Center(child: Text("Nessun libro presente."))
-                          : GridView.count(
-                            shrinkWrap: true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            physics: const NeverScrollableScrollPhysics(), // Disabilito lo scroll interno del GridView
-                            children:
-                                libriFiltrati.map((libro) {
-                                  return SizedBox(
-                                    width: 150,
-                                    height: 150,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    DettagliLibro(libro: libro),
-                                          ),
-                                        );
-                                        debugPrint(
-                                          'Hai premuto il libro: ${libro.titolo}',
-                                        );
-                                      },
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: LibroCoverWidget(libro: libro),
-                                    ),
-                                  );
-                                }).toList(),
-                          ),
-              
-              
+              Divider(
+                color: Theme.of(context).colorScheme.outline,
+                thickness: 1.0,
+              ),
+
+              libriFiltrati.isEmpty
+                  ? const Center(child: Text("Nessun libro presente."))
+                  : GridView.count(
+                    shrinkWrap:
+                        true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Disabilito lo scroll interno del GridView
+                    children:
+                        libriFiltrati.map((libro) {
+                          return SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            DettagliLibro(libro: libro),
+                                  ),
+                                );
+                                debugPrint(
+                                  'Hai premuto il libro: ${libro.titolo}',
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: LibroCoverWidget(libro: libro),
+                            ),
+                          );
+                        }).toList(),
+                  ),
             ],
           ),
         ),
