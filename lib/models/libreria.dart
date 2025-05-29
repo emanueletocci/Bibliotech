@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'genere_libro.dart';
 import 'libro.dart';
 import '../services/dao/db.dart';
+import 'stato_libro.dart';
 
 class Libreria extends ChangeNotifier {
   // Implementazione del Singleton con integrazione Provider (ChangeNotifier)
@@ -109,6 +110,29 @@ class Libreria extends ChangeNotifier {
       return getLibri(); // Restituisco tutti i libri se il genere è null
     }
     return cerca((libro) => libro.genere == genere);
+  }
+
+  // Restituisce i libri in base allo stato specificato
+  List<Libro> getLibriPerStato(StatoLibro? stato) {
+    if (stato == null) {
+      return getLibri(); // Restituisco tutti i libri se lo stato è null
+    }
+    return cerca((libro) => libro.stato == stato);
+  }
+
+  // Metodo helper per il filtraggio combinato dei libri
+  // Permette di filtrare per genere, stato e preferiti contemporaneamente
+  List<Libro> getLibriFiltrati({
+    GenereLibro? genere,
+    StatoLibro? stato,
+    bool soloPreferiti = false,
+  }) {
+    return cerca((libro) {
+      final genereOk = genere == null || libro.genere == genere;
+      final statoOk = stato == null || libro.stato == stato;
+      final preferitiOk = !soloPreferiti || libro.preferito;
+      return genereOk && statoOk && preferitiOk;
+    });
   }
 
 

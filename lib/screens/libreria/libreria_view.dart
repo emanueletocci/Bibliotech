@@ -9,74 +9,6 @@ import '../dettagli_libro/dettagli_libro_view.dart';
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
 
-  // Metodo statico per costruire l'AppBar della pagina Libreria
-  // Lo uso in mainScreen per inserire l'AppBar corretta all'interno dello scaffold
-  // evintando in questo modo di utilizzare scaffold innestati
-
-  static AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text('Libreria'),
-      actions: [
-        Builder(
-          builder:
-              (context) => IconButton(
-                icon: Icon(Icons.filter_list),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-              ),
-        ),
-      ],
-    );
-  }
-
-  static Drawer? buildDrawer(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            child: Text(
-              'Filtri',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-          ),
-          // Come in js lo spread operator consente di inserire un array all'interno di un altro array
-          // in questo caso sto creando un'unica lista contenente il drawer header e tutti i listTile
-          ListTile(
-            leading: Icon(Icons.all_inclusive),
-            title: const Text('Mostra tutti i libri'),
-            onTap: () {
-              Navigator.pop(context);
-
-              // Azione filtro da implementare
-            },
-          ),
-          ...StatoLibro.values.map(
-            (stato) => ListTile(
-              leading: Icon(stato.icona),
-              title: Text(stato.titolo),
-              onTap: () {
-                Navigator.pop(context);
-                // Azione filtro da implementare
-              },
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: const Text('Preferiti'),
-            onTap: () {
-              Navigator.pop(context);
-              // Azione filtro da implementare
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   State<LibreriaPage> createState() => _LibreriaPageState();
 }
@@ -84,7 +16,9 @@ class LibreriaPage extends StatefulWidget {
 class _LibreriaPageState extends State<LibreriaPage> {
   // Variabile per tenere traccia del genere selezionato
   // Se null, nessun genere è selezionato e si mostrano tutti i libri
-  GenereLibro? genereSelezionato;
+  GenereLibro? _genereSelezionato;
+  StatoLibro? _statoSelezionato;
+  bool _soloPreferiti = false;
 
   @override
   void initState() {
@@ -92,10 +26,18 @@ class _LibreriaPageState extends State<LibreriaPage> {
   }
 
   // Callback per l'aggiornamento dello stato in base al genere selezionato
-  void filtraPerGenere(GenereLibro? genere) {
-    setState(() {
-      genereSelezionato = genere;
-    });
+  void _filtraPerGenere(GenereLibro? genere) {
+    setState(() => _genereSelezionato = genere);
+  }
+
+  // Callback per l'aggiornamento dello stato in base allo stato del libro selezionato
+
+  void _filtraPerStato(StatoLibro? stato) {
+    setState(() => _statoSelezionato = stato);
+  }
+
+  void _filtraPerPreferiti(bool soloPreferiti) {
+    setState(() => _soloPreferiti = soloPreferiti);
   }
 
   @override
@@ -105,7 +47,11 @@ class _LibreriaPageState extends State<LibreriaPage> {
     // Ottengo la lista di libri filtrati.
     // Se il genere non è selezionato, prendo automaticamente tutti i libri
     // La lista viene ricreata ad ogni build, quindi ad ogni cambiamento di stato
-    final libriFiltrati = libreria.getLibriPerGenere(genereSelezionato);
+    final libriFiltrati = libreria.getLibriFiltrati(
+      genere: _genereSelezionato,
+      stato: _statoSelezionato,
+      soloPreferiti: _soloPreferiti,
+    );
 
     return SafeArea(
       child: Container(
@@ -115,9 +61,24 @@ class _LibreriaPageState extends State<LibreriaPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SearchBarCustom(),
-            Generi(
-              genereSelezionato: genereSelezionato,
-              onGenereSelezionato: filtraPerGenere,
+            GeneriBar(
+              genereSelezionato: _genereSelezionato,
+              onGenereSelezionato: _filtraPerGenere,
+            ),
+            StatiLibriBar(
+              statoSelezionato: _statoSelezionato,
+              onStatoSelezionato: _filtraPerStato,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: FilterChip(
+                  label: const Text("Preferiti"),
+                  selected: _soloPreferiti,
+                  onSelected: (selected) => _filtraPerPreferiti(selected),
+                  avatar: const Icon(Icons.favorite),
+                ),
+              ),
             ),
             Expanded(
               child: SizedBox(
@@ -183,11 +144,11 @@ class SearchBarCustom extends StatelessWidget {
   }
 }
 
-class Generi extends StatelessWidget {
+class GeneriBar extends StatelessWidget {
   final GenereLibro? genereSelezionato;
   final Function(GenereLibro?) onGenereSelezionato;
 
-  const Generi({
+  const GeneriBar({
     super.key,
     required this.genereSelezionato,
     required this.onGenereSelezionato,
@@ -204,7 +165,6 @@ class Generi extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
                   // Gestore del tap per il filtro "Tutti"
@@ -259,7 +219,6 @@ class Generi extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
                     onTap: () => onGenereSelezionato(genere),
@@ -303,6 +262,50 @@ class Generi extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class StatiLibriBar extends StatelessWidget {
+  final StatoLibro? statoSelezionato;
+  final Function(StatoLibro?) onStatoSelezionato;
+
+  const StatiLibriBar({
+    super.key,
+    required this.statoSelezionato,
+    required this.onStatoSelezionato,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: FilterChip(
+              label: const Text("Tutti"),
+              selected: statoSelezionato == null,
+              onSelected: (_) => onStatoSelezionato(null),
+              avatar: const Icon(Icons.all_inclusive),
+            ),
+          ),
+          ...StatoLibro.values.map((stato) {
+            final isSelected = statoSelezionato == stato;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: FilterChip(
+                label: Text(stato.titolo),
+                selected: isSelected,
+                onSelected:
+                    (selected) => onStatoSelezionato(selected ? stato : null),
+                avatar: Icon(stato.icona),
               ),
             );
           }),
