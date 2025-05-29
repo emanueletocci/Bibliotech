@@ -55,9 +55,9 @@ class _LibreriaPageState extends State<LibreriaPage> {
 
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
-          spacing: 15,
+          spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SearchBarCustom(),
@@ -71,7 +71,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: FilterChip(
                   label: const Text("Preferiti"),
                   selected: _soloPreferiti,
@@ -82,24 +82,20 @@ class _LibreriaPageState extends State<LibreriaPage> {
             ),
             Expanded(
               child: SizedBox(
-                height: 200,
                 child:
                     libriFiltrati.isEmpty
                         ? const Center(
-                          child: Text("Nessun libro presente nella libreria"),
+                          child: Text("Nessun libro presente."),
                         )
                         : GridView.count(
                           crossAxisCount: 3,
-                          crossAxisSpacing: 5.0,
-                          mainAxisSpacing: 5.0,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
                           children:
                               libriFiltrati.map((libro) {
-                                return Container(
+                                return SizedBox(
                                   width: 150,
                                   height: 150,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -161,9 +157,8 @@ class GeneriBar extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          // Filtro "Tutti"
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
               children: [
                 GestureDetector(
@@ -186,7 +181,8 @@ class GeneriBar extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        color: Colors.grey[200],
+                        // Imposto i colori del container "Tutti" (altrimenti si vede solo l'icona)
+                        color: Theme.of(context).colorScheme.surfaceContainer,
                         child: Icon(
                           Icons.all_inclusive,
                           size: 36,
@@ -213,11 +209,10 @@ class GeneriBar extends StatelessWidget {
               ],
             ),
           ),
-          // Tutti i generi come prima
           ...GenereLibro.values.map((genere) {
             final isSelected = genereSelezionato == genere;
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                 children: [
                   GestureDetector(
@@ -283,33 +278,38 @@ class StatiLibriBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: FilterChip(
-              label: const Text("Tutti"),
-              selected: statoSelezionato == null,
-              onSelected: (_) => onStatoSelezionato(null),
-              avatar: const Icon(Icons.all_inclusive),
-            ),
+    // Lista completa dei chip: "Tutti" + tutti gli stati
+    final List<Widget> chips = [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: FilterChip(
+          label: const Text("Tutti"),
+          selected: statoSelezionato == null,
+          onSelected: (_) => onStatoSelezionato(null),
+          avatar: const Icon(Icons.all_inclusive),
+        ),
+      ),
+      ...StatoLibro.values.map((stato) {
+        final isSelected = statoSelezionato == stato;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: FilterChip(
+            label: Text(stato.titolo),
+            selected: isSelected,
+            onSelected: (selected) => onStatoSelezionato(selected ? stato : null),
+            avatar: Icon(stato.icona),
           ),
-          ...StatoLibro.values.map((stato) {
-            final isSelected = statoSelezionato == stato;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: FilterChip(
-                label: Text(stato.titolo),
-                selected: isSelected,
-                onSelected:
-                    (selected) => onStatoSelezionato(selected ? stato : null),
-                avatar: Icon(stato.icona),
-              ),
-            );
-          }),
-        ],
+        );
+      }),
+    ];
+
+    return SizedBox(
+      height: 56, // Altezza tipica per chip
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        itemCount: chips.length,
+        itemBuilder: (context, index) => chips[index],
       ),
     );
   }
