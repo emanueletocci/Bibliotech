@@ -78,8 +78,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
               libriFiltrati.isEmpty
                   ? const Center(child: Text("Nessun libro presente."))
                   : GridView.count(
-                    shrinkWrap:
-                        true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
+                    shrinkWrap: true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
                     crossAxisCount: 3,
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
