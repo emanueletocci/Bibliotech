@@ -33,7 +33,6 @@ class _LibreriaPageState extends State<LibreriaPage> {
   }
 
   // Callback per l'aggiornamento dello stato in base allo stato del libro selezionato
-
   void _filtraPerStato(StatoLibro? stato) {
     setState(() => _statoSelezionato = stato);
   }
@@ -65,57 +64,61 @@ class _LibreriaPageState extends State<LibreriaPage> {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 10,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SezioneFiltri(
-              genereSelezionato: _genereSelezionato,
-              statoSelezionato: _statoSelezionato,
-              filtraPerGenere: _filtraPerGenere,
-              filtraPerStato: _filtraPerStato,
-              soloPreferiti: _soloPreferiti,
-              filtraPerPreferiti: _filtraPerPreferiti,
-              filtraPerTitolo: _filtraPerTitolo,
-            ),
-            Expanded(
-              child: SizedBox(
-                child:
-                    libriFiltrati.isEmpty
-                        ? const Center(child: Text("Nessun libro presente."))
-                        : GridView.count(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          children:
-                              libriFiltrati.map((libro) {
-                                return SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) =>
-                                                  DettagliLibro(libro: libro),
-                                        ),
-                                      );
-                                      debugPrint(
-                                        'Hai premuto il libro: ${libro.titolo}',
-                                      );
-                                    },
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: LibroCoverWidget(libro: libro),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SezioneFiltri(
+                genereSelezionato: _genereSelezionato,
+                statoSelezionato: _statoSelezionato,
+                filtraPerGenere: _filtraPerGenere,
+                filtraPerStato: _filtraPerStato,
+                soloPreferiti: _soloPreferiti,
+                filtraPerPreferiti: _filtraPerPreferiti,
+              ),
+              Divider(
+                color: Theme.of(context).colorScheme.outline,
+                thickness: 1.0,
+              ),
+
+              libriFiltrati.isEmpty
+                  ? const Center(child: Text("Nessun libro presente."))
+                  : GridView.count(
+                    shrinkWrap: true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Disabilito lo scroll interno del GridView
+                    children:
+                        libriFiltrati.map((libro) {
+                          return SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            DettagliLibro(libro: libro),
                                   ),
                                 );
-                              }).toList(),
-                        ),
-              ),
-            ),
-          ],
+                                debugPrint(
+                                  'Hai premuto il libro: ${libro.titolo}',
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: LibroCoverWidget(libro: libro),
+                            ),
+                          );
+                        }).toList(),
+                  ),
+            ],
+          ),
         ),
       ),
     );
