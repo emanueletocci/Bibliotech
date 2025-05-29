@@ -57,36 +57,23 @@ class _LibreriaPageState extends State<LibreriaPage> {
       child: Container(
         padding: const EdgeInsets.all(15.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SearchBarCustom(),
-            GeneriBar(
+            SezioneFiltri(
               genereSelezionato: _genereSelezionato,
-              onGenereSelezionato: _filtraPerGenere,
-            ),
-            StatiLibriBar(
               statoSelezionato: _statoSelezionato,
-              onStatoSelezionato: _filtraPerStato,
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0),
-                child: FilterChip(
-                  label: const Text("Preferiti"),
-                  selected: _soloPreferiti,
-                  onSelected: (selected) => _filtraPerPreferiti(selected),
-                  avatar: const Icon(Icons.favorite),
-                ),
-              ),
+              filtraPerGenere: _filtraPerGenere,
+              filtraPerStato: _filtraPerStato,
+              soloPreferiti: _soloPreferiti,
+              filtraPerPreferiti: _filtraPerPreferiti,
             ),
             Expanded(
               child: SizedBox(
                 child:
                     libriFiltrati.isEmpty
-                        ? const Center(
-                          child: Text("Nessun libro presente."),
-                        )
+                        ? const Center(child: Text("Nessun libro presente."))
                         : GridView.count(
                           crossAxisCount: 3,
                           crossAxisSpacing: 10.0,
@@ -125,9 +112,9 @@ class _LibreriaPageState extends State<LibreriaPage> {
   }
 }
 
+// Widget per la barra di ricerca personalizzata
 class SearchBarCustom extends StatelessWidget {
   const SearchBarCustom({super.key});
-
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -140,6 +127,7 @@ class SearchBarCustom extends StatelessWidget {
   }
 }
 
+// Widget per la barra dei filtri basata sui generi dei libri
 class GeneriBar extends StatelessWidget {
   final GenereLibro? genereSelezionato;
   final Function(GenereLibro?) onGenereSelezionato;
@@ -153,13 +141,14 @@ class GeneriBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      height: 90,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min, // <-- aggiungi questa riga
               children: [
                 GestureDetector(
                   // Gestore del tap per il filtro "Tutti"
@@ -214,6 +203,7 @@ class GeneriBar extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
+                mainAxisSize: MainAxisSize.min, // <-- aggiungi questa riga
                 children: [
                   GestureDetector(
                     onTap: () => onGenereSelezionato(genere),
@@ -266,6 +256,7 @@ class GeneriBar extends StatelessWidget {
   }
 }
 
+// Widget per la barra dei filtri basata sugli stati dei libri
 class StatiLibriBar extends StatelessWidget {
   final StatoLibro? statoSelezionato;
   final Function(StatoLibro?) onStatoSelezionato;
@@ -296,7 +287,8 @@ class StatiLibriBar extends StatelessWidget {
           child: FilterChip(
             label: Text(stato.titolo),
             selected: isSelected,
-            onSelected: (selected) => onStatoSelezionato(selected ? stato : null),
+            onSelected:
+                (selected) => onStatoSelezionato(selected ? stato : null),
             avatar: Icon(stato.icona),
           ),
         );
@@ -304,13 +296,69 @@ class StatiLibriBar extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 56, // Altezza tipica per chip
+      height: 56,
       child: ListView.builder(
+        // Di default, ListView ha un'altezza infinita, quindi devo specificare un'altezza o wrappare la lista
+        // in un widget con altezza fissa. Con shrinkWrap: true, la lista si adatta alle dimensioni dei suoi figli.
+        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: chips.length,
         itemBuilder: (context, index) => chips[index],
       ),
+    );
+  }
+}
+
+// Widget wrapper per la sezione dei filtri. Creo un unico widget che ingloba tutto l'header della pagina,
+// ossia tuta la sezione dedicata ai filtri. Ció mi semplifica la gestione dello scroll_to_hide
+class SezioneFiltri extends StatelessWidget {
+  final GenereLibro? genereSelezionato;
+  final StatoLibro? statoSelezionato;
+  final bool soloPreferiti;
+  final Function(GenereLibro?) filtraPerGenere;
+  final Function(StatoLibro?) filtraPerStato;
+  final Function(bool) filtraPerPreferiti;
+
+  const SezioneFiltri({
+    super.key,
+    required this.genereSelezionato,
+    required this.statoSelezionato,
+    required this.soloPreferiti,
+    required this.filtraPerGenere,
+    required this.filtraPerStato,
+    required this.filtraPerPreferiti,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SearchBarCustom(),
+        // Imposto manualmente la spaziatura in quanto i chips hanno un'altezza fissa di default
+        // Con spacing li distanzio troppo, quindi uso SizedBox
+        const SizedBox(height: 10),
+        GeneriBar(
+          genereSelezionato: genereSelezionato,
+          onGenereSelezionato: filtraPerGenere,
+        ),
+        StatiLibriBar(
+          statoSelezionato: statoSelezionato,
+          onStatoSelezionato: filtraPerStato,
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: FilterChip(
+              label: const Text("Preferiti"),
+              selected: soloPreferiti,
+              onSelected: (selected) => filtraPerPreferiti(selected),
+              avatar: const Icon(Icons.favorite),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
