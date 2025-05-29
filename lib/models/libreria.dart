@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'genere_libro.dart';
 import 'libro.dart';
 import '../services/dao/db.dart';
@@ -126,15 +128,18 @@ class Libreria extends ChangeNotifier {
     GenereLibro? genere,
     StatoLibro? stato,
     bool soloPreferiti = false,
+    String? titolo,
   }) {
     return cerca((libro) {
       final genereOk = genere == null || libro.genere == genere;
       final statoOk = stato == null || libro.stato == stato;
       final preferitiOk = !soloPreferiti || libro.preferito;
-      return genereOk && statoOk && preferitiOk;
+      final titoloOk =
+          titolo == null ||
+          libro.titolo.toLowerCase().contains(titolo.toLowerCase());
+      return genereOk && statoOk && preferitiOk && titoloOk;
     });
   }
-
 
   // Restituisce tutti i libri come lista ordinata
   // Utile per visualizzazioni che richiedono ListView/GridView

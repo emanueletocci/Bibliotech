@@ -18,6 +18,8 @@ class _LibreriaPageState extends State<LibreriaPage> {
   // Se null, nessun genere è selezionato e si mostrano tutti i libri
   GenereLibro? _genereSelezionato;
   StatoLibro? _statoSelezionato;
+  String? _titoloSelezionato;
+
   bool _soloPreferiti = false;
 
   @override
@@ -40,6 +42,12 @@ class _LibreriaPageState extends State<LibreriaPage> {
     setState(() => _soloPreferiti = soloPreferiti);
   }
 
+  void _filtraPerTitolo(String? titolo) {
+    setState(() {
+      _titoloSelezionato = titolo;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final libreria = context.watch<Libreria>();
@@ -51,6 +59,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
       genere: _genereSelezionato,
       stato: _statoSelezionato,
       soloPreferiti: _soloPreferiti,
+      titolo: _titoloSelezionato,
     );
 
     return SafeArea(
@@ -68,6 +77,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
               filtraPerStato: _filtraPerStato,
               soloPreferiti: _soloPreferiti,
               filtraPerPreferiti: _filtraPerPreferiti,
+              filtraPerTitolo: _filtraPerTitolo,
             ),
             Expanded(
               child: SizedBox(
@@ -112,21 +122,6 @@ class _LibreriaPageState extends State<LibreriaPage> {
   }
 }
 
-// Widget per la barra di ricerca personalizzata
-class SearchBarCustom extends StatelessWidget {
-  const SearchBarCustom({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(21)),
-        hintText: 'Cerca un libro!',
-        prefixIcon: Icon(Icons.search),
-      ),
-    );
-  }
-}
-
 // Widget per la barra dei filtri basata sui generi dei libri
 class GeneriBar extends StatelessWidget {
   final GenereLibro? genereSelezionato;
@@ -148,7 +143,7 @@ class GeneriBar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // <-- aggiungi questa riga
+              mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
                   // Gestore del tap per il filtro "Tutti"
@@ -203,7 +198,7 @@ class GeneriBar extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // <-- aggiungi questa riga
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
                     onTap: () => onGenereSelezionato(genere),
@@ -319,7 +314,7 @@ class SezioneFiltri extends StatelessWidget {
   final Function(GenereLibro?) filtraPerGenere;
   final Function(StatoLibro?) filtraPerStato;
   final Function(bool) filtraPerPreferiti;
-
+  final Function(String?) filtraPerTitolo;
   const SezioneFiltri({
     super.key,
     required this.genereSelezionato,
@@ -328,6 +323,7 @@ class SezioneFiltri extends StatelessWidget {
     required this.filtraPerGenere,
     required this.filtraPerStato,
     required this.filtraPerPreferiti,
+    required this.filtraPerTitolo,
   });
 
   @override
@@ -335,9 +331,7 @@ class SezioneFiltri extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SearchBarCustom(),
-        // Imposto manualmente la spaziatura in quanto i chips hanno un'altezza fissa di default
-        // Con spacing li distanzio troppo, quindi uso SizedBox
+        RicercaLibri(onChanged: filtraPerTitolo),
         const SizedBox(height: 10),
         GeneriBar(
           genereSelezionato: genereSelezionato,
@@ -359,6 +353,40 @@ class SezioneFiltri extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class RicercaLibri extends StatefulWidget {
+  final Function(String?) onChanged;
+
+  const RicercaLibri({super.key, required this.onChanged});
+
+  @override
+  State<RicercaLibri> createState() => _RicercaLibriState();
+}
+
+class _RicercaLibriState extends State<RicercaLibri> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      onChanged: (value) {
+        widget.onChanged(value.isEmpty ? null : value);
+      },
+      decoration: const InputDecoration(
+        labelText: "Cerca per titolo",
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(),
+      ),
     );
   }
 }
