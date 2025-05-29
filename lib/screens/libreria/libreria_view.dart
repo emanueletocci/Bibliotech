@@ -5,6 +5,7 @@ import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
 import '../../models/stato_libro.dart';
 import '../dettagli_libro/dettagli_libro_view.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 
 class LibreriaPage extends StatefulWidget {
   const LibreriaPage({super.key});
@@ -19,6 +20,9 @@ class _LibreriaPageState extends State<LibreriaPage> {
   GenereLibro? _genereSelezionato;
   StatoLibro? _statoSelezionato;
   bool _soloPreferiti = false;
+
+  // Controller necessario a nascondere i filtri quando si scorre verso il basso
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -61,13 +65,19 @@ class _LibreriaPageState extends State<LibreriaPage> {
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SezioneFiltri(
-              genereSelezionato: _genereSelezionato,
-              statoSelezionato: _statoSelezionato,
-              filtraPerGenere: _filtraPerGenere,
-              filtraPerStato: _filtraPerStato,
-              soloPreferiti: _soloPreferiti,
-              filtraPerPreferiti: _filtraPerPreferiti,
+            // Questa sezione deve essere nascondibile quando si scorre verso il basso
+            ScrollToHide(
+              scrollController: _scrollController,
+              duration: Duration(milliseconds: 250), 
+              hideDirection: Axis.vertical,
+              child: SezioneFiltri(
+                genereSelezionato: _genereSelezionato,
+                statoSelezionato: _statoSelezionato,
+                filtraPerGenere: _filtraPerGenere,
+                filtraPerStato: _filtraPerStato,
+                soloPreferiti: _soloPreferiti,
+                filtraPerPreferiti: _filtraPerPreferiti,
+              ),
             ),
             Expanded(
               child: SizedBox(
@@ -78,6 +88,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
                           crossAxisCount: 3,
                           crossAxisSpacing: 10.0,
                           mainAxisSpacing: 10.0,
+                          controller: _scrollController,
                           children:
                               libriFiltrati.map((libro) {
                                 return SizedBox(
