@@ -13,70 +13,68 @@ class LibreriaPage extends StatefulWidget {
   // Lo uso in mainScreen per inserire l'AppBar corretta all'interno dello scaffold
   // evintando in questo modo di utilizzare scaffold innestati
 
-static AppBar buildAppBar(BuildContext context) {
-  return AppBar(
-    title: const Text('Libreria'),
-    actions: [
-      Builder(
-        builder: (context) => IconButton(
-          icon: Icon(Icons.filter_list),
-          onPressed: () {
-            Scaffold.of(context).openEndDrawer();
-          },
+  static AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Libreria'),
+      actions: [
+        Builder(
+          builder:
+              (context) => IconButton(
+                icon: Icon(Icons.filter_list),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
-static Drawer? buildDrawer(BuildContext context) {
-  return Drawer(
-    child: ListView(
-      children: [
-        DrawerHeader(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          child: Text(
-            'Filtri',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
+  static Drawer? buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            child: Text(
+              'Filtri',
+              style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
-        ),
-        // Come in js lo spread operator consente di inserire un array all'interno di un altro array
-        // in questo caso sto creando un'unica lista contenente il drawer header e tutti i listTIle
-        ListTile(
-          leading: Icon(Icons.all_inclusive),
-          title: const Text('Mostra tutti i libri'),
-          onTap: () {
-            Navigator.pop(context);
-            // Azione filtro da implementare
-          },
-        ),
-        ...StatoLibro.values.map((stato) => ListTile(
-          leading: Icon(stato.icona),
-          title: Text(stato.titolo),
-          onTap: () {
-            Navigator.pop(context);
-            // Azione filtro da implementare
-          },
-        )),
-        ListTile(
-          leading: Icon(Icons.favorite),
-          title: const Text('Preferiti'),
-          onTap: () {
-            Navigator.pop(context);
-            // Azione filtro da implementare
-          },
-        ),        
-      ],
-    ),
-  );
-}
-
-
+          // Come in js lo spread operator consente di inserire un array all'interno di un altro array
+          // in questo caso sto creando un'unica lista contenente il drawer header e tutti i listTile
+          ListTile(
+            leading: Icon(Icons.all_inclusive),
+            title: const Text('Mostra tutti i libri'),
+            onTap: () {
+              Navigator.pop(context);
+              // Azione filtro da implementare
+            },
+          ),
+          ...StatoLibro.values.map(
+            (stato) => ListTile(
+              leading: Icon(stato.icona),
+              title: Text(stato.titolo),
+              onTap: () {
+                Navigator.pop(context);
+                // Azione filtro da implementare
+              },
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: const Text('Preferiti'),
+            onTap: () {
+              Navigator.pop(context);
+              // Azione filtro da implementare
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   State<LibreriaPage> createState() => _LibreriaPageState();
@@ -103,8 +101,9 @@ class _LibreriaPageState extends State<LibreriaPage> {
   Widget build(BuildContext context) {
     final libreria = context.watch<Libreria>();
 
-    // Ottengo la lista di libri filtrati. 
+    // Ottengo la lista di libri filtrati.
     // Se il genere non è selezionato, prendo automaticamente tutti i libri
+    // La lista viene ricreata ad ogni build, quindi ad ogni cambiamento di stato
     final libriFiltrati = libreria.getLibriPerGenere(genereSelezionato);
 
     return SafeArea(
@@ -118,7 +117,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
             Generi(
               genereSelezionato: genereSelezionato,
               onGenereSelezionato: filtraPerGenere,
-              ),
+            ),
             Expanded(
               child: SizedBox(
                 height: 200,
@@ -199,61 +198,67 @@ class Generi extends StatelessWidget {
       height: 100,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: GenereLibro.values.map((genere) {
-          final isSelected = genereSelezionato == genere;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () => onGenereSelezionato(genere),
-                  child: Container(
-                    width: 50,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).colorScheme.shadow,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
+        children:
+            GenereLibro.values.map((genere) {
+              final isSelected = genereSelezionato == genere;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GestureDetector(
+                      onTap: () => onGenereSelezionato(genere),
+                      child: Container(
+                        width: 50,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).colorScheme.shadow,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          border:
+                              isSelected
+                                  ? Border.all(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 2,
+                                  )
+                                  : null,
                         ),
-                      ],
-                      border: isSelected
-                          ? Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 2,
-                            )
-                          : null,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        genere.percorsoImmagine,
-                        fit: BoxFit.cover,
-                        color: isSelected ? null : Colors.black.withAlpha(50),
-                        colorBlendMode: isSelected ? null : BlendMode.darken,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            genere.percorsoImmagine,
+                            fit: BoxFit.cover,
+                            color:
+                                isSelected ? null : Colors.black.withAlpha(50),
+                            colorBlendMode:
+                                isSelected ? null : BlendMode.darken,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Text(
+                      genere.titolo,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                        color:
+                            isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  genere.titolo,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
       ),
     );
   }
 }
-
