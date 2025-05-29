@@ -1,12 +1,12 @@
-import 'package:bibliotech/services/controllers/aggiungi_libro_base_controller.dart';
+import 'package:bibliotech/services/controllers/aggiunta/aggiunta_base_controller.dart';
 import 'package:flutter/material.dart';
-import '../../models/genere_libro.dart';
-import '../../models/stato_libro.dart';
-import '../../models/libro.dart';
-import '../../models/libreria.dart';
+import '../../../models/genere_libro.dart';
+import '../../../models/stato_libro.dart';
+import '../../../models/libro.dart';
+import '../../../models/libreria.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../utilities/file_utility.dart';
+import '../../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
 class AggiungiLibroController extends BaseLibroController{
@@ -30,7 +30,6 @@ class AggiungiLibroController extends BaseLibroController{
   final TextEditingController dataPubblicazioneController = TextEditingController();
   final TextEditingController votoController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
-
 
   // Costruttore con parametro opzionale per modificare un libro esistente
   // Se il parametro é presente, inizializza i campi con i valori del libro da modificare
@@ -59,8 +58,7 @@ class AggiungiLibroController extends BaseLibroController{
     linguaController.text = libro.lingua ?? '';
     tramaController.text = libro.trama ?? '';
     isbnController.text = libro.isbn;
-    dataPubblicazioneController.text =
-        libro.dataPubblicazione?.toString() ?? '';
+    dataPubblicazioneController.text = libro.dataPubblicazione?.toString() ?? '';
     votoController.text = libro.voto?.toString() ?? '';
     noteController.text = libro.note ?? '';
     genereSelezionato = libro.genere;
@@ -87,12 +85,10 @@ class AggiungiLibroController extends BaseLibroController{
     }
   }
 
-  // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
-  void handleAggiungi() {
-    // Recupero i valori dai controller e li pulisco
+  // Metodo per recuperare i valori formattati dai textfields
+  void getFromFields(){
     titolo = titoloController.text.trim();
-    autori =
-        autoriController.text
+    autori = autoriController.text
             .split(',')
             .map((e) => e.trim())
             .where(
@@ -103,12 +99,23 @@ class AggiungiLibroController extends BaseLibroController{
     numeroPagine = int.tryParse(numeroPagineController.text);
     lingua = linguaController.text.trim();
     trama = tramaController.text.trim();
-    isbn = isbnController.text.toUpperCase().trim();
+
+    // Effettuo parsing e conversione degli isbn
+    String? rawIsbn = isbnController.text.toUpperCase().trim();
+    isbn = isbnValidator.toCanonical(rawIsbn);
+
     dataPubblicazione = DateTime.tryParse(dataPubblicazioneController.text);
     voto = double.tryParse(votoController.text);
     note = noteController.text;
     genere = genereSelezionato;
     stato = statoSelezionato;
+  }
+
+
+  // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
+  // Il metodo consente l'aggiunta di nuovi libri o la modifica di libri esistenti
+  void handleAggiungiModificaLibro() {
+    getFromFields(); 
 
     if (!controllaCampi()) {
       return; // Se i campi non sono validi, esco direttamente

@@ -1,6 +1,7 @@
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
+import 'package:bibliotech/services/controllers/aggiunta/aggiunta_api_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,12 @@ class _DettagliLibroState extends State<DettagliLibro>
   late TabController _tabControllerDetail;
   late Libro libro;
   late Libreria libreria;
+
+  // La schermata consente l'aggiunta e la rimozione di libri, sia forniti dall'API che manualmente...
+  // Essendo una schermata di dettaglio, si suppone che il libro che si sta cercando di aggiungere o modificare sia già presente in memoria...
+  // Posso quindi utilizzare direttamente il controller AggiuntaAPIController per gestire le operazioni di aggiunta e rimozione di libri.
+  // 
+  late RicercaGoogleBooksController apiController;
 
   // Variabile per gestire la modalità di modifica
   // Quando é true, i campi del libro sono editabili e vengono mostrati anche quelli nascosti

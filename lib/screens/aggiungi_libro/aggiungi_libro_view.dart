@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
-import '../../services/controllers/aggiungi_libro_controller.dart';
+import '../../services/controllers/aggiunta/aggiunta_manuale_controller.dart';
 import '../../models/libreria.dart';
 
 class AggiungiLibro extends StatefulWidget {
@@ -184,7 +184,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
 
   void _handleAggiungiLibro(AggiungiLibroController controller) async {
     try {
-      controller.handleAggiungi();
+      controller.handleAggiungiModificaLibro();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Libro inserito correttamente!'),
