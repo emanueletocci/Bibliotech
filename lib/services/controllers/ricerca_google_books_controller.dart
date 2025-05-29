@@ -1,17 +1,20 @@
-import 'package:bibliotech/services/controllers/aggiunta/aggiunta_base_controller.dart';
+/*
+ * Questo controller gestisce la ricerca di libri tramite l'API di Google Books, nella relativa schermata di ricerca.
+ * L'aggiunta e i relativi controlli sono stati delegati ad un altro controller
+ */
 import 'package:flutter/material.dart';
+import 'package:isbn/isbn.dart';
 
-import '../../../models/libro.dart';
-import '../../apis/google_books_api.dart';
-import '../../../models/libreria.dart';
+import '../../models/libro.dart';
+import '../apis/google_books_api.dart';
 
-class RicercaGoogleBooksController extends BaseLibroController{
+class RicercaGoogleBooksController{
   final TextEditingController searchQueryController = TextEditingController();
   final BookApiService _apiService = BookApiService();
-  final Libreria _libreria;
+  final Isbn isbnValidator = Isbn();
 
   // Il controller prende in input la libreria fornita dalla vista tramite il Provider
-  RicercaGoogleBooksController(this._libreria);
+  RicercaGoogleBooksController();
 
   // Variabile contenente tutti i libri restituiti dall'API per una ricerca
   List<Libro> _searchResults = [];

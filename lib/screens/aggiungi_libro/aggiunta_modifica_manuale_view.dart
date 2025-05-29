@@ -4,20 +4,20 @@ import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
-import '../../services/controllers/aggiunta/aggiunta_manuale_controller.dart';
+import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
 import '../../models/libreria.dart';
 
-class AggiungiLibro extends StatefulWidget {
+class AggiuntaModificaLibroManualeView extends StatefulWidget {
   final Libro? libroDaModificare;
 
-  const AggiungiLibro({super.key, this.libroDaModificare});
+  const AggiuntaModificaLibroManualeView({super.key, this.libroDaModificare});
 
   @override
-  State<AggiungiLibro> createState() => _AggiungiLibroState();
+  State<AggiuntaModificaLibroManualeView> createState() => _AggiuntaModificaLibroManualeViewState();
 }
 
-class _AggiungiLibroState extends State<AggiungiLibro> {
-  late AggiungiLibroController controller;
+class _AggiuntaModificaLibroManualeViewState extends State<AggiuntaModificaLibroManualeView> {
+  late AggiuntaModificaManualeController controller;
   bool _isControllerInitialized = false;
   late bool isFavorite;
 
@@ -31,7 +31,7 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
   Widget build(BuildContext context) {
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
-      controller = AggiungiLibroController(libreria, widget.libroDaModificare);
+      controller = AggiuntaModificaManualeController(libreria, widget.libroDaModificare);
       _isControllerInitialized = true;
     }
     return Scaffold(
@@ -182,9 +182,9 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
     );
   }
 
-  void _handleAggiungiLibro(AggiungiLibroController controller) async {
+  void _handleAggiungiLibro(AggiuntaModificaManualeController controller) async {
     try {
-      controller.handleAggiungiModificaLibro();
+      controller.handleAggiungiLibro();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Libro inserito correttamente!'),

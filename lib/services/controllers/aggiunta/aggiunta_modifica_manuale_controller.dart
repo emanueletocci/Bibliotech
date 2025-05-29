@@ -9,7 +9,7 @@ import 'dart:io';
 import '../../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
-class AggiungiLibroController extends BaseLibroController{
+class AggiuntaModificaManualeController extends GenericController{
   final List<GenereLibro> generi = GenereLibro.values.toList();
   final List<StatoLibro> stati = StatoLibro.values.toList();
 
@@ -34,7 +34,7 @@ class AggiungiLibroController extends BaseLibroController{
   // Costruttore con parametro opzionale per modificare un libro esistente
   // Se il parametro é presente, inizializza i campi con i valori del libro da modificare
   // Il controller gestisce quindi la modifica del libro
-  AggiungiLibroController(this._libreria, [Libro? libroDaModificare]): 
+  AggiuntaModificaManualeController(this._libreria, [Libro? libroDaModificare]): 
     super() {
     if (libroDaModificare != null) {
       _libroDaModificare = libroDaModificare;
@@ -86,7 +86,7 @@ class AggiungiLibroController extends BaseLibroController{
   }
 
   // Metodo per recuperare i valori formattati dai textfields
-  void getFromFields(){
+  void _getFromFields(){
     titolo = titoloController.text.trim();
     autori = autoriController.text
             .split(',')
@@ -114,8 +114,9 @@ class AggiungiLibroController extends BaseLibroController{
 
   // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
   // Il metodo consente l'aggiunta di nuovi libri o la modifica di libri esistenti
-  void handleAggiungiModificaLibro() {
-    getFromFields(); 
+  @override
+  void handleAggiungiLibro() {
+    _getFromFields(); 
 
     if (!controllaCampi()) {
       return; // Se i campi non sono validi, esco direttamente

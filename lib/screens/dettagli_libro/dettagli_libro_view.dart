@@ -1,7 +1,7 @@
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
-import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
-import 'package:bibliotech/services/controllers/aggiunta/aggiunta_api_controller.dart';
+import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
+import 'package:bibliotech/services/controllers/aggiunta/dettagli_libro_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +33,7 @@ class _DettagliLibroState extends State<DettagliLibro>
   // Essendo una schermata di dettaglio, si suppone che il libro che si sta cercando di aggiungere o modificare sia già presente in memoria...
   // Posso quindi utilizzare direttamente il controller AggiuntaAPIController per gestire le operazioni di aggiunta e rimozione di libri.
   // 
-  late RicercaGoogleBooksController apiController;
+  late DettagliLibroController controller;
 
   // Variabile per gestire la modalità di modifica
   // Quando é true, i campi del libro sono editabili e vengono mostrati anche quelli nascosti
@@ -58,6 +58,62 @@ class _DettagliLibroState extends State<DettagliLibro>
   void didChangeDependencies() {
     super.didChangeDependencies();
     libreria = context.watch<Libreria>();
+    controller = DettagliLibroController(libreria,libro);
+  }
+
+
+  void _handleAggiungiLibro(DettagliLibroController controller) async {
+    try {
+      controller.handleAggiungiLibro();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Libro inserito correttamente!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      Navigator.of(context).pop(true); // Segnalo successo!
+    } catch (e) {
+      String errorMessage = e.toString();
+      const prefix = 'Exception: ';
+      if (errorMessage.startsWith(prefix)) {
+        // Rimuovo il prefisso "Exception: " dal messaggio di errore
+        errorMessage = errorMessage.substring(prefix.length);
+      }
+      // Se viene lanciata un'eccezione, mostro un messaggio di errore
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  void _handleRimuoviLibro(DettagliLibroController controller) async {
+    try {
+      controller.handleRimuoviLibro();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Libro rimosso correttamente!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      Navigator.of(context).pop(true); // Segnalo successo!
+    } catch (e) {
+      String errorMessage = e.toString();
+      const prefix = 'Exception: ';
+      if (errorMessage.startsWith(prefix)) {
+        // Rimuovo il prefisso "Exception: " dal messaggio di errore
+        errorMessage = errorMessage.substring(prefix.length);
+      }
+      // Se viene lanciata un'eccezione, mostro un messaggio di errore
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
+    }
   }
 
   @override
@@ -75,7 +131,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           });
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AggiungiLibro(libroDaModificare: libro,)),
+            MaterialPageRoute(builder: (context) => AggiuntaModificaLibroManualeView(libroDaModificare: libro,)),
           );
         },
         child: Icon(Icons.edit),
@@ -208,7 +264,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline),
           onPressed: () {
-            libreria.aggiungiLibro(libro);
+            _handleAggiungiLibro(controller);
           },
         ),
       );
@@ -222,7 +278,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove),
           onPressed: () {
-            libreria.rimuoviLibro(libro);
+            _handleRimuoviLibro(controller);
           },
         ),
       );

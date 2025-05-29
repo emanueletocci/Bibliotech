@@ -4,7 +4,7 @@ import '../../../models/genere_libro.dart';
 import '../../../models/stato_libro.dart';
 import 'package:isbn/isbn.dart';
 
-abstract class BaseLibroController {
+abstract class GenericController {
   final Isbn isbnValidator = Isbn();
 
   GenereLibro? genereSelezionato;
@@ -24,7 +24,6 @@ abstract class BaseLibroController {
 
   // Imposto preferito a false di default
   bool isPreferito = false;
-  BaseLibroController();
 
   bool controllaCampi(){
     bool status = true;
@@ -40,7 +39,8 @@ abstract class BaseLibroController {
     }
     
     return status;
-  
   }
 
+  // Definizione di metodi astratti che devono essere implementati dalle classi figlie
+  void handleAggiungiLibro();
 }
