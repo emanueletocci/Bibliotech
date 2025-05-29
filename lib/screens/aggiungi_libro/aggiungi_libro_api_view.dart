@@ -66,7 +66,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
             child: TextField(
               controller: controller.searchQueryController,
               decoration: InputDecoration(
-                labelText: 'Cerca per titolo or ISBN',
+                labelText: 'Cerca per titolo o ISBN',
                 suffixIcon:
                     controller.isLoading
                         ? const Padding(

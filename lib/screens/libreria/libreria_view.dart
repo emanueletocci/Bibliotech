@@ -50,6 +50,7 @@ class LibreriaPage extends StatefulWidget {
             title: const Text('Mostra tutti i libri'),
             onTap: () {
               Navigator.pop(context);
+
               // Azione filtro da implementare
             },
           ),
@@ -175,7 +176,7 @@ class SearchBarCustom extends StatelessWidget {
     return TextField(
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(21)),
-        hintText: 'Search Book',
+        hintText: 'Cerca un libro!',
         prefixIcon: Icon(Icons.search),
       ),
     );
@@ -198,66 +199,114 @@ class Generi extends StatelessWidget {
       height: 100,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children:
-            GenereLibro.values.map((genere) {
-              final isSelected = genereSelezionato == genere;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      onTap: () => onGenereSelezionato(genere),
+        children: [
+          // Filtro "Tutti"
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  // Gestore del tap per il filtro "Tutti"
+                  // impostando null, ottengo la lista completa dei libri
+                  onTap: () => onGenereSelezionato(null),
+                  child: Container(
+                    width: 50,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border:
+                          genereSelezionato == null
+                              ? Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 2,
+                              )
+                              : null,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        width: 50,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.shadow,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                          border:
-                              isSelected
-                                  ? Border.all(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    width: 2,
-                                  )
-                                  : null,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            genere.percorsoImmagine,
-                            fit: BoxFit.cover,
-                            color:
-                                isSelected ? null : Colors.black.withAlpha(50),
-                            colorBlendMode:
-                                isSelected ? null : BlendMode.darken,
-                          ),
+                        color: Colors.grey[200],
+                        child: Icon(
+                          Icons.all_inclusive,
+                          size: 36,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ),
-                    Text(
-                      genere.titolo,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color:
-                            isSelected
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              );
-            }).toList(),
+                Text(
+                  "Tutti",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight:
+                        genereSelezionato == null
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                    color:
+                        genereSelezionato == null
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Tutti i generi come prima
+          ...GenereLibro.values.map((genere) {
+            final isSelected = genereSelezionato == genere;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    onTap: () => onGenereSelezionato(genere),
+                    child: Container(
+                      width: 50,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border:
+                            isSelected
+                                ? Border.all(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2,
+                                )
+                                : null,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          genere.percorsoImmagine,
+                          fit: BoxFit.cover,
+                          // Applico un filtro di colore se il genere non é selezionato
+                          // BlendMode.darken rende l'immagine più scura e va lasciato altrimenti flutter ne applica
+                          // uno di default che renderizza l'immagine di colore grigio, come specificato dal color
+                          color: isSelected ? null : Colors.black.withAlpha(60),
+                          colorBlendMode: isSelected ? null : BlendMode.darken,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    genere.titolo,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color:
+                          isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

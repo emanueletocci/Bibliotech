@@ -31,9 +31,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          _getAppBar(), // ottengo l'AppBar in base alla schermata selezionata
-      endDrawer: _getDrawer(), // ottengo il Drawer in base alla schermata selezionata
       body: IndexedStack(
         index:
             _selectedIndex, // mostro solo la schermata corrispondente a questo indice
@@ -83,19 +80,4 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Metodo helper per ottenere l'AppBar in base alla schermata selezionata (l'appbar deve comparire solamente nella schermata Libreria)
-  AppBar? _getAppBar() {
-    if (_selectedIndex == 1) {
-      return LibreriaPage.buildAppBar(context);
-    }
-    return null;
-  }
-
-  // Metodo helper per ottenere il Drawer in base alla schermata selezionata (il drawer deve comparire solamente nella schermata Libreria)
-  Drawer? _getDrawer() {
-    if (_selectedIndex == 1) {
-      return LibreriaPage.buildDrawer(context);
-    }
-    return null;
-  }
 }
