@@ -1,6 +1,6 @@
-import 'package:bibliotech/screens/aggiungi_libro/aggiungi_libro_view.dart';
+import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
 import 'package:flutter/material.dart';
-import '../screens/aggiungi_libro/aggiungi_libro_api_view.dart';
+import '../screens/ricerca_api/ricerca_google_books_view.dart';
 
 class PopupAggiunta extends StatelessWidget {
   const PopupAggiunta({super.key});
@@ -47,23 +47,13 @@ class PopupAggiunta extends StatelessWidget {
                   'Cerca nel catalogo',
                   Icons.search,
                   buttonWidth,
-                  () async {
-                    final result = await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()));
-                    if (result != null && result == true) {
-                      Navigator.of(context).pop(true); // Chiude il popup e ritorna true
-                    }
-                  },
+                  () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()))
                 ),
                 _buildButton(
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
-                  () async {
-                    final result = await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AggiungiLibro()));
-                    if (result != null && result == true) {
-                      Navigator.of(context).pop(true); // Chiude il popup e ritorna true
-                    }
-                  },
+                  () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AggiuntaModificaLibroManualeView()))
                 ),
               ],
             ),

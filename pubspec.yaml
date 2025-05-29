@@ -47,6 +47,8 @@ dependencies:
   provider: ^6.1.5
   curved_labeled_navigation_bar: ^2.0.6 #latest version
   sqflite_common_ffi: ^2.3.5
+  scroll_to_hide: ^2.2.1
+  isbn: ^1.0.4
 
 dev_dependencies:
   flutter_test:

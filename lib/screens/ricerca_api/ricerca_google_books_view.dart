@@ -1,9 +1,7 @@
 import 'package:bibliotech/screens/dettagli_libro/dettagli_libro_view.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../services/controllers/aggiungi_libro_api_controller.dart';
 import '../../components/libro_cover_widget.dart';
-import '../../models/libreria.dart';
+import '../../services/controllers/ricerca_google_books_controller.dart';
 
 class RicercaGoogleBooksView extends StatefulWidget {
   const RicercaGoogleBooksView({super.key});
@@ -23,8 +21,7 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_isControllerInitialized) {
-      final libreria = context.watch<Libreria>();
-      controller = RicercaGoogleBooksController(libreria);
+      controller = RicercaGoogleBooksController();
       _isControllerInitialized = true;
     }
   }

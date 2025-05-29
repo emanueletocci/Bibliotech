@@ -57,7 +57,7 @@ class BookApiService {
         final List<dynamic>? items = data['items'];
 
         if (items != null && items.isNotEmpty) {
-          // Mappa tutti gli elementi trovati in una lista di Libro
+          // Mappa tutti gli elementi trovati in una lista di Libri
           return items.map((jsonItem) => Libro.fromGoogleBooksJson(jsonItem)).toList();
         } else {
           debugPrint('DEBUG API: Nessun elemento trovato nella risposta.');

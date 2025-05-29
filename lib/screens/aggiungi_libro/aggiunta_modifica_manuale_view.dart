@@ -2,22 +2,25 @@ import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
+import '../../components/feedback.dart';
 import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
-import '../../services/controllers/aggiungi_libro_controller.dart';
+import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
 import '../../models/libreria.dart';
 
-class AggiungiLibro extends StatefulWidget {
+class AggiuntaModificaLibroManualeView extends StatefulWidget {
   final Libro? libroDaModificare;
 
-  const AggiungiLibro({super.key, this.libroDaModificare});
+  const AggiuntaModificaLibroManualeView({super.key, this.libroDaModificare});
 
   @override
-  State<AggiungiLibro> createState() => _AggiungiLibroState();
+  State<AggiuntaModificaLibroManualeView> createState() =>
+      _AggiuntaModificaLibroManualeViewState();
 }
 
-class _AggiungiLibroState extends State<AggiungiLibro> {
-  late AggiungiLibroController controller;
+class _AggiuntaModificaLibroManualeViewState
+    extends State<AggiuntaModificaLibroManualeView> {
+  late AggiuntaModificaManualeController controller;
   bool _isControllerInitialized = false;
   late bool isFavorite;
 
@@ -31,7 +34,10 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
   Widget build(BuildContext context) {
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
-      controller = AggiungiLibroController(libreria, widget.libroDaModificare);
+      controller = AggiuntaModificaManualeController(
+        libreria,
+        widget.libroDaModificare,
+      );
       _isControllerInitialized = true;
     }
     return Scaffold(
@@ -163,10 +169,15 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
                   });
                 },
               ),
-
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () => _handleAggiungiLibro(controller),
+                  onPressed: () {
+                     handleControllerOperation(
+                      context: context,
+                      operation: () async => controller.handleAggiungiLibro(),
+                      successMessage: "Libro rimosso correttamente!",
+                    );
+                  },
                   icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
@@ -180,32 +191,5 @@ class _AggiungiLibroState extends State<AggiungiLibro> {
         ),
       ),
     );
-  }
-
-  void _handleAggiungiLibro(AggiungiLibroController controller) async {
-    try {
-      controller.handleAggiungi();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Libro inserito correttamente!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 2));
-      if (!mounted) return;
-      Navigator.of(context).pop(true); // Segnalo successo!
-    } catch (e) {
-      String errorMessage = e.toString();
-      const prefix = 'Exception: ';
-      if (errorMessage.startsWith(prefix)) {
-        // Rimuovo il prefisso "Exception: " dal messaggio di errore
-        errorMessage = errorMessage.substring(prefix.length);
-      }
-      // Se viene lanciata un'eccezione, mostro un messaggio di errore
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-      );
-    }
   }
 }

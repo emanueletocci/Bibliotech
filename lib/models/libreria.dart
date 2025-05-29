@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'genere_libro.dart';
 import 'libro.dart';
 import '../services/dao/db.dart';
@@ -123,7 +122,7 @@ class Libreria extends ChangeNotifier {
   }
 
   // Metodo helper per il filtraggio combinato dei libri
-  // Permette di filtrare per genere, stato e preferiti contemporaneamente
+  // Permette di filtrare per genere, stato e preferiti e ricerca contemporaneamente
   List<Libro> getLibriFiltrati({
     GenereLibro? genere,
     StatoLibro? stato,

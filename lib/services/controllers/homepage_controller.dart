@@ -1,3 +1,6 @@
+/*
+ *  Questo controller implementa la logica di generazione delle liste di libri consigliati e delle ultime aggiunte nella homepage
+ */
 import '../../models/libreria.dart';
 import '../../models/libro.dart';
 import 'dart:math';

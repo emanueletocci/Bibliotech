@@ -5,15 +5,13 @@ class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  GenereLibro?
-  genere; // Dovrai decidere come mappare i generi di Google Books ai tuoi
+  GenereLibro? genere; 
   String? lingua;
   String? trama;
   String isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String?
-  copertina; // conterrà il percorso locale dell'immagine locale o un percorso di rete
+  String? copertina; // conterrà il percorso locale dell'immagine locale o un percorso di rete
   String? note;
   StatoLibro? stato;
   String? publisher;
@@ -197,6 +195,7 @@ class Libro {
       copertina: imageLinks?['thumbnail'] as String?,
     );
   }
+
 
   // Metodo statico per mappare le categorie di Google Books ai generi interni definiti nell'app
   static GenereLibro? _mapCategoriaToGenere(String categoria) {
