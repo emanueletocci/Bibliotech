@@ -77,6 +77,7 @@ class _LibreriaPageState extends State<LibreriaPage> {
                 filtraPerStato: _filtraPerStato,
                 soloPreferiti: _soloPreferiti,
                 filtraPerPreferiti: _filtraPerPreferiti,
+                filtraPerTitolo: _filtraPerTitolo,
               ),
               Divider(
                 color: Theme.of(context).colorScheme.outline,
