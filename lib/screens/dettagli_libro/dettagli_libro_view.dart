@@ -214,11 +214,11 @@ class _DettagliLibroState extends State<DettagliLibro>
           ),
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline),
-          onPressed: () async {
-            await handleControllerOperation(
+          onPressed: () {
+             handleControllerOperation(
               context: context,
               operation: () async => controller.handleAggiungiLibro(),
-              successMessage: "Libro rimosso correttamente!",
+              successMessage: "Libro aggiunto correttamente!",
             );
           },
         ),
@@ -233,7 +233,7 @@ class _DettagliLibroState extends State<DettagliLibro>
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove),
           onPressed: () async {
-            await handleControllerOperation(
+             handleControllerOperation(
               context: context,
               operation: () async => controller.handleRimuoviLibro(),
               successMessage: "Libro rimosso correttamente!",

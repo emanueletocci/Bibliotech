@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 /// Funzione helper generica per gestire operazioni asincrone della UI
 /// che coinvolgono un controller e mostrano feedback (SnackBar, navigazione).
-Future<void> handleControllerOperation({
+void handleControllerOperation({
   required BuildContext context,
   // Funzione eseguita dal controller
   required Future<void> Function() operation,
   required String successMessage,
-}) async {
+})  async {
   // Verifico che il BuildContext sia valido
 
   try {

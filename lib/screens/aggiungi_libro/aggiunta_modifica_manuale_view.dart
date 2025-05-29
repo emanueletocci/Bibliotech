@@ -171,8 +171,8 @@ class _AggiuntaModificaLibroManualeViewState
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await handleControllerOperation(
+                  onPressed: () {
+                     handleControllerOperation(
                       context: context,
                       operation: () async => controller.handleAggiungiLibro(),
                       successMessage: "Libro rimosso correttamente!",
