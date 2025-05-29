@@ -1,3 +1,4 @@
+import 'package:bibliotech/services/controllers/aggiungi_libro_base_controller.dart';
 import 'package:flutter/material.dart';
 import '../../models/genere_libro.dart';
 import '../../models/stato_libro.dart';
@@ -8,55 +9,39 @@ import 'dart:io';
 import '../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
-class AggiungiLibroController {
+class AggiungiLibroController extends BaseLibroController{
   final List<GenereLibro> generi = GenereLibro.values.toList();
   final List<StatoLibro> stati = StatoLibro.values.toList();
 
+  // Flag booleano per distinguere tra aggiunta e modifica
+  bool _isEditable = false;
+  Libro? _libroDaModificare;
+
+  // La libreria é ottenuta dalla view tramite il provider
+  final Libreria _libreria;
+
+  // Text Fields
   final TextEditingController titoloController = TextEditingController();
   final TextEditingController autoriController = TextEditingController();
   final TextEditingController numeroPagineController = TextEditingController();
   final TextEditingController linguaController = TextEditingController();
   final TextEditingController tramaController = TextEditingController();
   final TextEditingController isbnController = TextEditingController();
-  final TextEditingController dataPubblicazioneController =
-      TextEditingController();
+  final TextEditingController dataPubblicazioneController = TextEditingController();
   final TextEditingController votoController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
-  GenereLibro? genereSelezionato;
-  StatoLibro? statoSelezionato;
-
-  final Libreria _libreria;
-
-  String? titolo;
-  List<String>? autori;
-  int? numeroPagine;
-  String? lingua;
-  String? trama;
-  String isbn = '';
-  DateTime? dataPubblicazione;
-  double? voto;
-  String copertina = 'assets/images/book_placeholder.jpg';
-  String? note;
-  StatoLibro? stato;
-  GenereLibro? genere;
-  // Imposto preferito a false di default
-  bool isPreferito = false;
-
-  // Flag booleano per distinguere tra aggiunta e modifica
-  bool _isEditable = false;
-  Libro? _libroDaModificare;
 
   // Costruttore con parametro opzionale per modificare un libro esistente
   // Se il parametro é presente, inizializza i campi con i valori del libro da modificare
   // Il controller gestisce quindi la modifica del libro
-  AggiungiLibroController(this._libreria, [Libro? libroDaModificare]) {
+  AggiungiLibroController(this._libreria, [Libro? libroDaModificare]): 
+    super() {
     if (libroDaModificare != null) {
       _libroDaModificare = libroDaModificare;
       _initFields(libroDaModificare);
       copertina = libroDaModificare.copertina!;
-      _isEditable =
-          true; // Imposto il flag per indicare che si sta modificando un libro
+      _isEditable = true; // Imposto il flag per indicare che si sta modificando un libro
     } else {
       copertina =
           'assets/images/book_placeholder.jpg'; // Imposto un placeholder di default
@@ -130,7 +115,7 @@ class AggiungiLibroController {
     }
 
     Libro nuovoLibro = Libro(
-      titolo: titolo!,
+      titolo: titolo,
       autori: autori,
       numeroPagine: numeroPagine,
       genere: genere,
@@ -154,20 +139,9 @@ class AggiungiLibroController {
     }
   }
 
+  @override
   bool controllaCampi() {
-    bool status = true;
-
-    if (titolo?.isEmpty == true) {
-      status = false;
-      throw Exception("Il titolo non può essere vuoto");
-    }
-
-    if (isbn.isEmpty == true) {
-      status = false;
-      throw Exception("L'ISBN non può essere vuoto");
-    }
-
-    // Inserire validazione ISBN
+    bool status = super.controllaCampi();
 
     if (_isEditable) {
       // Modalitá modifica

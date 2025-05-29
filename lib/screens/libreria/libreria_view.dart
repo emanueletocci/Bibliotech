@@ -31,7 +31,6 @@ class _LibreriaPageState extends State<LibreriaPage> {
   }
 
   // Callback per l'aggiornamento dello stato in base allo stato del libro selezionato
-
   void _filtraPerStato(StatoLibro? stato) {
     setState(() => _statoSelezionato = stato);
   }
