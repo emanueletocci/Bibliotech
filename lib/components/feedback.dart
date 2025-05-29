@@ -1,3 +1,7 @@
+/*
+ * Questo file contiene l'implementazione di una funzione helper per la gestione dei feedback all'utente sotto forma di
+ * SnackBar. Generalmente é utilizzata insieme ai vari controller per gestire le operazioni di aggiunta, modifica o cancellazione
+ */ 
 import 'package:flutter/material.dart';
 
 /// Funzione helper generica per gestire operazioni asincrone della UI
