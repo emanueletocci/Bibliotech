@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'genere_libro_model.dart';
 import 'libro_model.dart';
-import '../services/dao/db.dart';
+import '../services/db/db.dart';
 import 'stato_libro_model.dart';
 
 class Libreria extends ChangeNotifier {
