@@ -2,7 +2,7 @@ import 'package:bibliotech/models/stato_libro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
-import '../../components/ui_helpers.dart';
+import '../../components/feedback.dart';
 import '../../models/genere_libro.dart';
 import '../../models/libro.dart';
 import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
@@ -14,10 +14,12 @@ class AggiuntaModificaLibroManualeView extends StatefulWidget {
   const AggiuntaModificaLibroManualeView({super.key, this.libroDaModificare});
 
   @override
-  State<AggiuntaModificaLibroManualeView> createState() => _AggiuntaModificaLibroManualeViewState();
+  State<AggiuntaModificaLibroManualeView> createState() =>
+      _AggiuntaModificaLibroManualeViewState();
 }
 
-class _AggiuntaModificaLibroManualeViewState extends State<AggiuntaModificaLibroManualeView> {
+class _AggiuntaModificaLibroManualeViewState
+    extends State<AggiuntaModificaLibroManualeView> {
   late AggiuntaModificaManualeController controller;
   bool _isControllerInitialized = false;
   late bool isFavorite;
@@ -32,7 +34,10 @@ class _AggiuntaModificaLibroManualeViewState extends State<AggiuntaModificaLibro
   Widget build(BuildContext context) {
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
-      controller = AggiuntaModificaManualeController(libreria, widget.libroDaModificare);
+      controller = AggiuntaModificaManualeController(
+        libreria,
+        widget.libroDaModificare,
+      );
       _isControllerInitialized = true;
     }
     return Scaffold(
@@ -166,13 +171,14 @@ class _AggiuntaModificaLibroManualeViewState extends State<AggiuntaModificaLibro
               ),
               Center(
                 child: ElevatedButton.icon(
-                onPressed: () async { 
-                  await handleControllerOperation(
-                    context: context, 
-                    operation: () async => controller.handleAggiungiLibro(), 
-                    successMessage: "Libro rimosso correttamente!", 
-                    errorMessagePrefix: "Exception:");
-                },                  icon: const Icon(Icons.add),
+                  onPressed: () async {
+                    await handleControllerOperation(
+                      context: context,
+                      operation: () async => controller.handleAggiungiLibro(),
+                      successMessage: "Libro rimosso correttamente!",
+                    );
+                  },
+                  icon: const Icon(Icons.add),
                   label: const Text("Aggiungi"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,

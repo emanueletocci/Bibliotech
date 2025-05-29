@@ -1,4 +1,4 @@
-import 'package:bibliotech/components/ui_helpers.dart';
+import 'package:bibliotech/components/feedback.dart';
 import 'package:bibliotech/models/libreria.dart';
 import 'package:bibliotech/models/stato_libro.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
@@ -33,7 +33,7 @@ class _DettagliLibroState extends State<DettagliLibro>
   // La schermata consente l'aggiunta e la rimozione di libri, sia forniti dall'API che manualmente...
   // Essendo una schermata di dettaglio, si suppone che il libro che si sta cercando di aggiungere o modificare sia già presente in memoria...
   // Posso quindi utilizzare direttamente il controller AggiuntaAPIController per gestire le operazioni di aggiunta e rimozione di libri.
-  // 
+  //
   late DettagliLibroController controller;
 
   // Variabile per gestire la modalità di modifica
@@ -59,7 +59,7 @@ class _DettagliLibroState extends State<DettagliLibro>
   void didChangeDependencies() {
     super.didChangeDependencies();
     libreria = context.watch<Libreria>();
-    controller = DettagliLibroController(libreria,libro);
+    controller = DettagliLibroController(libreria, libro);
   }
 
   @override
@@ -77,7 +77,12 @@ class _DettagliLibroState extends State<DettagliLibro>
           });
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AggiuntaModificaLibroManualeView(libroDaModificare: libro,)),
+            MaterialPageRoute(
+              builder:
+                  (context) => AggiuntaModificaLibroManualeView(
+                    libroDaModificare: libro,
+                  ),
+            ),
           );
         },
         child: Icon(Icons.edit),
@@ -209,12 +214,12 @@ class _DettagliLibroState extends State<DettagliLibro>
           ),
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline),
-          onPressed: () async { 
+          onPressed: () async {
             await handleControllerOperation(
-              context: context, 
-              operation: () async => controller.handleAggiungiLibro(), 
-              successMessage: "Libro rimosso correttamente!", 
-              errorMessagePrefix: "Exception:");
+              context: context,
+              operation: () async => controller.handleAggiungiLibro(),
+              successMessage: "Libro rimosso correttamente!",
+            );
           },
         ),
       );
@@ -227,12 +232,12 @@ class _DettagliLibroState extends State<DettagliLibro>
           ),
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove),
-          onPressed: () async { 
+          onPressed: () async {
             await handleControllerOperation(
-              context: context, 
-              operation: () async => controller.handleRimuoviLibro(), 
-              successMessage: "Libro rimosso correttamente!", 
-              errorMessagePrefix: "Exception:");
+              context: context,
+              operation: () async => controller.handleRimuoviLibro(),
+              successMessage: "Libro rimosso correttamente!",
+            );
           },
         ),
       );
