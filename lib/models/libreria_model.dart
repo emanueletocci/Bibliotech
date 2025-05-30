@@ -7,7 +7,9 @@ import 'stato_libro_model.dart';
 
 class Libreria extends ChangeNotifier {
   // Implementazione del Singleton con integrazione Provider (ChangeNotifier)
-  // Pattern che garantisce una sola istanza della libreria, con notifiche automatiche agli observer
+  // Il pattern Singleton garantisce che esista una sola istanza della libreria e che sia accessibile
+  // da qualunque parte dell'applicazione.
+  // La chiamata a Libreria() restituirà quindi sempre la stessa istanza...
   // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifier
 
   static final Libreria _instance = Libreria._privateConstructor();
