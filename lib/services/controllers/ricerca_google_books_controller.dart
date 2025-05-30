@@ -8,9 +8,16 @@ import 'package:isbn/isbn.dart';
 import '../../models/libro_model.dart';
 import '../apis/google_books_api.dart';
 
-class RicercaGoogleBooksController{
+/// Controller per la ricerca di libri tramite l'API di Google Books.
+/// Gestisce la logica di ricerca e lo stato dei risultati.
+class RicercaGoogleBooksController {
+  /// Controller per il campo di testo della query di ricerca.
   final TextEditingController searchQueryController = TextEditingController();
+
+  /// Servizio per le chiamate all'API di Google Books.
   final BookApiService _apiService = BookApiService();
+
+  /// Validatore per codici ISBN.
   final Isbn isbnValidator = Isbn();
 
   // Il controller prende in input la libreria fornita dalla vista tramite il Provider
@@ -20,12 +27,20 @@ class RicercaGoogleBooksController{
   List<Libro> _searchResults = [];
   bool _isLoading = false;
 
+  /// Risultati della ricerca corrente.
   List<Libro> get searchResults => _searchResults;
+
+  /// Stato di caricamento della ricerca.
   bool get isLoading => _isLoading;
 
   // Metodo per la ricerca dei libri tramite l'API di Google Books mediante il textFiedl presente
   // nella schermata di aggiunta tramite API. il metodo prende in input una stringa di ricerca (isbn o titolo)
   // ed effettua una chiamata all'API per ottenere i risultati.
+
+  /// Esegue la ricerca di libri tramite l'API di Google Books.
+  /// Utilizza il testo inserito dall'utente come query (ISBN o titolo).
+  /// Aggiorna lo stato di caricamento e i risultati della ricerca.
+  /// Lancia un'eccezione se si verifica un errore o se non vengono trovati libri.
   Future<void> searchBooks() async {
     final String query = searchQueryController.text.trim();
     if (query.isEmpty) {
@@ -39,7 +54,7 @@ class RicercaGoogleBooksController{
     // Provo ad effettuare la ricerca tramite l'API
     try {
       // Se il testo inserito dall'utente non é un isbn
-      if(isbnValidator.notIsbn(query, strict: false)) {
+      if (isbnValidator.notIsbn(query, strict: false)) {
         debugPrint('DEBUG: Ricerca per titolo: $query');
         _searchResults = await _apiService.searchBooks(query: query);
       } else {
@@ -60,5 +75,5 @@ class RicercaGoogleBooksController{
     } finally {
       _isLoading = false;
     }
-  }  
+  }
 }

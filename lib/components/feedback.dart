@@ -1,17 +1,26 @@
 /*
  * Questo file contiene l'implementazione di una funzione helper per la gestione dei feedback all'utente sotto forma di
  * SnackBar. Generalmente é utilizzata insieme ai vari controller per gestire le operazioni di aggiunta, modifica o cancellazione
- */ 
+ */
 import 'package:flutter/material.dart';
 
 /// Funzione helper generica per gestire operazioni asincrone della UI
 /// che coinvolgono un controller e mostrano feedback (SnackBar, navigazione).
+///
+/// Mostra una SnackBar di successo se l'operazione va a buon fine.
+/// In caso di errore, mostra una SnackBar di errore con il messaggio estratto dall'eccezione.
+/// Dopo il successo, attende 2 secondi e chiude la schermata corrente.
+///
+/// Parametri:
+/// - [context]: Il contesto di build corrente.
+/// - [operation]: La funzione asincrona da eseguire (ad esempio aggiunta, modifica, cancellazione).
+/// - [successMessage]: Il messaggio da mostrare nella SnackBar in caso di successo.
 void handleControllerOperation({
   required BuildContext context,
   // Funzione eseguita dal controller
   required Future<void> Function() operation,
   required String successMessage,
-})  async {
+}) async {
   // Verifico che il BuildContext sia valido
 
   try {

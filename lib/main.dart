@@ -6,6 +6,8 @@ import 'themes/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+/// Funzione principale dell'applicazione.
+/// Inizializza Flutter, configura il database e avvia l'app.
 void main() async {
   // Assicuro che il framwork Flutter sia inizializzato prima di eseguire interazioni con il SO o plugin nativi
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,17 +20,17 @@ void main() async {
 
   final libreria = Libreria();
   // Inizializz la libreria caricando i libri dal database
-  await libreria.init(); 
+  await libreria.init();
 
   runApp(
-    ChangeNotifierProvider<Libreria>(
-      create: (_) => libreria,
-      child: MyApp(),
-    ),
+    ChangeNotifierProvider<Libreria>(create: (_) => libreria, child: MyApp()),
   );
 }
 
+/// Widget principale dell'applicazione.
+/// Imposta il tema e la schermata iniziale.
 class MyApp extends StatelessWidget {
+  /// Costruttore della classe [MyApp].
   const MyApp({super.key});
 
   @override

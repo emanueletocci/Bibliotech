@@ -5,13 +5,14 @@ class Libro {
   String titolo;
   List<String>? autori;
   int? numeroPagine;
-  GenereLibro? genere; 
+  GenereLibro? genere;
   String? lingua;
   String? trama;
   String isbn;
   DateTime? dataPubblicazione;
   double? voto;
-  String? copertina; // conterrà il percorso locale dell'immagine locale o un percorso di rete
+  String?
+  copertina; // conterrà il percorso locale dell'immagine locale o un percorso di rete
   String? note;
   StatoLibro? stato;
   String? publisher;
@@ -196,7 +197,6 @@ class Libro {
     );
   }
 
-
   // Metodo statico per mappare le categorie di Google Books ai generi interni definiti nell'app
   static GenereLibro? _mapCategoriaToGenere(String categoria) {
     categoria = categoria.toLowerCase();
@@ -245,7 +245,8 @@ class Libro {
         return entry.value;
       }
     }
-    return GenereLibro.noCategoria; // Se non trovo corrispondenza, imposto a "Nessuna Categoria"
+    return GenereLibro
+        .noCategoria; // Se non trovo corrispondenza, imposto a "Nessuna Categoria"
   }
 
   // Metodo statico per il parsing degli autori

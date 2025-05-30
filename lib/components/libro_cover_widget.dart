@@ -2,26 +2,29 @@ import 'package:flutter/material.dart';
 import '../models/libro_model.dart';
 import 'dart:io';
 
+/// Widget che visualizza la copertina di un libro.
+/// Gestisce copertine da asset, URL di rete o file locali.
+/// Mostra un'icona di errore se l'immagine non è disponibile o non valida.
 class LibroCoverWidget extends StatelessWidget {
+  /// Il libro di cui mostrare la copertina.
   final Libro libro;
-  final VoidCallback? onTap; 
 
-  const LibroCoverWidget({
-    super.key,
-    required this.libro,
-    this.onTap, 
-  });
+  /// Callback opzionale da eseguire al tap sulla copertina.
+  final VoidCallback? onTap;
+
+  /// Costruttore del widget [LibroCoverWidget].
+  const LibroCoverWidget({super.key, required this.libro, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child:
-            _buildCoverImage(), 
-      );
+      borderRadius: BorderRadius.circular(8.0),
+      child: _buildCoverImage(),
+    );
   }
 
-  // Metodo helper per costruire l'immagine della copertina
+  /// Metodo helper per costruire l'immagine della copertina.
+  /// Gestisce asset di default, URL di rete e file locali.
   Widget _buildCoverImage() {
     // Caso 1: La copertina è null o vuota, o è il placeholder di default.
     // Se la copertina è null, la tratto come un placeholder
