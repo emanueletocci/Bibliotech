@@ -6,7 +6,11 @@ import '../../../models/genere_libro_model.dart';
 import '../../../models/stato_libro_model.dart';
 import '../../dettagli_libro/dettagli_libro_view.dart';
 
+/// Tab della schermata principale che mostra la libreria dell'utente.
+/// Permette di filtrare i libri per genere, stato, preferiti e titolo.
+/// Visualizza i libri in una griglia e consente di accedere ai dettagli di ciascun libro.
 class LibreriaTab extends StatefulWidget {
+  /// Costruttore della tab Libreria.
   const LibreriaTab({super.key});
 
   @override
@@ -14,12 +18,9 @@ class LibreriaTab extends StatefulWidget {
 }
 
 class _LibreriaTabState extends State<LibreriaTab> {
-  // Variabile per tenere traccia del genere selezionato
-  // Se null, nessun genere è selezionato e si mostrano tutti i libri
   GenereLibro? _genereSelezionato;
   StatoLibro? _statoSelezionato;
   String? _titoloSelezionato;
-
   bool _soloPreferiti = false;
 
   @override
@@ -27,20 +28,22 @@ class _LibreriaTabState extends State<LibreriaTab> {
     super.initState();
   }
 
-  // Callback per l'aggiornamento dello stato in base al genere selezionato
+  /// Callback per filtrare i libri per genere.
   void _filtraPerGenere(GenereLibro? genere) {
     setState(() => _genereSelezionato = genere);
   }
 
-  // Callback per l'aggiornamento dello stato in base allo stato del libro selezionato
+  /// Callback per filtrare i libri per stato.
   void _filtraPerStato(StatoLibro? stato) {
     setState(() => _statoSelezionato = stato);
   }
 
+  /// Callback per filtrare i libri preferiti.
   void _filtraPerPreferiti(bool soloPreferiti) {
     setState(() => _soloPreferiti = soloPreferiti);
   }
 
+  /// Callback per filtrare i libri per titolo.
   void _filtraPerTitolo(String? titolo) {
     setState(() {
       _titoloSelezionato = titolo;
@@ -51,9 +54,6 @@ class _LibreriaTabState extends State<LibreriaTab> {
   Widget build(BuildContext context) {
     final libreria = context.watch<Libreria>();
 
-    // Ottengo la lista di libri filtrati.
-    // Se il genere non è selezionato, prendo automaticamente tutti i libri
-    // La lista viene ricreata ad ogni build, quindi ad ogni cambiamento di stato
     final libriFiltrati = libreria.getLibriFiltrati(
       genere: _genereSelezionato,
       stato: _statoSelezionato,
@@ -83,16 +83,14 @@ class _LibreriaTabState extends State<LibreriaTab> {
                 color: Theme.of(context).colorScheme.outline,
                 thickness: 1.0,
               ),
-
               libriFiltrati.isEmpty
                   ? const Center(child: Text("Nessun libro presente."))
                   : GridView.count(
-                    shrinkWrap: true, // il gridview deve adattarsi alla dimensione dei suoi figli, occupando solo lo spazio necessario
+                    shrinkWrap: true,
                     crossAxisCount: 3,
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
-                    physics:
-                        const NeverScrollableScrollPhysics(), // Disabilito lo scroll interno del GridView
+                    physics: const NeverScrollableScrollPhysics(),
                     children:
                         libriFiltrati.map((libro) {
                           return SizedBox(
@@ -126,7 +124,8 @@ class _LibreriaTabState extends State<LibreriaTab> {
   }
 }
 
-// Widget per la barra dei filtri basata sui generi dei libri
+/// Barra dei filtri per la selezione del genere dei libri.
+/// Mostra tutti i generi disponibili e consente di selezionarne uno.
 class GeneriBar extends StatelessWidget {
   final GenereLibro? genereSelezionato;
   final Function(GenereLibro?) onGenereSelezionato;
@@ -150,8 +149,6 @@ class GeneriBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
-                  // Gestore del tap per il filtro "Tutti"
-                  // impostando null, ottengo la lista completa dei libri
                   onTap: () => onGenereSelezionato(null),
                   child: Container(
                     width: 50,
@@ -169,7 +166,6 @@ class GeneriBar extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        // Imposto i colori del container "Tutti" (altrimenti si vede solo l'icona)
                         color: Theme.of(context).colorScheme.surfaceContainer,
                         child: Icon(
                           Icons.all_inclusive,
@@ -224,9 +220,6 @@ class GeneriBar extends StatelessWidget {
                         child: Image.asset(
                           genere.percorsoImmagine,
                           fit: BoxFit.cover,
-                          // Applico un filtro di colore se il genere non é selezionato
-                          // BlendMode.darken rende l'immagine più scura e va lasciato altrimenti flutter ne applica
-                          // uno di default che renderizza l'immagine di colore grigio, come specificato dal color
                           color: isSelected ? null : Colors.black.withAlpha(60),
                           colorBlendMode: isSelected ? null : BlendMode.darken,
                         ),
@@ -255,7 +248,8 @@ class GeneriBar extends StatelessWidget {
   }
 }
 
-// Widget per la barra dei filtri basata sugli stati dei libri
+/// Barra dei filtri per la selezione dello stato dei libri.
+/// Mostra tutti gli stati disponibili e consente di selezionarne uno.
 class StatiLibriBar extends StatelessWidget {
   final StatoLibro? statoSelezionato;
   final Function(StatoLibro?) onStatoSelezionato;
@@ -268,7 +262,6 @@ class StatiLibriBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Lista completa dei chip: "Tutti" + tutti gli stati
     final List<Widget> chips = [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -297,8 +290,6 @@ class StatiLibriBar extends StatelessWidget {
     return SizedBox(
       height: 56,
       child: ListView.builder(
-        // Di default, ListView ha un'altezza infinita, quindi devo specificare un'altezza o wrappare la lista
-        // in un widget con altezza fissa. Con shrinkWrap: true, la lista si adatta alle dimensioni dei suoi figli.
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -309,8 +300,8 @@ class StatiLibriBar extends StatelessWidget {
   }
 }
 
-// Widget wrapper per la sezione dei filtri. Creo un unico widget che ingloba tutto l'header della pagina,
-// ossia tuta la sezione dedicata ai filtri. Ció mi semplifica la gestione dello scroll_to_hide
+/// Widget wrapper per la sezione dei filtri.
+/// Comprende la ricerca per titolo, la barra dei generi, la barra degli stati e il filtro preferiti.
 class SezioneFiltri extends StatelessWidget {
   final GenereLibro? genereSelezionato;
   final StatoLibro? statoSelezionato;
@@ -361,6 +352,8 @@ class SezioneFiltri extends StatelessWidget {
   }
 }
 
+/// Campo di ricerca per filtrare i libri per titolo.
+/// Chiama la callback [onChanged] ad ogni modifica del testo.
 class RicercaLibri extends StatefulWidget {
   final Function(String?) onChanged;
 

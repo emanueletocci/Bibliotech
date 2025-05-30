@@ -7,7 +7,10 @@ import 'package:provider/provider.dart';
 
 import '../../dettagli_libro/dettagli_libro_view.dart';
 
+/// Tab principale della homepage dell'app.
+/// Mostra un header di benvenuto, pulsante per aggiungere libri, pulsanti rapidi e caroselli di libri consigliati e ultime aggiunte.
 class HomepageTab extends StatefulWidget {
+  /// Costruttore della tab Homepage.
   const HomepageTab({super.key});
 
   @override
@@ -36,6 +39,7 @@ class _HomepageTabState extends State<HomepageTab> {
     );
   }
 
+  /// Costruisce l'header della homepage con titolo, pulsante aggiunta e stile personalizzato.
   Widget _buildHeader(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -118,6 +122,7 @@ class _HomepageTabState extends State<HomepageTab> {
     );
   }
 
+  /// Costruisce il corpo della homepage con pulsanti rapidi, carosello libri consigliati e ultime aggiunte.
   Widget _buildBody(BuildContext context, HomepageController controller) {
     final libriConsigliati = controller.libriConsigliati;
     final ultimeAggiunte = controller.ultimeAggiunte;
@@ -191,7 +196,8 @@ class _HomepageTabState extends State<HomepageTab> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DettagliLibroView(libro: libro),
+                            builder:
+                                (context) => DettagliLibroView(libro: libro),
                           ),
                         );
                         debugPrint('Hai premuto il libro: ${libro.titolo}');
@@ -227,7 +233,8 @@ class _HomepageTabState extends State<HomepageTab> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DettagliLibroView(libro: libro),
+                            builder:
+                                (context) => DettagliLibroView(libro: libro),
                           ),
                         );
                         debugPrint('Hai premuto il libro: ${libro.titolo}');

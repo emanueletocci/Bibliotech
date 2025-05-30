@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../services/controllers/ricerca_google_books_controller.dart';
 
+/// Schermata per la ricerca di libri tramite Google Books API.
+/// Permette all'utente di cercare libri per titolo o ISBN e visualizzare i risultati.
+/// Toccando un risultato si accede ai dettagli del libro.
 class RicercaGoogleBooksView extends StatefulWidget {
+  /// Costruttore della schermata di ricerca Google Books.
   const RicercaGoogleBooksView({super.key});
 
   @override
@@ -11,12 +15,12 @@ class RicercaGoogleBooksView extends StatefulWidget {
 }
 
 class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
+  /// Controller per la gestione della ricerca e dei risultati.
   late RicercaGoogleBooksController controller;
+
+  /// Flag per evitare di inizializzare più volte il controller.
   bool _isControllerInitialized = false;
 
-  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
-  // viene eseguito subito dopo initState e prima di build
-  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -26,25 +30,26 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
     }
   }
 
-  // Metodo per gestire la ricerca dei libri.
+  /// Gestisce la ricerca dei libri e mostra eventuali errori tramite SnackBar.
   Future<void> _handleSearchBooks() async {
     try {
       await controller.searchBooks();
     } catch (e) {
-      // Cattura l'eccezione lanciata dal controller e mostra un messaggio di errore.
       String errorMessage = e.toString();
       const prefix = 'Exception: ';
       if (errorMessage.startsWith(prefix)) {
-        // Rimuovo il prefisso "Exception: " dal messaggio di errore
         errorMessage = errorMessage.substring(prefix.length);
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Theme.of(context).colorScheme.error),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
       }
     } finally {
-      if (mounted) setState(() {}); // Mostro i risultati della ricerca;
+      if (mounted) setState(() {});
     }
   }
 
@@ -91,15 +96,13 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
               child: ListView.builder(
                 itemCount: controller.searchResults.length,
                 itemBuilder: (context, index) {
-                  final book =
-                      controller.searchResults[index]; 
+                  final book = controller.searchResults[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 8.0,
                       vertical: 4.0,
                     ),
                     elevation: 2,
-                    // ListTile consente di stilizzare i singoli elementi di una lista
                     child: ListTile(
                       leading: SizedBox(
                         width: 50,
@@ -117,11 +120,11 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () {
-                        //_handleAggiungiLibro(book);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DettagliLibroView(libro: book),
+                            builder:
+                                (context) => DettagliLibroView(libro: book),
                           ),
                         );
                       },
