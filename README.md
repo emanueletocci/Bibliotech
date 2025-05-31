@@ -1,11 +1,38 @@
-![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
+# 📚 Bibliotech
 
-# Bibliotech
+[![Flutter](https://img.shields.io/badge/flutter-v3.19.6-blue?logo=flutter)](https://flutter.dev/)
 
-Bozze: https://docs.google.com/document/d/134Bb6w__ZjqzB6ukmv6nTkFb9iBX_u7PH47r1ZrXh1k/edit?usp=sharing
+> **Bibliotech** è un'app mobile multipiattaforma per la gestione della libreria personale.  
+> Sviluppata in Flutter, consente di catalogare, arricchire e organizzare i tuoi libri con facilità.
 
-Documentazione ufficiale: https://www.overleaf.com/read/ryzhknrbptmc#f3aa6c
+---
 
-Mockup: https://www.figma.com/design/QSPCMmoPRzGiIP1bdn78C8/Mobile-Programming?node-id=0-1&t=kzEEztIGSt7dS5N1-1
+## 🚀 Demo & Risorse
 
-**Bibliotech** è un'applicazione mobile multipiattaforma sviluppata per facilitare la gestione della libreria personale degli utenti.  L'applicazione consente di catalogare i libri, sia quelli già letti che quelli da leggere, e di arricchire le informazioni relative a ciascun libro con note personali e valutazioni.  Bibliotech offre inoltre funzionalità per l'organizzazione dei libri tramite categorie personalizzabili, la ricerca rapida e la visualizzazione di statistiche di lettura.  
+- **Documentazione del progetto:** [Overleaf](https://www.overleaf.com/read/ryzhnkrbptmc#f3aa6c)
+- **Documentazione tecnica:** [Github Actions](https://emanueletocci.github.io/Bibliotech/)
+- **Mockup UI:** [Figma](https://www.figma.com/design/QSPCMmoPRzGiIP1bdn78C8/Mobile-Programming?node-id=0-1&t=kzEEztlGSt7d5SN1-1)
+
+---
+
+## ✨ Caratteristiche principali
+
+- 📖 **Gestione libreria**: aggiungi, modifica e organizza i tuoi libri.
+- 🔍 **Ricerca e filtri avanzati**: trova rapidamente libri per titolo, genere, stato o preferiti.
+- 💬 **Citazioni letterarie**: ogni giorno una nuova citazione per ispirarti.
+- 📊 **Statistiche di lettura**: monitora i tuoi progressi e le tue abitudini di lettura.
+
+
+---
+
+## 📱 Anteprima
+
+<p align="center">
+  <img src="assets/images/mockups/Aggiungi%20libro.jpg" alt="Screenshot Bibliotech" width="300"/>
+</p>
+
+---
+
+
+## 📦 Come iniziare
+
