@@ -86,9 +86,14 @@ class Libreria extends ChangeNotifier {
 
   /// Modifica un libro esistente sostituendolo con uno nuovo.
   /// Rimuove il vecchio libro e aggiunge quello nuovo.
-  void modificaLibro(Libro vecchioLibro, Libro nuovoLibro) {
-    rimuoviLibro(vecchioLibro);
-    aggiungiLibro(nuovoLibro);
+  Future<void> modificaLibro(Libro vecchioLibro, Libro nuovoLibro) async {
+    try {
+      await _dbHelper.updateLibro(nuovoLibro);
+      _libri[vecchioLibro.isbn] = nuovoLibro;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Errore modifica libro: $e');
+    }
   }
 
   /// Ricerca per titolo (case insensitive).

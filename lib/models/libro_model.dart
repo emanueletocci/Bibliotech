@@ -257,4 +257,38 @@ class Libro {
       return null;
     }
   }
+
+  Libro copyWith({
+    String? titolo,
+    List<String>? autori,
+    int? numeroPagine,
+    GenereLibro? genere,
+    String? lingua,
+    String? trama,
+    String? isbn,
+    DateTime? dataPubblicazione,
+    double? voto,
+    String? copertina,
+    String? note,
+    StatoLibro? stato,
+    bool? preferito,
+    String? publisher,
+  }) {
+    return Libro(
+      titolo: titolo ?? this.titolo,
+      autori: autori ?? this.autori,
+      numeroPagine: numeroPagine ?? this.numeroPagine,
+      genere: genere ?? this.genere,
+      lingua: lingua ?? this.lingua,
+      trama: trama ?? this.trama,
+      isbn: isbn ?? this.isbn,
+      dataPubblicazione: dataPubblicazione ?? this.dataPubblicazione,
+      voto: voto ?? this.voto,
+      copertina: copertina ?? this.copertina,
+      note: note ?? this.note,
+      stato: stato ?? this.stato,
+      preferito: preferito ?? this.preferito,
+      publisher: publisher ?? this.publisher,
+    );
+  }
 }

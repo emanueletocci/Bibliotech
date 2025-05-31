@@ -1,6 +1,5 @@
 import 'package:bibliotech/models/stato_libro_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../components/libro_cover_widget.dart';
 import '../../components/feedback.dart';
@@ -174,33 +173,9 @@ class _AggiuntaModificaLibroManualeViewState
               /// Campo di testo per il voto.
               TextField(
                 controller: controller.votoController,
+                enabled: possibileInserireVoto,
                 decoration: const InputDecoration(labelText: 'Voto'),
-                keyboardType: TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,  // non consento l'inserimento di voti negativi
-                ),
-                inputFormatters: <TextInputFormatter>[
-                  // la stringa deve inizia con cifre seguite opzionalmente da un punto o una virgola e altre cifre
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d*')),
-                  TextInputFormatter.withFunction((oldValue, newValue){
-                    String text = newValue.text;
-
-                    text = text.replaceAll(',', '.'); // Sostituisco il punto con la virgola
-
-                    // se l'utente inserisce un voto del tipo .5, lo trasformo in 0.5
-                    if (text.startsWith('.') && text.length > 1) {
-                      text = '0$text';
-                    }
-                    //.copyWith é un costruttore di copia che consente di creare un nuovo oggetto a partire da uno esistente,
-                    return newValue.copyWith(
-                      text: text, // aggiorno il testo
-                      selection: TextSelection.collapsed(offset: text.length),
-                    );
-
-                  }),
-
-                  
-                ],
+                keyboardType: TextInputType.number,
               ),
 
               /// Campo di testo per le note personali.
@@ -224,7 +199,19 @@ class _AggiuntaModificaLibroManualeViewState
                         .toList(),
                 onChanged: (val) {
                   setState(() {
+                    final statoPrecedente = controller.statoSelezionato;
                     controller.statoSelezionato = val;
+
+                    // Se l'utente cambia lo stato in acquistare o da leggere, la recensione deve essere cambiata in null
+                    final nonPermetteRecensione =
+                        val == StatoLibro.daLeggere ||
+                        val == StatoLibro.daAcquistare;
+                    final eraPermessoRecensione =
+                        statoPrecedente != StatoLibro.daLeggere &&
+                        statoPrecedente != StatoLibro.daAcquistare;
+                    if (nonPermetteRecensione && eraPermessoRecensione) {
+                      controller.votoController.clear();
+                    }
                   });
                 },
               ),
@@ -252,5 +239,15 @@ class _AggiuntaModificaLibroManualeViewState
         ),
       ),
     );
+  }
+
+  //Metodo helper per controllare l'inserimento del voto
+  bool get possibileInserireVoto {
+    final stato = controller.statoSelezionato;
+    final votoEsistente = controller.votoController.text.isNotEmpty;
+    final statoSenzaVoto =
+        stato == StatoLibro.daLeggere || stato == StatoLibro.daAcquistare;
+
+    return !statoSenzaVoto && !votoEsistente;
   }
 }
