@@ -15,18 +15,39 @@ import 'package:flutter/material.dart';
 /// - [context]: Il contesto di build corrente.
 /// - [operation]: La funzione asincrona da eseguire (ad esempio aggiunta, modifica, cancellazione).
 /// - [successMessage]: Il messaggio da mostrare nella SnackBar in caso di successo.
+
 void handleControllerOperation({
   required BuildContext context,
   // Funzione eseguita dal controller
-  required Future<void> Function() operation,
+  required dynamic Function() operation,
   required String successMessage,
 }) async {
   // Verifico che il BuildContext sia valido
 
   try {
-    await operation(); // Eseguo l'operazione asincrona del controller
+    final avviso = await operation(); // Eseguo l'operazione asincrona del controller
 
-    if (!context.mounted) return;
+    if (!context.mounted) return ;
+
+    if(avviso != null) {
+      // Se l'operazione ha restituito un avviso, lo mostro in un AlertDialog
+      await showDialog(
+        context: context, 
+        builder: (context) => AlertDialog(
+          title: const Text('Avviso'),
+          content: Text(avviso),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (!context.mounted) return ;
+
     // Se l'operazione ha successo, mostro la SnackBar di successo
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -53,7 +74,7 @@ void handleControllerOperation({
     }
 
     // Controllo `mounted` prima di mostrare la SnackBar di errore
-    if (!context.mounted) return;
+    if (!context.mounted) return ;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
