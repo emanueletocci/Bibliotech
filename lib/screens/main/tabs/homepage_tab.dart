@@ -126,43 +126,42 @@ class _HomepageTabState extends State<HomepageTab> {
   Widget _buildBody(BuildContext context, HomepageController controller) {
     final libriConsigliati = controller.libriConsigliati;
     final ultimeAggiunte = controller.ultimeAggiunte;
+    final citazione = controller.citazioneDelGiorno;
 
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
       child: Column(
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Center(
-            child: Row(
-              spacing: 20,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.shopping_cart, size: 25),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
+                children: [
+                  Text(
+                    citazione.testo,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic
+                    )
                     ),
-                    elevation: 3,
-                  ),
-                  label: const Text("Wishlist", style: TextStyle(fontSize: 18)),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite, size: 25),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      '- ${citazione.autore}, ${citazione.libro}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
-                  label: const Text(
-                    "Preferiti",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           const Text(
