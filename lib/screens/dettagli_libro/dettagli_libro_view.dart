@@ -86,21 +86,21 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
         child: Icon(Icons.edit),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            bookSummary(),
-            TabBar(
-              controller: _tabControllerDetail,
-              tabs: [Tab(text: "Info"), Tab(text: "Note")],
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabControllerDetail,
-                children: [infoSection(), noteSection()],
-              ),
-            ),
-          ],
+        child: NestedScrollView(
+          headerSliverBuilder:
+              (context, _) => [
+                SliverToBoxAdapter(child: bookSummary()),
+                SliverToBoxAdapter(
+                  child: TabBar(
+                    controller: _tabControllerDetail,
+                    tabs: const [Tab(text: "Info"), Tab(text: "Note")],
+                  ),
+                ),
+              ],
+          body: TabBarView(
+            controller: _tabControllerDetail,
+            children: [infoSection(), noteSection()],
+          ),
         ),
       ),
     );
@@ -143,7 +143,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
                           allowHalfRating: true,
                           starCount: 5,
                           // gestisce automaticamente la normalizzaazione del voto per i fuori-range: eg. 15 = 5,
-                          rating: libro.voto!,  
+                          rating: libro.voto!,
                           onRatingChanged: (_) {},
                         ),
                       ),
@@ -275,10 +275,12 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
       if (libro.stato != null)
         InfoBlock(label: "Stato", value: libro.stato!.titolo),
       if (libro.voto != null)
-        InfoBlock(label: "Voto", value: libro.voto!.toStringAsFixed(1)),    // formatto ad una cifra decimale
+        InfoBlock(
+          label: "Voto",
+          value: libro.voto!.toStringAsFixed(1),
+        ), // formatto ad una cifra decimale
       if (libro.trama != null && libro.trama!.isNotEmpty)
         InfoBlock(label: "Trama", value: libro.trama!),
-
     ];
   }
 }

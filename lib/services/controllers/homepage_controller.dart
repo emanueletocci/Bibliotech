@@ -20,7 +20,7 @@ class HomepageController {
   List<Libro>? _cachedConsigliati;
 
   /// Numero massimo di libri da mostrare.
-  final int numLibri = 5;
+  final int numLibri = 10;
 
   /// Costruttore che riceve la libreria da gestire.
   HomepageController(this.libreria);
