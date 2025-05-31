@@ -57,13 +57,6 @@ void handleControllerOperation({
       ),
     );
 
-    // Aspetto prima di fare il pop per permettere all'utente di leggere la SnackBar
-    // restituisce un Future
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Controllo `mounted` prima della navigazione
-    if (!context.mounted) return;
-    Navigator.of(context).pop(true); // Segnalo successo!
   } catch (e) {
     // In caso di errore, estraggo il messaggio e lo mostro in una SnackBar di errore
     String errorMessage = e.toString();
