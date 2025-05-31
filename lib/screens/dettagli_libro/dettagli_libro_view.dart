@@ -1,3 +1,4 @@
+import 'package:bibliotech/components/feedback.dart';
 import 'package:bibliotech/models/libreria_model.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
 import 'package:bibliotech/services/controllers/aggiunta/dettagli_libro_controller.dart';
@@ -160,9 +161,60 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
               ),
             ],
           ),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: buildActionButtons(),
+          ),
         ],
       ),
     );
+  }
+
+  /// Costruisce i pulsanti di azione in base allo stato del libro e alla presenza in libreria.
+  List<Widget> buildActionButtons() {
+    final isInLibreria = libreria.cercaLibroPerIsbn(libro.isbn) != null;
+    List<Widget> buttons = [];
+
+    if (!isInLibreria) {
+      buttons.add(
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
+          ),
+          label: Text("Aggiungi alla libreria"),
+          icon: Icon(Icons.add_circle_outline),
+          onPressed: () {
+            handleControllerOperation(
+              context: context,
+              operation: () async => controller.handleAggiungiLibro(),
+              successMessage: "Libro aggiunto correttamente!",
+            );
+          },
+        ),
+      );
+    } else {
+      buttons.add(
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Colors.white,
+          ),
+          label: Text("Rimuovi dalla libreria"),
+          icon: Icon(Icons.remove),
+          onPressed: () async {
+            handleControllerOperation(
+              context: context,
+              operation: () async => controller.handleRimuoviLibro(),
+              successMessage: "Libro rimosso correttamente!",
+            );
+          },
+        ),
+      );
+    }
+    return buttons;
   }
 
   /// Mostra la copertina del libro.
@@ -210,18 +262,21 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
       if (libro.dataPubblicazione != null)
         InfoBlock(
           label: "Data di pubblicazione",
-          value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
+          value: DateFormat('dd/MM/yyyy').format(libro.dataPubblicazione!),
         ),
       if (libro.publisher != null)
         InfoBlock(label: "Produttore", value: libro.publisher!),
       if (libro.lingua != null && libro.lingua!.isNotEmpty)
         InfoBlock(label: "Lingua", value: libro.lingua!),
-      if (libro.trama != null && libro.trama!.isNotEmpty)
-        InfoBlock(label: "Trama", value: libro.trama!),
       if (libro.note != null && libro.note!.isNotEmpty)
         InfoBlock(label: "Note", value: libro.note!),
       if (libro.stato != null)
         InfoBlock(label: "Stato", value: libro.stato!.titolo),
+      if (libro.voto != null)
+        InfoBlock(label: "Voto", value: libro.voto!.toStringAsFixed(1)),    // formatto ad una cifra decimale
+      if (libro.trama != null && libro.trama!.isNotEmpty)
+        InfoBlock(label: "Trama", value: libro.trama!),
+
     ];
   }
 }
