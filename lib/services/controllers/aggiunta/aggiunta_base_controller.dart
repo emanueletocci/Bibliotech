@@ -73,12 +73,12 @@ abstract class GenericController {
   String? controllaCampiFacoltativi() {
     final StringBuffer messaggio = StringBuffer();
     if(stato == null) {
-      messaggio.write("Lo stato del libro non è stato selezionato! Si consiglia di inserire manualmente uno stato!\n");
+      messaggio.write("Stato non selezionato! Si consiglia di inserire manualmente uno stato!\n");
     }
 
     if(genere == null) {
       // Teoricamente, se la mappatura del genere funziona correttamente, il genere non dovrebbe essere mai null.
-      messaggio.write("Il genere del libro non è stato selezionato! Si consiglia di inserire manualmente un genere!\n");
+      messaggio.write("Genere non selezionato! Si consiglia di inserire manualmente un genere!\n");
     }
 
     return messaggio.isNotEmpty ? messaggio.toString() : null;

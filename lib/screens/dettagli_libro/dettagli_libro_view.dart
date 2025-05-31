@@ -140,9 +140,11 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
                         alignment: Alignment.centerLeft,
                         child: StarRating(
                           size: 22.0,
+                          allowHalfRating: true,
                           starCount: 5,
-                          rating: libro.voto!,
-                          onRatingChanged: (rating) {},
+                          // gestisce automaticamente la normalizzaazione del voto per i fuori-range: eg. 15 = 5,
+                          rating: libro.voto!,  
+                          onRatingChanged: (_) {},
                         ),
                       ),
                     IconButton(
