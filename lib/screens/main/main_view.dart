@@ -8,6 +8,7 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'tabs/homepage_tab.dart';
 import 'tabs/libreria_tab.dart';
+import 'tabs/statistics_tab.dart';
 import '../../components/popup_aggiunta.dart';
 
 /// Schermata principale dell'applicazione.
@@ -27,7 +28,7 @@ class _MainViewState extends State<MainView> {
   int _selectedIndex = 0;
 
   /// Lista delle pagine principali mostrate nell'app.
-  final List<Widget> _pages = [HomepageTab(), LibreriaTab()];
+  final List<Widget> _pages = [HomepageTab(), LibreriaTab(), StatisticsTab()];
 
   /// Gestisce il cambio di tab nella barra di navigazione.
   void _onTabTapped(int index) {
@@ -64,6 +65,15 @@ class _MainViewState extends State<MainView> {
           CurvedNavigationBarItem(
             child: Icon(Icons.library_books, size: 30, color: Colors.white),
             label: 'Libreria',
+            labelStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          CurvedNavigationBarItem(
+            child: Icon(Icons.show_chart_sharp, size: 30, color: Colors.white),
+            label: 'Stats',
             labelStyle: TextStyle(
               fontSize: 14,
               color: Colors.white,

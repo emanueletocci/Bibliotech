@@ -47,6 +47,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.5
   scroll_to_hide: ^2.2.1
   isbn: ^1.0.4
+  fl_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
