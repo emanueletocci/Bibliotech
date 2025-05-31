@@ -1,6 +1,4 @@
-import 'package:bibliotech/components/feedback.dart';
 import 'package:bibliotech/models/libreria_model.dart';
-import 'package:bibliotech/models/stato_libro_model.dart';
 import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
 import 'package:bibliotech/services/controllers/aggiunta/dettagli_libro_controller.dart';
 import 'package:flutter/material.dart';
@@ -162,114 +160,9 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
               ),
             ],
           ),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            alignment: WrapAlignment.center,
-            children: buildActionButtons(),
-          ),
         ],
       ),
     );
-  }
-
-  /// Costruisce i pulsanti di azione in base allo stato del libro e alla presenza in libreria.
-  List<Widget> buildActionButtons() {
-    final stato = libro.stato;
-    final haVoto = libro.voto != null;
-    final isInLibreria = libreria.cercaLibroPerIsbn(libro.isbn) != null;
-    List<Widget> buttons = [];
-
-    if (!isInLibreria) {
-      buttons.add(
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Colors.white,
-          ),
-          label: Text("Aggiungi alla libreria"),
-          icon: Icon(Icons.add_circle_outline),
-          onPressed: () {
-            handleControllerOperation(
-              context: context,
-              operation: () async => controller.handleAggiungiLibro(),
-              successMessage: "Libro aggiunto correttamente!",
-            );
-          },
-        ),
-      );
-    } else {
-      buttons.add(
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Colors.white,
-          ),
-          label: Text("Rimuovi dalla libreria"),
-          icon: Icon(Icons.remove),
-          onPressed: () async {
-            handleControllerOperation(
-              context: context,
-              operation: () async => controller.handleRimuoviLibro(),
-              successMessage: "Libro rimosso correttamente!",
-            );
-          },
-        ),
-      );
-      switch (stato) {
-        case StatoLibro.daLeggere:
-          buttons.add(
-            ElevatedButton(
-              onPressed: () => (),
-              child: Text("Inizia la lettura"),
-            ),
-          );
-          break;
-        case StatoLibro.inLettura:
-          buttons.add(
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  libro.stato = StatoLibro.abbandonato;
-                });
-              },
-              child: Text("Abbandona lettura"),
-            ),
-          );
-          if (!haVoto) {
-            buttons.add(
-              ElevatedButton(
-                onPressed: () => (),
-                child: Text("Aggiungi recensione"),
-              ),
-            );
-          }
-          break;
-        case StatoLibro.abbandonato:
-          buttons.add(
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  libro.stato = StatoLibro.inLettura;
-                });
-              },
-              child: Text("Riprendi lettura"),
-            ),
-          );
-          if (!haVoto) {
-            buttons.add(
-              ElevatedButton(
-                onPressed: () => (),
-                child: Text("Aggiungi recensione"),
-              ),
-            );
-          }
-          break;
-        default:
-          break;
-      }
-    }
-    return buttons;
   }
 
   /// Mostra la copertina del libro.
