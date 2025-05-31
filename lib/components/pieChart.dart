@@ -77,9 +77,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
           color: colore,
           value: genereNum.value.toDouble(),
           title: "${genereNum.key.titolo}\n${percentuale.toStringAsFixed(1)}%",
-          radius: isTouched ? 100 : 80,
+          radius: isTouched ? 80 : 70,
           titleStyle: TextStyle(
-            fontSize: isTouched ? 16 : 14,
+            fontSize: isTouched ? 14 : 12,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),

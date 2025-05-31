@@ -72,7 +72,10 @@ class StatisticsTab extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text('Statistiche', style: TextStyle(color: Colors.white)),
+        title: Text(
+          'Statistiche',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -84,7 +87,7 @@ class StatisticsTab extends StatelessWidget {
             GrigliaStato(conteggioPerStato: conteggioPerStato),
             const SizedBox(height: 24),
             Container(
-              height: 750.0,
+              height: 890.0,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -272,27 +275,34 @@ class StatisticsTab extends StatelessWidget {
                     ],
                   ),
 
-                  Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.all(16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Distribuzione per genere',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.all(16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Distribuzione per genere',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          PieChartWidget(conteggioGeneri: conteggioGeneri),
-                        ],
+                            const SizedBox(height: 8),
+                            Expanded(
+                              // Assicura che il grafico riempia lo spazio disponibile
+                              child: PieChartWidget(
+                                conteggioGeneri: conteggioGeneri,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
