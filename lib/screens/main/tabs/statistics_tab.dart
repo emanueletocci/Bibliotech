@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:collection/collection.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 import '../../../models/libreria_model.dart';
 import '../../../models/stato_libro_model.dart';
