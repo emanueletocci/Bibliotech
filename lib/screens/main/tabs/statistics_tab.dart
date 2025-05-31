@@ -288,7 +288,7 @@ class StatisticsTab extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Distribuzione per genere',
+                              'I tuoi genere più letti',
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
