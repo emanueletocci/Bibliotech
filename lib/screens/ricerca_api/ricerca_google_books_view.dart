@@ -61,10 +61,11 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(20.0),
         children: [
           Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.all(30.0),
             child: TextField(
               controller: controller.searchQueryController,
               decoration: InputDecoration(
@@ -77,63 +78,49 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
                         )
                         : IconButton(
                           icon: const Icon(Icons.search),
-                          onPressed: () {
-                            _handleSearchBooks();
-                          },
+                          onPressed: _handleSearchBooks,
                         ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(21),
                 ),
               ),
-              onSubmitted: (_) {
-                _handleSearchBooks();
-              },
+              onSubmitted: (_) => _handleSearchBooks(),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ListView.builder(
-                itemCount: controller.searchResults.length,
-                itemBuilder: (context, index) {
-                  final book = controller.searchResults[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 4.0,
-                    ),
-                    elevation: 2,
-                    child: ListTile(
-                      leading: SizedBox(
-                        width: 50,
-                        height: 70,
-                        child: LibroCoverWidget(libro: book),
-                      ),
-                      title: Text(
-                        book.titolo,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        book.autori?.join(', ') ?? 'Autori sconosciuti',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => DettagliLibroView(libro: book),
-                          ),
-                        );
-                      },
+          ...controller.searchResults.map((book) {
+            return Card(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
+              elevation: 2,
+              child: ListTile(
+                leading: SizedBox(
+                  width: 50,
+                  height: 70,
+                  child: LibroCoverWidget(libro: book),
+                ),
+                title: Text(
+                  book.titolo,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  book.autori?.join(', ') ?? 'Autori sconosciuti',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DettagliLibroView(libro: book),
                     ),
                   );
                 },
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
