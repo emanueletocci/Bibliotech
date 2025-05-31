@@ -42,10 +42,12 @@ class DettagliLibroController extends GenericController {
 
   /// Gestisce l'aggiunta di un libro alla libreria dopo aver effettuato i controlli sui campi.
   @override
-  void handleAggiungiLibro() {
+  String? handleAggiungiLibro() {
     // Ottengo i dati dal libro visualizzato, se presente in modo tale da poter controllare se sono validi, prima di aggiungerli
     _getFromLibro();
-    if (!controllaCampi()) return;
+    if (!controllaCampiObbligatori()) return null;
+
+    final avviso = controllaCampiFacoltativi();
 
     Libro nuovoLibro = Libro(
       titolo: titolo,
@@ -64,6 +66,8 @@ class DettagliLibroController extends GenericController {
     );
 
     _libreria.aggiungiLibro(nuovoLibro);
+
+    return avviso;
   }
 
   /// Gestisce la rimozione del libro attualmente visualizzato dalla libreria.
@@ -80,8 +84,8 @@ class DettagliLibroController extends GenericController {
   /// Verifica che non esista già un libro con lo stesso ISBN in libreria.
   /// Restituisce true se i campi sono validi, altrimenti lancia un'eccezione.
   @override
-  bool controllaCampi() {
-    bool status = super.controllaCampi();
+  bool controllaCampiObbligatori() {
+    bool status = super.controllaCampiObbligatori();
 
     // Se il libro da visualizzare é presente, controllo che non esista già un libro con lo stesso ISBN
     if (_libroVisualizzato != null && isbn != _libroVisualizzato.isbn) {

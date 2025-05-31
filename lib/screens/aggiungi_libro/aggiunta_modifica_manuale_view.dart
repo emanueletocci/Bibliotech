@@ -210,7 +210,7 @@ class _AggiuntaModificaLibroManualeViewState
                     handleControllerOperation(
                       context: context,
                       operation: () async => controller.handleAggiungiLibro(),
-                      successMessage: "Libro rimosso correttamente!",
+                      successMessage: "Libro aggiunto correttamente!",
                     );
                   },
                   icon: const Icon(Icons.add),

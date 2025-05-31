@@ -142,12 +142,14 @@ class AggiuntaModificaManualeController extends GenericController {
   /// Gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri.
   /// Consente l'aggiunta di nuovi libri o la modifica di libri esistenti.
   @override
-  void handleAggiungiLibro() {
+  String? handleAggiungiLibro() {
     _getFromFields();
 
-    if (!controllaCampi()) {
-      return; // Se i campi non sono validi, esco direttamente
+    if (!controllaCampiObbligatori()) {
+      return null; // Se i campi non sono validi, esco direttamente
     }
+
+    final avviso = controllaCampiFacoltativi();
 
     Libro nuovoLibro = Libro(
       titolo: titolo,
@@ -172,14 +174,17 @@ class AggiuntaModificaManualeController extends GenericController {
       // Altrimenti lo aggiungo come nuovo libro
       _libreria.aggiungiLibro(nuovoLibro);
     }
+
+    return avviso;
   }
 
   /// Controlla la validità dei campi del libro prima di aggiungerlo o modificarlo.
   /// Verifica che non esista già un libro con lo stesso ISBN in libreria.
   /// Restituisce true se i campi sono validi, altrimenti lancia un'eccezione.
   @override
-  bool controllaCampi() {
-    bool status = super.controllaCampi();
+  bool controllaCampiObbligatori() {
+    // chiamo il metodo del padre
+    bool status = super.controllaCampiObbligatori();
 
     if (_isEditable) {
       // Modalitá modifica

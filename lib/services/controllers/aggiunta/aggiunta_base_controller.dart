@@ -57,23 +57,34 @@ abstract class GenericController {
   /// Controlla la validità dei campi principali del libro.
   /// Lancia un'eccezione se il titolo è vuoto o l'ISBN non è valido.
   /// Restituisce true se i campi sono validi.
-  bool controllaCampi() {
-    bool status = true;
-
+  bool controllaCampiObbligatori() {
     if (titolo.isEmpty) {
-      status = false;
       throw Exception("Il titolo non può essere vuoto");
     }
+
     // Controllo se l'isbn inserito é valido
     if (isbnValidator.notIsbn(isbn, strict: false)) {
-      status = false;
       throw Exception("L'ISBN inserito non è valido");
     }
 
-    return status;
+    return true;
+  }
+
+  String? controllaCampiFacoltativi() {
+    final StringBuffer messaggio = StringBuffer();
+    if(stato == null) {
+      messaggio.write("Lo stato del libro non è stato selezionato! Si consiglia di inserire manualmente uno stato!\n");
+    }
+
+    if(genere == null) {
+      // Teoricamente, se la mappatura del genere funziona correttamente, il genere non dovrebbe essere mai null.
+      messaggio.write("Il genere del libro non è stato selezionato! Si consiglia di inserire manualmente un genere!\n");
+    }
+
+    return messaggio.isNotEmpty ? messaggio.toString() : null;
   }
 
   /// Metodo astratto per gestire l'aggiunta di un libro.
   /// Deve essere implementato dalle classi figlie.
-  void handleAggiungiLibro();
+  handleAggiungiLibro();
 }
