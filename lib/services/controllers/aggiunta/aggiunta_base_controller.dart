@@ -70,6 +70,7 @@ abstract class GenericController {
     return true;
   }
 
+  /// Controlla i campi facoltativi del libro e restituisce un messaggio di avviso se necessario, altrimenti null.
   String? controllaCampiFacoltativi() {
     final StringBuffer messaggio = StringBuffer();
     if(stato == null) {
