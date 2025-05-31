@@ -2,7 +2,10 @@ import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view
 import 'package:flutter/material.dart';
 import '../screens/ricerca_api/ricerca_google_books_view.dart';
 
+/// Widget popup per la selezione della modalità di aggiunta di un nuovo libro.
+/// Permette di scegliere tra ricerca tramite catalogo o aggiunta manuale.
 class PopupAggiunta extends StatelessWidget {
+  /// Costruttore della classe [PopupAggiunta].
   const PopupAggiunta({super.key});
 
   @override
@@ -36,24 +39,38 @@ class PopupAggiunta extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
+              /// Spaziatura verticale tra i pulsanti e il titolo.
               spacing: 15,
               mainAxisSize: MainAxisSize.min,
               children: [
+                /// Titolo del popup.
                 const Text(
                   'Aggiungi un nuovo libro',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
+
+                /// Pulsante per la ricerca nel catalogo.
                 _buildButton(
                   'Cerca nel catalogo',
                   Icons.search,
                   buttonWidth,
-                  () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RicercaGoogleBooksView()))
+                  () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => RicercaGoogleBooksView(),
+                    ),
+                  ),
                 ),
+
+                /// Pulsante per l'aggiunta manuale.
                 _buildButton(
                   'Aggiungi manualmente',
                   Icons.add,
                   buttonWidth,
-                  () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AggiuntaModificaLibroManualeView()))
+                  () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => AggiuntaModificaLibroManualeView(),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -63,16 +80,25 @@ class PopupAggiunta extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(String text, IconData icon, double width, VoidCallback onPressed) {
+  /// Costruisce un pulsante con icona e testo per il popup.
+  ///
+  /// [text] è il testo del pulsante.
+  /// [icon] è l'icona da visualizzare.
+  /// [width] è la larghezza del pulsante.
+  /// [onPressed] è la callback da eseguire al click.
+  Widget _buildButton(
+    String text,
+    IconData icon,
+    double width,
+    VoidCallback onPressed,
+  ) {
     return SizedBox(
       width: width,
       child: ElevatedButton.icon(
         icon: Icon(icon),
         label: Text(text),
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
-        ),
+        style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
       ),
     );
   }

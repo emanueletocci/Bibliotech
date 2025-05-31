@@ -9,38 +9,64 @@ import 'dart:io';
 import '../../utilities/file_utility.dart';
 import 'package:path/path.dart' as p;
 
-class AggiuntaModificaManualeController extends GenericController{
+/// Controller per la gestione dell'aggiunta e modifica manuale dei libri.
+/// Gestisce la logica per aggiungere un nuovo libro o modificare un libro esistente nella libreria.
+/// Fornisce metodi per la selezione della copertina, il recupero dei dati dai campi e la validazione.
+class AggiuntaModificaManualeController extends GenericController {
+  /// Lista dei generi disponibili.
   final List<GenereLibro> generi = GenereLibro.values.toList();
+
+  /// Lista degli stati disponibili.
   final List<StatoLibro> stati = StatoLibro.values.toList();
 
-  // Flag booleano per distinguere tra aggiunta e modifica
+  /// Flag booleano per distinguere tra aggiunta e modifica.
   bool _isEditable = false;
+
+  /// Riferimento al libro da modificare, se presente.
   Libro? _libroDaModificare;
 
-  // La libreria é ottenuta dalla view tramite il provider
+  /// Riferimento alla libreria gestita dal controller.
   final Libreria _libreria;
 
-  // Text Fields
+  /// Controller per il campo titolo.
   final TextEditingController titoloController = TextEditingController();
+
+  /// Controller per il campo autori.
   final TextEditingController autoriController = TextEditingController();
+
+  /// Controller per il campo numero pagine.
   final TextEditingController numeroPagineController = TextEditingController();
+
+  /// Controller per il campo lingua.
   final TextEditingController linguaController = TextEditingController();
+
+  /// Controller per il campo trama.
   final TextEditingController tramaController = TextEditingController();
+
+  /// Controller per il campo ISBN.
   final TextEditingController isbnController = TextEditingController();
-  final TextEditingController dataPubblicazioneController = TextEditingController();
+
+  /// Controller per il campo data pubblicazione.
+  final TextEditingController dataPubblicazioneController =
+      TextEditingController();
+
+  /// Controller per il campo voto.
   final TextEditingController votoController = TextEditingController();
+
+  /// Controller per il campo note.
   final TextEditingController noteController = TextEditingController();
 
-  // Costruttore con parametro opzionale per modificare un libro esistente
-  // Se il parametro é presente, inizializza i campi con i valori del libro da modificare
-  // Il controller gestisce quindi la modifica del libro
-  AggiuntaModificaManualeController(this._libreria, [Libro? libroDaModificare]): 
-    super() {
+  /// Costruttore con parametro opzionale per modificare un libro esistente.
+  /// Se il parametro è presente, inizializza i campi con i valori del libro da modificare.
+  /// Il controller gestisce quindi la modifica del libro.
+  AggiuntaModificaManualeController(this._libreria, [Libro? libroDaModificare])
+    : super() {
     if (libroDaModificare != null) {
       _libroDaModificare = libroDaModificare;
       _initFields(libroDaModificare);
       copertina = libroDaModificare.copertina!;
-      _isEditable = true; // Imposto il flag per indicare che si sta modificando un libro
+      _isEditable =
+          true; // Imposto il flag per indicare che si sta modificando un libro
     } else {
       copertina =
           'assets/images/book_placeholder.jpg'; // Imposto un placeholder di default
@@ -50,7 +76,7 @@ class AggiuntaModificaManualeController extends GenericController{
     }
   }
 
-  // Se il libro é presente, inizializza i campi con i valori del libro da modificare
+  /// Inizializza i campi del controller con i valori del libro da modificare.
   void _initFields(Libro libro) {
     titoloController.text = libro.titolo;
     autoriController.text = libro.autori?.join(', ') ?? '';
@@ -58,7 +84,8 @@ class AggiuntaModificaManualeController extends GenericController{
     linguaController.text = libro.lingua ?? '';
     tramaController.text = libro.trama ?? '';
     isbnController.text = libro.isbn;
-    dataPubblicazioneController.text = libro.dataPubblicazione?.toString() ?? '';
+    dataPubblicazioneController.text =
+        libro.dataPubblicazione?.toString() ?? '';
     votoController.text = libro.voto?.toString() ?? '';
     noteController.text = libro.note ?? '';
     genereSelezionato = libro.genere;
@@ -66,8 +93,8 @@ class AggiuntaModificaManualeController extends GenericController{
     isPreferito = libro.preferito;
   }
 
-  // Metodo per la selezione e salvataggio della copertina dalla galleria
-  // Questa funzione assegna il percorso locale del file salvato all'attributo 'copertina'.
+  /// Metodo per la selezione e salvataggio della copertina dalla galleria.
+  /// Assegna il percorso locale del file salvato all'attributo 'copertina'.
   Future<void> selezionaCopertina() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(
@@ -85,10 +112,11 @@ class AggiuntaModificaManualeController extends GenericController{
     }
   }
 
-  // Metodo per recuperare i valori formattati dai textfields
-  void _getFromFields(){
+  /// Recupera i valori formattati dai textfields e li assegna alle proprietà del controller.
+  void _getFromFields() {
     titolo = titoloController.text.trim();
-    autori = autoriController.text
+    autori =
+        autoriController.text
             .split(',')
             .map((e) => e.trim())
             .where(
@@ -111,12 +139,11 @@ class AggiuntaModificaManualeController extends GenericController{
     stato = statoSelezionato;
   }
 
-
-  // Metodo che gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri
-  // Il metodo consente l'aggiunta di nuovi libri o la modifica di libri esistenti
+  /// Gestisce il click del pulsante "Aggiungi" nella schermata di aggiunta manuale dei libri.
+  /// Consente l'aggiunta di nuovi libri o la modifica di libri esistenti.
   @override
   void handleAggiungiLibro() {
-    _getFromFields(); 
+    _getFromFields();
 
     if (!controllaCampi()) {
       return; // Se i campi non sono validi, esco direttamente
@@ -147,22 +174,27 @@ class AggiuntaModificaManualeController extends GenericController{
     }
   }
 
+  /// Controlla la validità dei campi del libro prima di aggiungerlo o modificarlo.
+  /// Verifica che non esista già un libro con lo stesso ISBN in libreria.
+  /// Restituisce true se i campi sono validi, altrimenti lancia un'eccezione.
   @override
   bool controllaCampi() {
     bool status = super.controllaCampi();
 
     if (_isEditable) {
       // Modalitá modifica
-      if(isbn != _libroDaModificare!.isbn){
+      if (isbn != _libroDaModificare!.isbn) {
         // Se il nuovo ISBN è diverso, verifico che non esista già un libro con quel ISBN
-        if(_libreria.cercaLibroPerIsbn(isbn) != null) {
+        if (_libreria.cercaLibroPerIsbn(isbn) != null) {
           status = false;
-          throw Exception("Il libro con questo ISBN è già presente in libreria");
+          throw Exception(
+            "Il libro con questo ISBN è già presente in libreria",
+          );
         }
       }
     } else {
       // Modalitá aggiunta
-      if (_libreria.cercaLibroPerIsbn(isbn) != null) {  
+      if (_libreria.cercaLibroPerIsbn(isbn) != null) {
         status = false;
         throw Exception("Il libro con questo ISBN è già presente in libreria");
       }

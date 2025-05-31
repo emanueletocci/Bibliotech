@@ -10,7 +10,12 @@ import 'tabs/homepage_tab.dart';
 import 'tabs/libreria_tab.dart';
 import '../../components/popup_aggiunta.dart';
 
+/// Schermata principale dell'applicazione.
+/// Contiene la struttura base con uno [IndexedStack] per la navigazione tra le pagine principali
+/// e una barra di navigazione inferiore curva.
+/// Le schermate principali (homepage, libreria) sono gestite come tab separati.
 class MainView extends StatefulWidget {
+  /// Costruttore della schermata principale.
   const MainView({super.key});
 
   @override
@@ -18,10 +23,13 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  /// Indice della tab attualmente selezionata.
   int _selectedIndex = 0;
 
+  /// Lista delle pagine principali mostrate nell'app.
   final List<Widget> _pages = [HomepageTab(), LibreriaTab()];
 
+  /// Gestisce il cambio di tab nella barra di navigazione.
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -79,5 +87,4 @@ class _MainViewState extends State<MainView> {
       ),
     );
   }
-
 }

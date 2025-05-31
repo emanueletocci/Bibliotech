@@ -10,34 +10,38 @@ import '../../models/libro_model.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import '../../components/libro_cover_widget.dart';
 
+/// Schermata che mostra i dettagli di un libro.
+/// Permette di visualizzare informazioni, note, modificare o rimuovere il libro dalla libreria.
+/// Consente anche di aggiungere il libro se non presente.
 class DettagliLibroView extends StatefulWidget {
+  /// Il libro di cui mostrare i dettagli.
   final Libro libro;
 
+  /// Costruttore della schermata dettagli libro.
   const DettagliLibroView({super.key, required this.libro});
 
   @override
   State<DettagliLibroView> createState() => _DettagliLibroViewState();
 }
 
-// Il mixin SingleTickerProviderStateMixin permette alla classe _BookDetailState di gestire una singola animazione (in questo caso, la navigazione tra le tab)
-// in modo efficiente e sicuro, evitando che l’animazione continui anche quando la pagina non è più visibile.
-// In pratica, il mixin fornisce il parametro vsync: this che viene passato al TabController:
-
+/// Stato della schermata dettagli libro.
+/// Gestisce la visualizzazione, modifica e azioni sul libro.
+/// Usa [SingleTickerProviderStateMixin] per gestire le tab animate.
 class _DettagliLibroViewState extends State<DettagliLibroView>
     with SingleTickerProviderStateMixin {
-  // Controller per le tab del dettaglio libro
+  /// Controller per le tab del dettaglio libro.
   late TabController _tabControllerDetail;
+
+  /// Istanza locale del libro visualizzato.
   late Libro libro;
+
+  /// Riferimento alla libreria dell'utente.
   late Libreria libreria;
 
-  // La schermata consente l'aggiunta e la rimozione di libri, sia forniti dall'API che manualmente...
-  // Essendo una schermata di dettaglio, si suppone che il libro che si sta cercando di aggiungere o modificare sia già presente in memoria...
-  // Posso quindi utilizzare direttamente il controller AggiuntaAPIController per gestire le operazioni di aggiunta e rimozione di libri.
-  //
+  /// Controller per la logica di dettaglio libro.
   late DettagliLibroController controller;
 
-  // Variabile per gestire la modalità di modifica
-  // Quando é true, i campi del libro sono editabili e vengono mostrati anche quelli nascosti
+  /// Indica se la modalità di modifica è attiva.
   bool isEditing = false;
 
   @override
@@ -45,15 +49,10 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     super.initState();
     _tabControllerDetail = TabController(
       length: 2, // Due tab: Info e Note
-      vsync: this, // Fornisce il parametro vsync per l'animazione
+      vsync: this,
     );
-    // Uso una copia locale del libro passato dal widget per eventuali modifiche da parte dell'utente
     libro = widget.libro;
   }
-
-  // didChangeDependencies viene chiamato quando le dipendenze del widget cambiano (eg. mediaQuery, Theme...)
-  // viene eseguito subito dopo initState e prima di build
-  // In questo modo la libreria e il controller non vengono ricreati ad ogni build e mantengo lo stato condiviso
 
   @override
   void didChangeDependencies() {
@@ -73,7 +72,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            isEditing = !isEditing; // toggle della modalità di modifica
+            isEditing = !isEditing;
           });
           Navigator.pushReplacement(
             context,
@@ -87,22 +86,16 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
         },
         child: Icon(Icons.edit),
       ),
-
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             bookSummary(),
-
-            // Tab bar per info e note
             TabBar(
               controller: _tabControllerDetail,
               tabs: [Tab(text: "Info"), Tab(text: "Note")],
             ),
-
-            // Contenuto info e note
             Expanded(
-              // Espande il TabBarView per occupare lo spazio rimanente, inoltre solo i tab sono scrollabili
               child: TabBarView(
                 controller: _tabControllerDetail,
                 children: [infoSection(), noteSection()],
@@ -114,7 +107,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     );
   }
 
-  // Copertina + dettagli in grassetto
+  /// Mostra la copertina e i dettagli principali del libro.
   Widget bookSummary() {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -136,16 +129,13 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 2, // Mostra al massimo 2 righe
-                      overflow:
-                          TextOverflow
-                              .ellipsis, // Mostro "..." se il testo è troppo lungo
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       libro.getAutoriString(),
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-                    // Mostro le stelle della valutazione solo se il libro ha un voto
                     if (libro.voto != null)
                       Align(
                         alignment: Alignment.centerLeft,
@@ -153,11 +143,9 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
                           size: 22.0,
                           starCount: 5,
                           rating: libro.voto!,
-                          onRatingChanged: (rating) {}, // rating fisso
+                          onRatingChanged: (rating) {},
                         ),
                       ),
-
-                    // Toggle Buttons per preferiti
                     IconButton(
                       icon: Icon(
                         libro.preferito
@@ -174,13 +162,9 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
               ),
             ],
           ),
-
-          // Wrap é un layout widget che permette di disporre i figli in righe e colonne,
-          // permettendo di andare a capo quando non c'è spazio sufficiente...
-          // Gestisce automaticamente l'overflow
           Wrap(
-            spacing: 10, // spazio tra i figli sulla stessa riga
-            runSpacing: 10, // spazio tra le righe
+            spacing: 10,
+            runSpacing: 10,
             alignment: WrapAlignment.center,
             children: buildActionButtons(),
           ),
@@ -189,22 +173,13 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     );
   }
 
-  ///posso fare percentuale lettura per ogni libro nella libreria
-  //totali libri letti, abbandonati e inlettura e da incominciare
-  ///e mostrare un grafico a torta con le percentuali
-  ///statistiche recensioni... //mostro pulsanti diversi a seconda dello stato del libro:
-  // - Se il libro non é presente in Libreria, mostro "Aggiungi alla biblioteca"
-  // - Se il libro è "In lettura", mostro "Aggiorna pagine lette", "Abbandona" e "Aggiungi recensione"
-  // - Se il libro è "Letto" o "Abbandonato", mostro "Aggiungi recensione"
-  // I pulsanti preferiti e wishlist (da acquistare) li lascio sempre visibili come toggle
-
+  /// Costruisce i pulsanti di azione in base allo stato del libro e alla presenza in libreria.
   List<Widget> buildActionButtons() {
     final stato = libro.stato;
     final haVoto = libro.voto != null;
     final isInLibreria = libreria.cercaLibroPerIsbn(libro.isbn) != null;
     List<Widget> buttons = [];
 
-    // Se il libro non è presente nella libreria, aggiungo solo il pulsante per aggiungerlo
     if (!isInLibreria) {
       buttons.add(
         ElevatedButton.icon(
@@ -215,7 +190,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
           label: Text("Aggiungi alla libreria"),
           icon: Icon(Icons.add_circle_outline),
           onPressed: () {
-             handleControllerOperation(
+            handleControllerOperation(
               context: context,
               operation: () async => controller.handleAggiungiLibro(),
               successMessage: "Libro aggiunto correttamente!",
@@ -233,7 +208,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
           label: Text("Rimuovi dalla libreria"),
           icon: Icon(Icons.remove),
           onPressed: () async {
-             handleControllerOperation(
+            handleControllerOperation(
               context: context,
               operation: () async => controller.handleRimuoviLibro(),
               successMessage: "Libro rimosso correttamente!",
@@ -241,7 +216,6 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
           },
         ),
       );
-      // Gestione dei pulsanti in base allo stato del libro (solo se il libro è in libreria)
       switch (stato) {
         case StatoLibro.daLeggere:
           buttons.add(
@@ -298,6 +272,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     return buttons;
   }
 
+  /// Mostra la copertina del libro.
   Widget bookImg() {
     return SizedBox(
       width: 175,
@@ -306,6 +281,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     );
   }
 
+  /// Sezione con le informazioni dettagliate del libro.
   Widget infoSection() {
     return SingleChildScrollView(
       padding: EdgeInsets.all(20),
@@ -317,6 +293,7 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     );
   }
 
+  /// Sezione con le note del libro.
   Widget noteSection() {
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
@@ -327,54 +304,44 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
     );
   }
 
-  // Metodo helper per costruire i blocchi di informazioni relativi al libro, basato sui campi disponibili
-  // Se un campo del model é null, non mostro nulla
-
+  /// Costruisce i blocchi di informazioni relativi al libro.
   List<Widget> buildInfoBlocks(Libro libro) {
-    // Se la modalitá di modifica é attiva, mostro i campi modificabili (tutti quelli del model Libro)
     return [
       InfoBlock(label: "Titolo", value: libro.titolo),
-
-      // Qui la gestione degli autori é delegata al metodo getAutoriString() del model Libro
       InfoBlock(label: "Autori", value: libro.getAutoriString()),
-
       if (libro.numeroPagine != null)
         InfoBlock(label: "Pagine", value: libro.numeroPagine!.toString()),
-
       if (libro.genere != null)
         InfoBlock(label: "Genere", value: libro.genere!.toString()),
-
       InfoBlock(label: "ISBN", value: libro.isbn),
-
       if (libro.dataPubblicazione != null)
         InfoBlock(
           label: "Data di pubblicazione",
           value: DateFormat('yyyy-MM-dd').format(libro.dataPubblicazione!),
         ),
-
       if (libro.publisher != null)
         InfoBlock(label: "Produttore", value: libro.publisher!),
-
       if (libro.lingua != null && libro.lingua!.isNotEmpty)
         InfoBlock(label: "Lingua", value: libro.lingua!),
-
       if (libro.trama != null && libro.trama!.isNotEmpty)
         InfoBlock(label: "Trama", value: libro.trama!),
-
       if (libro.note != null && libro.note!.isNotEmpty)
         InfoBlock(label: "Note", value: libro.note!),
-
       if (libro.stato != null)
         InfoBlock(label: "Stato", value: libro.stato!.titolo),
     ];
   }
 }
 
-// Widget per mostrare un blocco di informazioni con etichetta e valore
+/// Widget per mostrare un blocco di informazioni con etichetta e valore.
 class InfoBlock extends StatelessWidget {
+  /// Etichetta del campo.
   final String label;
+
+  /// Valore del campo.
   final String value;
 
+  /// Costruttore del blocco informativo.
   const InfoBlock({super.key, required this.label, required this.value});
 
   @override

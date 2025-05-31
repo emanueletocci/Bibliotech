@@ -8,16 +8,21 @@ import 'package:bibliotech/services/controllers/aggiunta/aggiunta_base_controlle
 import '../../../models/libreria_model.dart';
 import '../../../models/libro_model.dart';
 
-class DettagliLibroController extends GenericController{
-
-  // La libreria é ottenuta dalla view tramite il provider
+/// Controller per la gestione dei dettagli di un libro.
+/// Gestisce l'aggiunta e la rimozione di libri già presenti nella libreria.
+/// Esegue controlli sui campi del libro prima di aggiungerlo o rimuoverlo.
+class DettagliLibroController extends GenericController {
+  /// Riferimento alla libreria gestita dal controller.
   final Libreria _libreria;
+
+  /// Libro attualmente visualizzato o selezionato.
   final Libro? _libroVisualizzato;
 
-  DettagliLibroController(this._libreria, this._libroVisualizzato): super();
+  /// Costruttore che riceve la libreria e il libro da visualizzare.
+  DettagliLibroController(this._libreria, this._libroVisualizzato) : super();
 
-  // Metodo helper che consente di ottenere i dati grezzi da un libro giá esistente
-  void _getFromLibro(){
+  /// Metodo helper che consente di ottenere i dati grezzi da un libro giá esistente.
+  void _getFromLibro() {
     if (_libroVisualizzato != null) {
       titolo = _libroVisualizzato.titolo;
       autori = _libroVisualizzato.autori;
@@ -35,11 +40,12 @@ class DettagliLibroController extends GenericController{
     }
   }
 
+  /// Gestisce l'aggiunta di un libro alla libreria dopo aver effettuato i controlli sui campi.
   @override
-  void handleAggiungiLibro(){
+  void handleAggiungiLibro() {
     // Ottengo i dati dal libro visualizzato, se presente in modo tale da poter controllare se sono validi, prima di aggiungerli
     _getFromLibro();
-    if(!controllaCampi()) return;
+    if (!controllaCampi()) return;
 
     Libro nuovoLibro = Libro(
       titolo: titolo,
@@ -60,6 +66,8 @@ class DettagliLibroController extends GenericController{
     _libreria.aggiungiLibro(nuovoLibro);
   }
 
+  /// Gestisce la rimozione del libro attualmente visualizzato dalla libreria.
+  /// Lancia un'eccezione se nessun libro è selezionato.
   void handleRimuoviLibro() {
     if (_libroVisualizzato != null) {
       _libreria.rimuoviLibro(_libroVisualizzato);
@@ -68,6 +76,9 @@ class DettagliLibroController extends GenericController{
     }
   }
 
+  /// Controlla la validità dei campi del libro prima di aggiungerlo.
+  /// Verifica che non esista già un libro con lo stesso ISBN in libreria.
+  /// Restituisce true se i campi sono validi, altrimenti lancia un'eccezione.
   @override
   bool controllaCampi() {
     bool status = super.controllaCampi();

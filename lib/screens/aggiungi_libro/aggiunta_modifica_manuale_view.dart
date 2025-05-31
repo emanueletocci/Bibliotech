@@ -8,9 +8,14 @@ import '../../models/libro_model.dart';
 import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
 import '../../models/libreria_model.dart';
 
+/// Schermata per l'aggiunta o la modifica manuale di un libro.
+/// Permette all'utente di inserire o modificare manualmente i dati di un libro,
+/// inclusi titolo, autori, copertina, genere, stato, preferiti e altre informazioni.
 class AggiuntaModificaLibroManualeView extends StatefulWidget {
+  /// Libro da modificare, se presente. Se null, si tratta di una nuova aggiunta.
   final Libro? libroDaModificare;
 
+  /// Costruttore della schermata di aggiunta/modifica manuale.
   const AggiuntaModificaLibroManualeView({super.key, this.libroDaModificare});
 
   @override
@@ -20,8 +25,13 @@ class AggiuntaModificaLibroManualeView extends StatefulWidget {
 
 class _AggiuntaModificaLibroManualeViewState
     extends State<AggiuntaModificaLibroManualeView> {
+  /// Controller per la logica di aggiunta/modifica manuale.
   late AggiuntaModificaManualeController controller;
+
+  /// Flag per evitare di inizializzare più volte il controller.
   bool _isControllerInitialized = false;
+
+  /// Indica se il libro è segnato come preferito.
   late bool isFavorite;
 
   @override
@@ -53,6 +63,7 @@ class _AggiuntaModificaLibroManualeViewState
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Widget per la selezione della copertina del libro.
               Center(
                 child: GestureDetector(
                   onTap: () async {
@@ -65,7 +76,6 @@ class _AggiuntaModificaLibroManualeViewState
                     width: 150,
                     height: 200,
                     child: LibroCoverWidget(
-                      // Creo un'istanza temporanea del libro... mi interessa solo la copertina
                       libro: Libro(
                         isbn: controller.isbnController.text,
                         copertina: controller.copertina,
@@ -75,6 +85,8 @@ class _AggiuntaModificaLibroManualeViewState
                   ),
                 ),
               ),
+
+              /// Icona per selezionare il libro come preferito.
               Center(
                 child: IconButton(
                   icon: Icon(
@@ -90,19 +102,27 @@ class _AggiuntaModificaLibroManualeViewState
                   },
                 ),
               ),
+
+              /// Campo di testo per il titolo del libro.
               TextField(
                 controller: controller.titoloController,
                 decoration: const InputDecoration(labelText: 'Titolo*'),
               ),
+
+              /// Campo di testo per gli autori.
               TextField(
                 controller: controller.autoriController,
                 decoration: const InputDecoration(labelText: 'Autori'),
               ),
+
+              /// Campo di testo per il numero di pagine.
               TextField(
                 controller: controller.numeroPagineController,
                 decoration: const InputDecoration(labelText: 'Numero Pagine'),
                 keyboardType: TextInputType.number,
               ),
+
+              /// Dropdown per la selezione del genere.
               DropdownButtonFormField<GenereLibro>(
                 decoration: const InputDecoration(labelText: 'Genere'),
                 value: controller.genereSelezionato,
@@ -122,19 +142,26 @@ class _AggiuntaModificaLibroManualeViewState
                 },
               ),
 
+              /// Campo di testo per la lingua.
               TextField(
                 controller: controller.linguaController,
                 decoration: const InputDecoration(labelText: 'Lingua'),
                 keyboardType: TextInputType.text,
               ),
+
+              /// Campo di testo per la trama.
               TextField(
                 controller: controller.tramaController,
                 decoration: const InputDecoration(labelText: 'Trama'),
               ),
+
+              /// Campo di testo per l'ISBN.
               TextField(
                 controller: controller.isbnController,
                 decoration: const InputDecoration(labelText: 'ISBN*'),
               ),
+
+              /// Campo di testo per la data di pubblicazione.
               TextField(
                 controller: controller.dataPubblicazioneController,
                 decoration: const InputDecoration(
@@ -142,15 +169,21 @@ class _AggiuntaModificaLibroManualeViewState
                 ),
                 keyboardType: TextInputType.datetime,
               ),
+
+              /// Campo di testo per il voto.
               TextField(
                 controller: controller.votoController,
                 decoration: const InputDecoration(labelText: 'Voto'),
                 keyboardType: TextInputType.number,
               ),
+
+              /// Campo di testo per le note personali.
               TextField(
                 controller: controller.noteController,
                 decoration: const InputDecoration(labelText: 'Note personali'),
               ),
+
+              /// Dropdown per la selezione dello stato del libro.
               DropdownButtonFormField<StatoLibro>(
                 decoration: const InputDecoration(labelText: 'Stato'),
                 value: controller.statoSelezionato,
@@ -169,10 +202,12 @@ class _AggiuntaModificaLibroManualeViewState
                   });
                 },
               ),
+
+              /// Pulsante per aggiungere o modificare il libro.
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                     handleControllerOperation(
+                    handleControllerOperation(
                       context: context,
                       operation: () async => controller.handleAggiungiLibro(),
                       successMessage: "Libro rimosso correttamente!",
