@@ -73,18 +73,31 @@ abstract class GenericController {
   /// Controlla i campi facoltativi del libro e restituisce un messaggio di avviso se necessario, altrimenti null.
   String? controllaCampiFacoltativi() {
     final StringBuffer messaggio = StringBuffer();
-    if(stato == null) {
-      messaggio.write("Stato non selezionato! Si consiglia di inserire manualmente uno stato!\n\n");
+    if (stato == null) {
+      messaggio.write(
+        "Stato non selezionato! Si consiglia di inserire manualmente uno stato!\n\n",
+      );
     }
 
-    if(genere == null) {
+    if (genere == null) {
       // Teoricamente, se la mappatura del genere funziona correttamente, il genere non dovrebbe essere mai null.
-      messaggio.write("Genere non selezionato! Si consiglia di inserire manualmente un genere!\n\n");
+      messaggio.write(
+        "Genere non selezionato! Si consiglia di inserire manualmente un genere!\n\n",
+      );
     }
 
-    if(voto!=null){
-      if(voto! < 0 || voto! > 5) {
-        messaggio.write("Il voto deve essere compreso tra 0 e 10! Verrá normalizzato automaticamente\n\n");
+    if (voto != null) {
+      if (voto! < 0 || voto! > 5) {
+        messaggio.write(
+          "Il voto deve essere compreso tra 0 e 5! Verrá normalizzato automaticamente\n\n",
+        );
+      }
+
+    // Implementazione della normalizzazione del voto
+      if (voto! < 0) {
+        voto = 0;
+      } else if (voto! > 5) {
+        voto = 5;
       }
     }
 
