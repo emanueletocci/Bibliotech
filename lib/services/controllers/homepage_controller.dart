@@ -89,6 +89,12 @@ class HomepageController {
       libro: "Il piccolo principe",
     ),
     Citazione(
+      testo:
+          "Un lettore vive mille vite prima di morire. Colui che non legge mai ne vive solo una.",
+      autore: "George R.R. Martin",
+      libro: "A Dance with Dragons",
+    ),
+    Citazione(
       testo: "Chi non legge, a 70 anni avrà vissuto una sola vita: la propria.",
       autore: "Umberto Eco",
       libro: "Il nome della rosa",
@@ -104,12 +110,6 @@ class HomepageController {
           "Leggere è andare incontro a qualcosa che sta per essere e ancora nessuno sa cosa sarà.",
       autore: "Italo Calvino",
       libro: "Se una notte d'inverno un viaggiatore",
-    ),
-    Citazione(
-      testo:
-          "Un lettore vive mille vite prima di morire. Colui che non legge mai ne vive solo una.",
-      autore: "George R.R. Martin",
-      libro: "A Dance with Dragons",
     ),
     Citazione(
       testo: "I libri sono specchi: si vede solo ciò che si ha dentro.",
