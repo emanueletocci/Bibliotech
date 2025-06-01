@@ -242,7 +242,7 @@ Widget _buildGeneriTuttiCard(Map<GenereLibro, int> conteggioGeneri) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'I tuoi generi',
+            'Tutti i tuoi generi',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           PieChartWidget(conteggioGeneri: conteggioGeneri),
