@@ -6,18 +6,19 @@ import '../../../models/genere_libro_model.dart';
 import '../../../models/stato_libro_model.dart';
 import '../../dettagli_libro/dettagli_libro_view.dart';
 
-/// Tab della schermata principale che mostra la libreria dell'utente.
+/// Schermata che mostra la libreria dell'utente.
+///
 /// Permette di filtrare i libri per genere, stato, preferiti e titolo.
-/// Visualizza i libri in una griglia e consente di accedere ai dettagli di ciascun libro.
-class LibreriaTab extends StatefulWidget {
-  /// Costruttore della tab Libreria.
-  const LibreriaTab({super.key});
+/// Visualizza i libri in una griglia e consente di accedere ai dettagli.
+class LibreriaView extends StatefulWidget {
+  /// Costruttore della schermata Libreria.
+  const LibreriaView({super.key});
 
   @override
-  State<LibreriaTab> createState() => _LibreriaTabState();
+  State<LibreriaView> createState() => _LibreriaViewState();
 }
 
-class _LibreriaTabState extends State<LibreriaTab> {
+class _LibreriaViewState extends State<LibreriaView> {
   GenereLibro? _genereSelezionato;
   StatoLibro? _statoSelezionato;
   String? _titoloSelezionato;
@@ -28,26 +29,24 @@ class _LibreriaTabState extends State<LibreriaTab> {
     super.initState();
   }
 
-  /// Callback per filtrare i libri per genere.
+  /// Imposta il filtro per genere.
   void _filtraPerGenere(GenereLibro? genere) {
     setState(() => _genereSelezionato = genere);
   }
 
-  /// Callback per filtrare i libri per stato.
+  /// Imposta il filtro per stato di lettura.
   void _filtraPerStato(StatoLibro? stato) {
     setState(() => _statoSelezionato = stato);
   }
 
-  /// Callback per filtrare i libri preferiti.
+  /// Imposta il filtro per visualizzare solo i preferiti.
   void _filtraPerPreferiti(bool soloPreferiti) {
     setState(() => _soloPreferiti = soloPreferiti);
   }
 
-  /// Callback per filtrare i libri per titolo.
+  /// Imposta il filtro per titolo (ricerca).
   void _filtraPerTitolo(String? titolo) {
-    setState(() {
-      _titoloSelezionato = titolo;
-    });
+    setState(() => _titoloSelezionato = titolo);
   }
 
   @override
@@ -64,16 +63,15 @@ class _LibreriaTabState extends State<LibreriaTab> {
     final orientamento = MediaQuery.of(context).orientation;
     final crossAxisCount = orientamento == Orientation.portrait ? 3 : 5;
 
-
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Sezione dei filtri in alto.
               SezioneFiltri(
                 genereSelezionato: _genereSelezionato,
                 statoSelezionato: _statoSelezionato,
@@ -88,39 +86,37 @@ class _LibreriaTabState extends State<LibreriaTab> {
                 thickness: 1.0,
               ),
 
+              /// Griglia dei libri filtrati oppure messaggio "nessun libro".
               libriFiltrati.isEmpty
                   ? const Center(child: Text("Nessun libro presente."))
                   : GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children:
-                        libriFiltrati.map((libro) {
-                          return SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            DettagliLibroView(libro: libro),
-                                  ),
-                                );
-                                debugPrint(
-                                  'Hai premuto il libro: ${libro.titolo}',
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: LibroCoverWidget(libro: libro),
-                            ),
-                          );
-                        }).toList(),
-                  ),
+                      shrinkWrap: true,
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: libriFiltrati.map((libro) {
+                        return SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DettagliLibroView(libro: libro),
+                                ),
+                              );
+                              debugPrint(
+                                  'Hai premuto il libro: ${libro.titolo}');
+                            },
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: LibroCoverWidget(libro: libro),
+                          ),
+                        );
+                      }).toList(),
+                    ),
             ],
           ),
         ),
@@ -129,12 +125,15 @@ class _LibreriaTabState extends State<LibreriaTab> {
   }
 }
 
-/// Barra dei filtri per la selezione del genere dei libri.
-/// Mostra tutti i generi disponibili e consente di selezionarne uno.
+/// Barra orizzontale per selezionare il genere del libro.
 class GeneriBar extends StatelessWidget {
+  /// Genere attualmente selezionato.
   final GenereLibro? genereSelezionato;
+
+  /// Callback quando viene selezionato un genere.
   final Function(GenereLibro?) onGenereSelezionato;
 
+  /// Costruttore.
   const GeneriBar({
     super.key,
     required this.genereSelezionato,
@@ -148,6 +147,7 @@ class GeneriBar extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
+          // Opzione "Tutti"
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
@@ -160,18 +160,18 @@ class GeneriBar extends StatelessWidget {
                     height: 70,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      border:
-                          genereSelezionato == null
-                              ? Border.all(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 2,
-                              )
-                              : null,
+                      border: genereSelezionato == null
+                          ? Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            )
+                          : null,
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        color: Theme.of(context).colorScheme.surfaceContainer,
+                        color:
+                            Theme.of(context).colorScheme.surfaceContainer,
                         child: Icon(
                           Icons.all_inclusive,
                           size: 36,
@@ -183,21 +183,19 @@ class GeneriBar extends StatelessWidget {
                 ),
                 Text(
                   "Tutti",
-                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontWeight:
-                        genereSelezionato == null
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                    color:
-                        genereSelezionato == null
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurface,
+                    fontWeight: genereSelezionato == null
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: genereSelezionato == null
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
             ),
           ),
+          // Generi dinamici
           ...GenereLibro.values.map((genere) {
             final isSelected = genereSelezionato == genere;
             return Padding(
@@ -212,35 +210,37 @@ class GeneriBar extends StatelessWidget {
                       height: 70,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        border:
-                            isSelected
-                                ? Border.all(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
-                                )
-                                : null,
+                        border: isSelected
+                            ? Border.all(
+                                color:
+                                    Theme.of(context).colorScheme.primary,
+                                width: 2,
+                              )
+                            : null,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
                           genere.percorsoImmagine,
                           fit: BoxFit.cover,
-                          color: isSelected ? null : Colors.black.withAlpha(60),
-                          colorBlendMode: isSelected ? null : BlendMode.darken,
+                          color: isSelected
+                              ? null
+                              : Colors.black.withAlpha(60),
+                          colorBlendMode: isSelected
+                              ? null
+                              : BlendMode.darken,
                         ),
                       ),
                     ),
                   ),
                   Text(
                     genere.titolo,
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
-                      color:
-                          isSelected
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -253,12 +253,15 @@ class GeneriBar extends StatelessWidget {
   }
 }
 
-/// Barra dei filtri per la selezione dello stato dei libri.
-/// Mostra tutti gli stati disponibili e consente di selezionarne uno.
+/// Barra per selezionare lo stato di lettura dei libri.
 class StatiLibriBar extends StatelessWidget {
+  /// Stato selezionato.
   final StatoLibro? statoSelezionato;
+
+  /// Callback quando viene selezionato uno stato.
   final Function(StatoLibro?) onStatoSelezionato;
 
+  /// Costruttore.
   const StatiLibriBar({
     super.key,
     required this.statoSelezionato,
@@ -284,8 +287,8 @@ class StatiLibriBar extends StatelessWidget {
           child: FilterChip(
             label: Text(stato.titolo),
             selected: isSelected,
-            onSelected:
-                (selected) => onStatoSelezionato(selected ? stato : null),
+            onSelected: (selected) =>
+                onStatoSelezionato(selected ? stato : null),
             avatar: Icon(stato.icona),
           ),
         );
@@ -305,16 +308,30 @@ class StatiLibriBar extends StatelessWidget {
   }
 }
 
-/// Widget wrapper per la sezione dei filtri.
-/// Comprende la ricerca per titolo, la barra dei generi, la barra degli stati e il filtro preferiti.
+/// Sezione contenente tutti i filtri combinati: titolo, genere, stato, preferiti.
 class SezioneFiltri extends StatelessWidget {
+  /// Genere selezionato.
   final GenereLibro? genereSelezionato;
+
+  /// Stato selezionato.
   final StatoLibro? statoSelezionato;
+
+  /// Visualizza solo preferiti.
   final bool soloPreferiti;
+
+  /// Callback per filtrare per genere.
   final Function(GenereLibro?) filtraPerGenere;
+
+  /// Callback per filtrare per stato.
   final Function(StatoLibro?) filtraPerStato;
+
+  /// Callback per filtrare per preferiti.
   final Function(bool) filtraPerPreferiti;
+
+  /// Callback per filtrare per titolo.
   final Function(String?) filtraPerTitolo;
+
+  /// Costruttore.
   const SezioneFiltri({
     super.key,
     required this.genereSelezionato,
@@ -347,7 +364,7 @@ class SezioneFiltri extends StatelessWidget {
             child: FilterChip(
               label: const Text("Preferiti"),
               selected: soloPreferiti,
-              onSelected: (selected) => filtraPerPreferiti(selected),
+              onSelected: filtraPerPreferiti,
               avatar: const Icon(Icons.favorite),
             ),
           ),
@@ -358,10 +375,11 @@ class SezioneFiltri extends StatelessWidget {
 }
 
 /// Campo di ricerca per filtrare i libri per titolo.
-/// Chiama la callback [onChanged] ad ogni modifica del testo.
 class RicercaLibri extends StatefulWidget {
+  /// Callback chiamata quando il testo cambia.
   final Function(String?) onChanged;
 
+  /// Costruttore.
   const RicercaLibri({super.key, required this.onChanged});
 
   @override
@@ -381,9 +399,8 @@ class _RicercaLibriState extends State<RicercaLibri> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,
-      onChanged: (value) {
-        widget.onChanged(value.isEmpty ? null : value);
-      },
+      onChanged: (value) =>
+          widget.onChanged(value.isEmpty ? null : value),
       decoration: const InputDecoration(
         labelText: "Cerca per titolo",
         prefixIcon: Icon(Icons.search),

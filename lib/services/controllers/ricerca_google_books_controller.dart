@@ -1,7 +1,3 @@
-/*
- * Questo controller gestisce la ricerca di libri tramite l'API di Google Books, nella relativa schermata di ricerca.
- * L'aggiunta e i relativi controlli sono stati delegati ad un altro controller
- */
 import 'package:flutter/material.dart';
 import 'package:isbn/isbn.dart';
 
@@ -20,7 +16,7 @@ class RicercaGoogleBooksController {
   /// Validatore per codici ISBN.
   final Isbn isbnValidator = Isbn();
 
-  // Il controller prende in input la libreria fornita dalla vista tramite il Provider
+  /// Costruttore del controller.
   RicercaGoogleBooksController();
 
   // Variabile contenente tutti i libri restituiti dall'API per una ricerca
@@ -28,19 +24,22 @@ class RicercaGoogleBooksController {
   bool _isLoading = false;
 
   /// Risultati della ricerca corrente.
+  ///
+  /// @return una lista di oggetti [Libro] corrispondenti alla ricerca effettuata.
   List<Libro> get searchResults => _searchResults;
 
   /// Stato di caricamento della ricerca.
+  ///
+  /// @return `true` se una ricerca è in corso, altrimenti `false`.
   bool get isLoading => _isLoading;
-
-  // Metodo per la ricerca dei libri tramite l'API di Google Books mediante il textFiedl presente
-  // nella schermata di aggiunta tramite API. il metodo prende in input una stringa di ricerca (isbn o titolo)
-  // ed effettua una chiamata all'API per ottenere i risultati.
 
   /// Esegue la ricerca di libri tramite l'API di Google Books.
   /// Utilizza il testo inserito dall'utente come query (ISBN o titolo).
   /// Aggiorna lo stato di caricamento e i risultati della ricerca.
+  ///
   /// Lancia un'eccezione se si verifica un errore o se non vengono trovati libri.
+  ///
+  /// @return [Future<void>] completato al termine della ricerca.
   Future<void> searchBooks() async {
     final String query = searchQueryController.text.trim();
     if (query.isEmpty) {

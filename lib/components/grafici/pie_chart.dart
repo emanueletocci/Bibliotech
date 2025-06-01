@@ -24,7 +24,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     if (widget.conteggioGeneri.isEmpty) {
       return Center(
         child: Text(
-          "Non hai letto nessun libro! Inizia a leggere qualcosa!",
+          "Nessun libro trovato secondo i criteri selezionati.",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
@@ -87,12 +87,14 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     }
   }
 
-  /// Crea le sezioni del grafico a torta in base al conteggio dei generi.
-  /// Ogni sezione ha un colore assegnato e dimensioni diverse se selezionata.
+  /// Restituisce una lista di sezioni per il grafico a torta in base ai generi letti.
+  /// Ogni sezione rappresenta un genere con un colore distinto e un raggio personalizzato.
+  ///
+  /// @param conteggioGeneri Mappa dei generi e del numero di libri letti per ciascun genere.
+  /// @return Una lista di [PieChartSectionData] da visualizzare nel grafico.
   List<PieChartSectionData> _showingSections(
     Map<GenereLibro, int> conteggioGeneri,
   ) {
-    // fold accumula il totale dei libri letti per calcolare le percentuali.
     conteggioGeneri.values.fold<int>(0, (a, b) => a + b);
     final List<Color> colori = Colors.primaries;
 
@@ -120,6 +122,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   /// Costruisce la legenda sottostante il grafico a torta.
   /// Ogni voce mostra un colore, il nome del genere e la percentuale corrispondente.
+  ///
+  /// @param conteggioGeneri Mappa dei generi e del numero di libri letti per ciascun genere.
+  /// @return Un widget [Wrap] contenente la legenda colorata con testo e percentuali.
   Widget _buildLegenda(Map<GenereLibro, int> conteggioGeneri) {
     final totale = conteggioGeneri.values.fold<int>(0, (a, b) => a + b);
     final List<Color> colori = Colors.primaries;
@@ -127,26 +132,25 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     return Wrap(
       spacing: 16,
       runSpacing: 8,
-      children:
-          conteggioGeneri.entries.toList().asMap().entries.map((entry) {
-            final index = entry.key;
-            final genere = entry.value.key;
-            final valore = entry.value.value;
-            final colore = colori[index % colori.length];
-            final percentuale = (valore / totale) * 100;
+      children: conteggioGeneri.entries.toList().asMap().entries.map((entry) {
+        final index = entry.key;
+        final genere = entry.value.key;
+        final valore = entry.value.value;
+        final colore = colori[index % colori.length];
+        final percentuale = (valore / totale) * 100;
 
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(width: 12, height: 12, color: colore),
-                const SizedBox(width: 6),
-                Text(
-                  '${genere.titolo} (${percentuale.toStringAsFixed(1)}%)',
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
-            );
-          }).toList(),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 12, height: 12, color: colore),
+            const SizedBox(width: 6),
+            Text(
+              '${genere.titolo} (${percentuale.toStringAsFixed(1)}%)',
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }

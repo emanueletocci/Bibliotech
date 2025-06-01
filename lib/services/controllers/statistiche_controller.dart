@@ -3,7 +3,6 @@ import '../../models/libreria_model.dart';
 import '../../models/stato_libro_model.dart';
 
 /// Controller per la gestione delle statistiche della libreria.
-///
 /// Questa classe si occupa di raccogliere e calcolare tutte le statistiche
 /// utili per la visualizzazione nella schermata delle statistiche,
 /// separando la logica di business dalla vista.
@@ -29,7 +28,6 @@ class StatisticheController {
   }
 
   /// Restituisce il numero di libri che hanno note non vuote.
-  ///
   /// @return Numero di libri con note.
   int getNumNote() {
     return libreria
@@ -46,7 +44,6 @@ class StatisticheController {
   }
 
   /// Restituisce una lista con tutti i voti assegnati ai libri.
-  ///
   /// @return Lista di voti dei libri recensiti.
   List<double> getListaVoti() {
     return libreria
@@ -57,7 +54,6 @@ class StatisticheController {
   }
 
   /// Restituisce una lista con i titoli dei libri che hanno un voto assegnato.
-  ///
   /// @return Lista di titoli dei libri recensiti.
   List<String> getTitoliLibriConVoto() {
     return libreria
@@ -68,7 +64,6 @@ class StatisticheController {
   }
 
   /// Calcola e rest1ituisce la media dei voti assegnati ai libri.
-  ///
   /// Se non ci sono libri recensiti, restituisce 0.
   /// @return Media dei voti.
   double getMediaVoto() {
@@ -84,7 +79,6 @@ class StatisticheController {
   }
 
   /// Calcola il numero di pagine lette e il tempo stimato di lettura.
-  ///
   /// Considera solo i libri nello stato "letto" e con un numero di pagine valido.
   /// Il tempo stimato è calcolato come 5 minuti per pagina.
   /// @return Mappa con chiavi: 'pagineLette', 'ore', 'minuti'.

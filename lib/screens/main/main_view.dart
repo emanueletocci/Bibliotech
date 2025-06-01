@@ -6,9 +6,9 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
-import 'tabs/homepage_tab.dart';
-import 'tabs/libreria_tab.dart';
-import 'tabs/stats_tab.dart';
+import 'sub-screens/homepage_view.dart';
+import 'sub-screens/libreria_view.dart';
+import 'sub-screens/stats_view.dart';
 import '../../components/popup_aggiunta.dart';
 
 /// Schermata principale dell'applicazione.
@@ -28,7 +28,7 @@ class _MainViewState extends State<MainView> {
   int _selectedIndex = 0;
 
   /// Lista delle pagine principali mostrate nell'app.
-  final List<Widget> _pages = [HomepageTab(), LibreriaTab(), StatisticheTab()];
+  final List<Widget> _pages = [HomepageView(), LibreriaView(), StatisticheView()];
 
   /// Gestisce il cambio di tab nella barra di navigazione.
   void _onTabTapped(int index) {

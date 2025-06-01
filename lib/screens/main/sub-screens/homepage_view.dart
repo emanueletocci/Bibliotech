@@ -6,17 +6,21 @@ import '../../../services/controllers/homepage_controller.dart';
 import 'package:provider/provider.dart';
 import '../../dettagli_libro/dettagli_libro_view.dart';
 
-/// Tab principale della homepage dell'app.
-/// Mostra un header di benvenuto, pulsante per aggiungere libri, pulsanti rapidi e caroselli di libri consigliati e ultime aggiunte.
-class HomepageTab extends StatefulWidget {
+/// Schermata principale dell'applicazione Bibliotech.
+///
+/// Mostra:
+/// - header di benvenuto con pulsante per aggiungere libri,
+/// - citazione del giorno,
+/// - caroselli di libri consigliati e delle ultime aggiunte.
+class HomepageView extends StatefulWidget {
   /// Costruttore della tab Homepage.
-  const HomepageTab({super.key});
+  const HomepageView({super.key});
 
   @override
-  State<HomepageTab> createState() => _HomepageTabState();
+  State<HomepageView> createState() => _HomepageViewState();
 }
 
-class _HomepageTabState extends State<HomepageTab> {
+class _HomepageViewState extends State<HomepageView> {
   @override
   void initState() {
     super.initState();
@@ -29,6 +33,7 @@ class _HomepageTabState extends State<HomepageTab> {
 
     return SingleChildScrollView(
       child: Column(
+        /// Spaziatura verticale tra i componenti principali.
         spacing: 15,
         children: <Widget>[
           _buildHeader(context),
@@ -38,24 +43,31 @@ class _HomepageTabState extends State<HomepageTab> {
     );
   }
 
-  /// Costruisce l'header della homepage con titolo, pulsante aggiunta e stile personalizzato.
+  /// Costruisce l'header della homepage.
+  ///
+  /// Include:
+  /// - testo di benvenuto,
+  /// - pulsante per aggiungere un nuovo libro tramite popup,
+  /// - sfondo colorato con bordi personalizzati.
   Widget _buildHeader(BuildContext context) {
     final orientamento = MediaQuery.of(context).orientation;
     final headerHeight = orientamento == Orientation.portrait ? 250.0 : 180.0;
     final headerPadding = orientamento == Orientation.portrait ? 20.0 : 0.0;
     final headerSpacing = orientamento == Orientation.portrait ? 25.0 : 10.0;
+
     return Stack(
       children: <Widget>[
+        /// Sfondo con curvatura e ombra.
         Container(
           height: headerHeight,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               bottomRight: Radius.circular(70),
               bottomLeft: Radius.circular(150),
             ),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 spreadRadius: 1,
@@ -65,16 +77,18 @@ class _HomepageTabState extends State<HomepageTab> {
             ],
           ),
         ),
+
+        /// Testo e pulsante di aggiunta.
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: headerPadding),
           child: Column(
             spacing: headerSpacing,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SafeArea(
+              const SafeArea(
                 child: Text(
                   "Benvenuto su Bibliotech!",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -125,7 +139,12 @@ class _HomepageTabState extends State<HomepageTab> {
     );
   }
 
-  /// Costruisce il corpo della homepage con pulsanti rapidi, carosello libri consigliati e ultime aggiunte.
+  /// Costruisce il corpo della homepage.
+  ///
+  /// Contiene:
+  /// - citazione del giorno,
+  /// - carosello con libri consigliati,
+  /// - carosello con ultime aggiunte.
   Widget _buildBody(BuildContext context, HomepageController controller) {
     final libriConsigliati = controller.libriConsigliati;
     final ultimeAggiunte = controller.ultimeAggiunte;
@@ -137,7 +156,7 @@ class _HomepageTabState extends State<HomepageTab> {
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // card con citazione del giorno
+          /// Card con la citazione del giorno.
           Card(
             elevation: 4,
             child: Padding(
@@ -148,7 +167,10 @@ class _HomepageTabState extends State<HomepageTab> {
                 children: [
                   Text(
                     citazione.testo,
-                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -166,81 +188,75 @@ class _HomepageTabState extends State<HomepageTab> {
               ),
             ),
           ),
+
+          /// Titolo e carosello dei libri consigliati.
           const Text(
             "Libri consigliati",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 200,
-            child:
-                libriConsigliati.isEmpty
-                    ? const Center(
-                      child: Text("Nessun libro consigliato al momento."),
-                    )
-                    : CarouselView(
-                      itemExtent: 150,
-                      children:
-                          libriConsigliati
-                              .map(
-                                (libro) => Container(
-                                  width: 150,
-                                  height: 150,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: LibroCoverWidget(libro: libro),
-                                ),
-                              )
-                              .toList(),
-                      onTap: (int index) {
-                        final libro = libriConsigliati[index];
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => DettagliLibroView(libro: libro),
+            child: libriConsigliati.isEmpty
+                ? const Center(
+                    child: Text("Nessun libro consigliato al momento."),
+                  )
+                : CarouselView(
+                    itemExtent: 150,
+                    children: libriConsigliati
+                        .map(
+                          (libro) => Container(
+                            width: 150,
+                            height: 150,
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: LibroCoverWidget(libro: libro),
                           ),
-                        );
-                        debugPrint('Hai premuto il libro: ${libro.titolo}');
-                      },
-                    ),
+                        )
+                        .toList(),
+                    onTap: (int index) {
+                      final libro = libriConsigliati[index];
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DettagliLibroView(libro: libro),
+                        ),
+                      );
+                      debugPrint('Hai premuto il libro: ${libro.titolo}');
+                    },
+                  ),
           ),
+
+          /// Titolo e carosello delle ultime aggiunte.
           const Text(
             "Ultime aggiunte",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 200,
-            child:
-                ultimeAggiunte.isEmpty
-                    ? const Center(child: Text("Nessuna aggiunta recente."))
-                    : CarouselView(
-                      itemExtent: 150,
-                      children:
-                          ultimeAggiunte
-                              .map(
-                                (libro) => Container(
-                                  width: 150,
-                                  height: 150,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: LibroCoverWidget(libro: libro),
-                                ),
-                              )
-                              .toList(),
-                      onTap: (int index) {
-                        final libro = ultimeAggiunte[index];
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => DettagliLibroView(libro: libro),
+            child: ultimeAggiunte.isEmpty
+                ? const Center(child: Text("Nessuna aggiunta recente."))
+                : CarouselView(
+                    itemExtent: 150,
+                    children: ultimeAggiunte
+                        .map(
+                          (libro) => Container(
+                            width: 150,
+                            height: 150,
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: LibroCoverWidget(libro: libro),
                           ),
-                        );
-                        debugPrint('Hai premuto il libro: ${libro.titolo}');
-                      },
-                    ),
+                        )
+                        .toList(),
+                    onTap: (int index) {
+                      final libro = ultimeAggiunte[index];
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DettagliLibroView(libro: libro),
+                        ),
+                      );
+                      debugPrint('Hai premuto il libro: ${libro.titolo}');
+                    },
+                  ),
           ),
         ],
       ),

@@ -1,7 +1,3 @@
-/*
- *  Questo controller implementa la logica di generazione delle liste di libri consigliati e delle ultime aggiunte nella homepage
- */
-
 import '../../models/citazione_model.dart';
 import '../../models/libreria_model.dart';
 import '../../models/libro_model.dart';
@@ -22,12 +18,15 @@ class HomepageController {
   /// Numero massimo di libri da mostrare.
   final int numLibri = 10;
 
-  /// Costruttore che riceve la libreria da gestire.
+  /// Costruttore che riceve la libreria da gestire dalla vista.
   HomepageController(this.libreria);
 
   DateTime get _now => DateTime.now();
   DateTime get _today => DateTime(_now.year, _now.month, _now.day);
 
+  /// Restituisce la citazione basata sul giorno corrente.
+  ///
+  /// @return Una citazione selezionata ciclicamente in base al giorno del mese.
   Citazione get citazioneDelGiorno {
     final giornoCorrente = _today.day;
     // sottraggo 1 per avere un indice 0-based
@@ -36,6 +35,12 @@ class HomepageController {
     return _citazioni[index];
   }
 
+  /// Restituisce una lista di libri consigliati dalla libreria.
+  /// La lista viene generata casualmente e memorizzata in cache per migliorare le performance.
+  /// Se la cache è scaduta o la lista dei libri è cambiata, viene rigenerata.
+  /// Se la libreria è vuota, restituisce una lista vuota.
+  ///
+  /// @return Una lista di [Libro] consigliati.
   List<Libro> get libriConsigliati {
     // Se la cache è nulla o la data è cambiata, rigenera la lista
     if (_cachedConsigliati == null ||
@@ -52,6 +57,8 @@ class HomepageController {
   }
 
   /// Genera una lista casuale di libri consigliati dalla libreria.
+  ///
+  /// @return Una lista di [Libro] selezionati casualmente.
   List<Libro> _generaLibriConsigliati() {
     final libri = libreria.getLibri();
 
@@ -65,7 +72,9 @@ class HomepageController {
     return booksToShuffle.take(min(numLibri, libri.length)).toList();
   }
 
-  /// Restituisce la lista delle ultime aggiunte alla libreria.
+  /// Restituisce le ultime aggiunte alla libreria, ordinate dal più recente.
+  ///
+  /// @return Una lista di [Libro] ordinati dalla data di aggiunta più recente.
   List<Libro> get ultimeAggiunte {
     final libri = libreria.getLibri();
     if (libri.isEmpty) {

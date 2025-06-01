@@ -16,8 +16,8 @@ import '../../../services/controllers/statistiche_controller.dart';
 /// - pagine lette e tempo stimato di lettura,
 /// - numero di note scritte,
 /// - due grafici a torta per i generi (letti e totali).
-class StatisticheTab extends StatelessWidget {
-  const StatisticheTab({super.key});
+class StatisticheView extends StatelessWidget {
+  const StatisticheView({super.key});
 
   @override
   Widget build(BuildContext context) {
