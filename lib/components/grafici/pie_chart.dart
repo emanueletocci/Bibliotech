@@ -2,10 +2,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../models/genere_libro_model.dart';
 
-/// Widget che visualizza un grafico a torta con i generi dei libri letti e una legenda sottostante.
+/// Widget che visualizza un grafico a torta con i generi dei libri letti
+/// e una legenda sottostante che mostra i generi e la percentuale letta.
 class PieChartWidget extends StatefulWidget {
+  /// Mappa che contiene i generi dei libri come chiave e il conteggio come valore.
   final Map<GenereLibro, int> conteggioGeneri;
 
+  /// Costruttore del widget [PieChartWidget].
   const PieChartWidget({super.key, required this.conteggioGeneri});
 
   @override
@@ -13,10 +16,12 @@ class PieChartWidget extends StatefulWidget {
 }
 
 class _PieChartWidgetState extends State<PieChartWidget> {
+  /// Indice della sezione attualmente toccata nel grafico.
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
+    // Se non ci sono generi letti, mostra un messaggio informativo.
     if (widget.conteggioGeneri.isEmpty) {
       return Center(
         child: Text(
@@ -31,6 +36,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       );
     }
 
+    // Visualizzazione del grafico e della legenda.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,6 +46,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             PieChartData(
               pieTouchData: PieTouchData(
                 touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  // Aggiorna l'indice toccato per animare la sezione.
                   setState(() {
                     touchedIndex =
                         pieTouchResponse?.touchedSection?.touchedSectionIndex ??
@@ -59,10 +66,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 
-  /// Crea le sezioni del grafico a torta.
+  /// Crea le sezioni del grafico a torta in base al conteggio dei generi.
+  ///
+  /// Ogni sezione ha un colore assegnato e dimensioni diverse se selezionata.
   List<PieChartSectionData> _showingSections(
     Map<GenereLibro, int> conteggioGeneri,
   ) {
+    // Calcolo del totale (non utilizzato direttamente qui, può essere utile).
     conteggioGeneri.values.fold<int>(0, (a, b) => a + b);
     final List<Color> colori = Colors.primaries;
 
@@ -77,7 +87,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
         PieChartSectionData(
           color: colore,
           value: entry.value.toDouble(),
-          title: '', // Nessun titolo dentro la torta
+          title: '', // Nessun titolo all'interno della sezione.
           radius: isTouched ? 80 : 70,
         ),
       );
@@ -88,7 +98,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     return sezioni;
   }
 
-  /// Costruisce la legenda con colori, nome del genere e percentuale.
+  /// Costruisce la legenda sottostante il grafico a torta.
+  ///
+  /// Ogni voce mostra un colore, il nome del genere e la percentuale corrispondente.
   Widget _buildLegenda(Map<GenereLibro, int> conteggioGeneri) {
     final totale = conteggioGeneri.values.fold<int>(0, (a, b) => a + b);
     final List<Color> colori = Colors.primaries;

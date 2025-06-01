@@ -139,5 +139,4 @@ class StatisticheController {
     }
     return conteggioGeneri;
   }
-
 }

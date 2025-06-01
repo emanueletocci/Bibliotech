@@ -8,20 +8,20 @@ import '../../../components/grafici/pie_chart.dart';
 import '../../../components/grafici/line_chart.dart';
 import '../../../services/controllers/statistiche_controller.dart';
 
-/// Schermata delle statistiche.
+/// Schermata delle statistiche della libreria.
 /// Mostra:
 /// - il numero di libri per ogni stato,
-/// - la media delle recensioni,
-/// - istogramma che mostra le recensioni fatte e i rispettivi libri,
-/// - numero pagine lette con tempo medio totale,
-/// - numero note scritte,
-/// - un grafico a torta dei generi letti.
-
+/// - la media e il numero delle recensioni,
+/// - un grafico delle recensioni per libro,
+/// - pagine lette e tempo stimato di lettura,
+/// - numero di note scritte,
+/// - due grafici a torta per i generi (letti e totali).
 class StatisticheTab extends StatelessWidget {
   const StatisticheTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Ottiene i dati dalla libreria tramite il controller
     final libreria = context.watch<Libreria>();
     final controller = StatisticheController(libreria);
 
@@ -30,7 +30,7 @@ class StatisticheTab extends StatelessWidget {
     final numRecensioni = controller.getNumRecensioni();
     final mediaVoto = controller.getMediaVoto();
     final pagineLetteETempo = controller.getPagineLetteETempo();
-    final conteggioGeneriLetti = controller.getConteggioGeneriLetti(); 
+    final conteggioGeneriLetti = controller.getConteggioGeneriLetti();
     final conteggioGeneriTotale = controller.getConteggioGeneriTotali();
     final votiLibri = controller.getListaVoti();
     final titoliLibri = controller.getTitoliLibriConVoto();
@@ -42,7 +42,12 @@ class StatisticheTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GrigliaStato(conteggioPerStato: conteggioPerStato),
-          _buildRecensioniCard(mediaVoto, numRecensioni, titoliLibri, votiLibri),
+          _buildRecensioniCard(
+            mediaVoto,
+            numRecensioni,
+            titoliLibri,
+            votiLibri,
+          ),
           _buildLetturaENoteCard(pagineLetteETempo, numNote),
           _buildGeneriLettiCard(conteggioGeneriLetti),
           _buildGeneriTuttiCard(conteggioGeneriTotale),
@@ -51,8 +56,14 @@ class StatisticheTab extends StatelessWidget {
     );
   }
 
-  /// Card delle recensioni con media, conteggio e grafico.
-  Widget _buildRecensioniCard(double mediaVoto, int numRecensioni, List<String> titoliLibri, List<double> votiLibri) {
+  /// Costruisce una card con le statistiche sulle recensioni,
+  /// mostrando media, numero e un grafico a linee.
+  Widget _buildRecensioniCard(
+    double mediaVoto,
+    int numRecensioni,
+    List<String> titoliLibri,
+    List<double> votiLibri,
+  ) {
     return Card(
       elevation: 4,
       child: Padding(
@@ -68,10 +79,7 @@ class StatisticheTab extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              'Media recensioni:',
-              style: const TextStyle(fontSize: 12.0),
-            ),
+            Text('Media recensioni:', style: const TextStyle(fontSize: 12.0)),
             Column(
               spacing: 5,
               children: [
@@ -89,23 +97,26 @@ class StatisticheTab extends StatelessWidget {
                 ),
               ],
             ),
-            BookRatingBarChart(
-              titoliLibri: titoliLibri,
-              voti: votiLibri,
-            ),
+            BookRatingBarChart(titoliLibri: titoliLibri, voti: votiLibri),
           ],
         ),
       ),
     );
   }
 
-  /// Card con pagine lette, tempo stimato e note scritte.
-  Widget _buildLetturaENoteCard(Map<String, dynamic> pagineLetteETempo, int numNote) {
+  /// Costruisce due card affiancate:
+  /// - Una con pagine lette e tempo stimato,
+  /// - L'altra con il numero di note scritte.
+  Widget _buildLetturaENoteCard(
+    Map<String, dynamic> pagineLetteETempo,
+    int numNote,
+  ) {
     return Row(
       spacing: 15,
       children: [
+        // Card: Lettura
         Expanded(
-          flex: 2,  // imposto la primo card con più spazio
+          flex: 2,
           child: Card(
             elevation: 4,
             shape: RoundedRectangleBorder(
@@ -121,7 +132,6 @@ class StatisticheTab extends StatelessWidget {
                     'Lettura',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  // Uso text.rich per formattare il testo con più stili dinamicamente
                   Text.rich(
                     TextSpan(
                       text: 'Pagine lette: ',
@@ -155,6 +165,7 @@ class StatisticheTab extends StatelessWidget {
             ),
           ),
         ),
+        // Card: Note
         Expanded(
           flex: 1,
           child: Card(
@@ -179,7 +190,10 @@ class StatisticheTab extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: "$numNote",
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -193,13 +207,11 @@ class StatisticheTab extends StatelessWidget {
     );
   }
 
-  /// Card con grafico a torta dei generi più letti.
+  /// Card che mostra i generi **più letti** sotto forma di grafico a torta.
   Widget _buildGeneriLettiCard(Map<GenereLibro, int> conteggioGeneri) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -218,31 +230,34 @@ class StatisticheTab extends StatelessWidget {
   }
 }
 
-  /// Card con grafico a torta dei generi di tutti i libri presenti nella libreria
-  Widget _buildGeneriTuttiCard(Map<GenereLibro, int> conteggioGeneri) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+/// Card che mostra i generi di **tutti** i libri (non solo quelli letti).
+Widget _buildGeneriTuttiCard(Map<GenereLibro, int> conteggioGeneri) {
+  return Card(
+    elevation: 4,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        spacing: 8,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'I tuoi generi',
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+          ),
+          PieChartWidget(conteggioGeneri: conteggioGeneri),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          spacing: 8,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'I tuoi generi',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            PieChartWidget(conteggioGeneri: conteggioGeneri),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
 
-
+/// Mostra una griglia con il numero di libri per ogni stato:
+/// - Letto
+/// - In lettura
+/// - Da leggere
+/// - Abbandonato
+/// - Da acquistare
 class GrigliaStato extends StatelessWidget {
   final Map<StatoLibro, int> conteggioPerStato;
   const GrigliaStato({super.key, required this.conteggioPerStato});
@@ -279,6 +294,7 @@ class GrigliaStato extends StatelessWidget {
     );
   }
 
+  /// Costruisce una card decorata per uno specifico stato libro.
   Expanded _statoCard(String title, String count, MaterialColor baseColor, IconData icon) {
     return Expanded(
       child: Container(
