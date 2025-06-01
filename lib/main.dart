@@ -1,22 +1,14 @@
-import 'dart:io';
 import 'package:bibliotech/screens/main/main_view.dart';
 import 'package:flutter/material.dart';
 import 'models/libreria_model.dart';
 import 'themes/themes.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 /// Funzione principale dell'applicazione.
 /// Inizializza Flutter, configura il database e avvia l'app.
 void main() async {
   // Assicuro che il framwork Flutter sia inizializzato prima di eseguire interazioni con il SO o plugin nativi
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Il plugin sqflite non funziona su desktop, occorre utilizzare sqflite_ffi
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  }
 
   final libreria = Libreria();
   // Inizializz la libreria caricando i libri dal database
