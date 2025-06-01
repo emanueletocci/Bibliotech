@@ -25,18 +25,6 @@
 
 ---
 
-## 📱 Anteprima
-
-<p align="center">
-  <img src="assets/images/preview/homepage.png" alt="Screenshot Bibliotech" width="300"/>
-  <img src="assets/images/preview/libreria.png" alt="Screenshot Bibliotech" width="300"/>
-  <img src="assets/images/preview/aggiuntaModifica.png" alt="Screenshot Bibliotech" width="300"/>
-  <img src="assets/images/preview/dettaglio-libro.png" alt="Screenshot Bibliotech" width="300"/>
-
-</p>
-
----
-
 
 ## 📦 Come iniziare
 
@@ -50,3 +38,16 @@ Per l'esecuzione locale dell'applicazione é necessario aver installato un emula
 ```
 flutter run
 ```
+
+---
+
+## 📱 Anteprima
+
+<p align="center">
+  <img src="assets/images/preview/homepage.png" alt="Screenshot Bibliotech" width="300"/>
+  <img src="assets/images/preview/libreria.png" alt="Screenshot Bibliotech" width="300"/>
+  <img src="assets/images/preview/aggiuntaModifica.png" alt="Screenshot Bibliotech" width="300"/>
+  <img src="assets/images/preview/dettaglio-libro.png" alt="Screenshot Bibliotech" width="300"/>
+
+</p>
+
