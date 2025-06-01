@@ -64,7 +64,7 @@ class AggiuntaModificaManualeController extends GenericController {
     if (libroDaModificare != null) {
       _libroDaModificare = libroDaModificare;
       _initFields(libroDaModificare);
-      copertina = libroDaModificare.copertina!;
+      copertina = libroDaModificare.copertina ?? 'assets/images/book_placeholder.jpg';
       _isEditable =
           true; // Imposto il flag per indicare che si sta modificando un libro
     } else {
