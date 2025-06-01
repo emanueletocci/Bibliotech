@@ -161,10 +161,14 @@ class Libreria extends ChangeNotifier {
   }
 
   /// Restituisce tutti i libri come lista ordinata alfabeticamente per titolo.
-  /// Utile per visualizzazioni che richiedono ListView/GridView.
-  List<Libro> getLibri() {
+  List<Libro> getLibriOrdinati() {
    final libri = _libri.values.toList();
     libri.sort((libro1, libro2) => libro1.titolo.toLowerCase().compareTo(libro2.titolo.toLowerCase()));
     return libri;
+  }
+
+  /// Restituisce tutti i libri come lista non ordinata.
+  List<Libro> getLibri() {
+    return _libri.values.toList();
   }
 }
