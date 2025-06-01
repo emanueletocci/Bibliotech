@@ -9,7 +9,7 @@
 
 ## 🚀 Demo & Risorse
 
-- **Documentazione del progetto:** [PDF](/docs/REALAZIONE_GRUPPO_17.pdf) [Overleaf](https://www.overleaf.com/read/ryzhknrbptmc#f3aa6c)
+- **Documentazione del progetto:** [PDF](docs/REALAZIONE_GRUPPO_17.pdf) [Overleaf](https://www.overleaf.com/read/ryzhknrbptmc#f3aa6c)
 - **Documentazione tecnica:** [Github Actions](https://emanueletocci.github.io/Bibliotech/)
 - **Mockup UI:** [Figma](https://www.figma.com/design/QSPCMmoPRzGiIP1bdn78C8/Mobile-Programming?node-id=0-1&t=kzEEztlGSt7d5SN1-1)
 
