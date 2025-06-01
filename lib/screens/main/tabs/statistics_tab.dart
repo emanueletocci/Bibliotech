@@ -68,18 +68,7 @@ class StatisticsTab extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          'Statistiche',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         //padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,7 +300,6 @@ class StatisticsTab extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }
@@ -323,7 +311,7 @@ class GrigliaStato extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.45,
         child: Column(
           children: [

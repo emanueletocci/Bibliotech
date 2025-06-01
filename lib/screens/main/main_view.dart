@@ -40,6 +40,18 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:
+          _selectedIndex != 2
+              ? null
+              : AppBar(
+                title: const Text(
+                  'Statistiche',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                foregroundColor: Colors.white,
+                centerTitle: true,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
       body: IndexedStack(
         index:
             _selectedIndex, // mostro solo la schermata corrispondente a questo indice
