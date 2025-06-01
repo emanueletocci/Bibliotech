@@ -36,7 +36,7 @@ class StatisticheView extends StatelessWidget {
     final titoliLibri = controller.getTitoliLibriConVoto();
 
     final orientamento = MediaQuery.of(context).orientation;
-    final chartBoxHeight = orientamento == Orientation.portrait ? 350.0 : 150.0;
+    final chartBoxHeight = orientamento == Orientation.portrait ? 450.0 : 150.0;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
