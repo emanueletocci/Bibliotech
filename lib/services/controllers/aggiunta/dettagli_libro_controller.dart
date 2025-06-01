@@ -11,7 +11,7 @@ import '../../../models/libro_model.dart';
 /// Controller per la gestione dei dettagli di un libro.
 /// Gestisce l'aggiunta e la rimozione di libri già presenti nella libreria.
 /// Esegue controlli sui campi del libro prima di aggiungerlo o rimuoverlo.
-class DettagliLibroController extends GenericController {
+class DettagliLibroController extends AggiuntaBaseController {
   /// Riferimento alla libreria gestita dal controller.
   final Libreria _libreria;
 

@@ -12,7 +12,7 @@ import 'package:path/path.dart' as p;
 /// Controller per la gestione dell'aggiunta e modifica manuale dei libri.
 /// Gestisce la logica per aggiungere un nuovo libro o modificare un libro esistente nella libreria.
 /// Fornisce metodi per la selezione della copertina, il recupero dei dati dai campi e la validazione.
-class AggiuntaModificaManualeController extends GenericController {
+class AggiuntaModificaController extends AggiuntaBaseController {
   /// Lista dei generi disponibili.
   final List<GenereLibro> generi = GenereLibro.values.toList();
 
@@ -59,7 +59,7 @@ class AggiuntaModificaManualeController extends GenericController {
   /// Costruttore con parametro opzionale per modificare un libro esistente.
   /// Se il parametro è presente, inizializza i campi con i valori del libro da modificare.
   /// Il controller gestisce quindi la modifica del libro.
-  AggiuntaModificaManualeController(this._libreria, [Libro? libroDaModificare])
+  AggiuntaModificaController(this._libreria, [Libro? libroDaModificare])
     : super() {
     if (libroDaModificare != null) {
       _libroDaModificare = libroDaModificare;

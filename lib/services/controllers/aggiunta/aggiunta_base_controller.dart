@@ -4,7 +4,7 @@ import 'package:isbn/isbn.dart';
 
 /// Classe astratta base per i controller di aggiunta e modifica libro.
 /// Fornisce proprietà comuni e metodi di validazione per i dati del libro.
-abstract class GenericController {
+abstract class AggiuntaBaseController {
   /// Validatore per codici ISBN.
   final Isbn isbnValidator = Isbn();
 

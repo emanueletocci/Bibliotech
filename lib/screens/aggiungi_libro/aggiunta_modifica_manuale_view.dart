@@ -6,7 +6,7 @@ import '../../components/libro_cover_widget.dart';
 import '../../components/feedback.dart';
 import '../../models/genere_libro_model.dart';
 import '../../models/libro_model.dart';
-import '../../services/controllers/aggiunta/aggiunta_modifica_manuale_controller.dart';
+import '../../services/controllers/aggiunta/aggiunta_modifica_controller.dart';
 import '../../models/libreria_model.dart';
 
 /// Schermata per l'aggiunta o la modifica manuale di un libro.
@@ -27,7 +27,7 @@ class AggiuntaModificaLibroManualeView extends StatefulWidget {
 class _AggiuntaModificaLibroManualeViewState
     extends State<AggiuntaModificaLibroManualeView> {
   /// Controller per la logica di aggiunta/modifica manuale.
-  late AggiuntaModificaManualeController controller;
+  late AggiuntaModificaController controller;
 
   /// Flag per evitare di inizializzare più volte il controller.
   bool _isControllerInitialized = false;
@@ -45,7 +45,7 @@ class _AggiuntaModificaLibroManualeViewState
   Widget build(BuildContext context) {
     if (!_isControllerInitialized) {
       final libreria = context.watch<Libreria>();
-      controller = AggiuntaModificaManualeController(
+      controller = AggiuntaModificaController(
         libreria,
         widget.libroDaModificare,
       );
