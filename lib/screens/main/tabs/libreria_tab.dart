@@ -61,6 +61,10 @@ class _LibreriaTabState extends State<LibreriaTab> {
       titolo: _titoloSelezionato,
     );
 
+    final orientazione = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientazione == Orientation.portrait ? 3 : 5;
+
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(15.0),
@@ -83,11 +87,12 @@ class _LibreriaTabState extends State<LibreriaTab> {
                 color: Theme.of(context).colorScheme.outline,
                 thickness: 1.0,
               ),
+
               libriFiltrati.isEmpty
                   ? const Center(child: Text("Nessun libro presente."))
                   : GridView.count(
                     shrinkWrap: true,
-                    crossAxisCount: 3,
+                    crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
                     physics: const NeverScrollableScrollPhysics(),

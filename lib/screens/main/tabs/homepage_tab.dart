@@ -4,7 +4,6 @@ import '../../../components/libro_cover_widget.dart';
 import '../../../models/libreria_model.dart';
 import '../../../services/controllers/homepage_controller.dart';
 import 'package:provider/provider.dart';
-
 import '../../dettagli_libro/dettagli_libro_view.dart';
 
 /// Tab principale della homepage dell'app.
@@ -129,11 +128,12 @@ class _HomepageTabState extends State<HomepageTab> {
     final citazione = controller.citazioneDelGiorno;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+      padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
       child: Column(
         spacing: 15,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          // card con citazione del giorno
           Card(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -143,11 +143,8 @@ class _HomepageTabState extends State<HomepageTab> {
                 children: [
                   Text(
                     citazione.testo,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic
-                    )
-                    ),
+                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(

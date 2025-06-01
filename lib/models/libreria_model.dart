@@ -108,8 +108,11 @@ class Libreria extends ChangeNotifier {
     return _libri[isbn];
   }
 
-  /// Ricerca generica con callback per filtri personalizzati.
+  /// Ricerca generica che restituisce una lista di libri che soddisfano un criterio specificato.
+  /// Prende in input una funzione [criterio] che rappresenta il filtro di ricerca. 
+  /// Il metodo inserisce nella lista solo i libri che soddisfano il criterio, ovvero quelli per cui la funzione [criterio] restituisce true.
   /// Esempio: cerca((libro) => libro.annoPubblicazione > 2000)
+  
   List<Libro> cerca(bool Function(Libro) criterio) {
     return _libri.values.where(criterio).toList();
   }
@@ -140,7 +143,9 @@ class Libreria extends ChangeNotifier {
     bool soloPreferiti = false,
     String? titolo,
   }) {
-    return cerca((libro) {
+    final filtrati = cerca((libro) {
+      // Il metodo cerca() prende in input una Function (una funzione di filtraggio) che restituisce un bool
+      // 
       final genereOk = genere == null || libro.genere == genere;
       final statoOk = stato == null || libro.stato == stato;
       final preferitiOk = !soloPreferiti || libro.preferito;
@@ -149,11 +154,17 @@ class Libreria extends ChangeNotifier {
           libro.titolo.toLowerCase().contains(titolo.toLowerCase());
       return genereOk && statoOk && preferitiOk && titoloOk;
     });
+
+    // Ordino i risultati per titolo
+    filtrati.sort((libro1, libro2) => libro1.titolo.toLowerCase().compareTo(libro2.titolo.toLowerCase()));
+    return filtrati;
   }
 
-  /// Restituisce tutti i libri come lista ordinata.
+  /// Restituisce tutti i libri come lista ordinata alfabeticamente per titolo.
   /// Utile per visualizzazioni che richiedono ListView/GridView.
   List<Libro> getLibri() {
-    return _libri.values.toList();
+   final libri = _libri.values.toList();
+    libri.sort((libro1, libro2) => libro1.titolo.toLowerCase().compareTo(libro2.titolo.toLowerCase()));
+    return libri;
   }
 }
