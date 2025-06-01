@@ -305,14 +305,13 @@ class GrigliaStato extends StatelessWidget {
             BoxShadow(
               offset: const Offset(0, 9),
               blurRadius: 18,
-              spreadRadius: -5,
+              spreadRadius: -10,
             ),
           ],
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomCenter,
             colors: [baseColor[200]!, baseColor[300]!, baseColor[500]!],
-            stops: const [0.1, 0.5, 1.0],
           ),
         ),
         child: Stack(
@@ -326,10 +325,9 @@ class GrigliaStato extends StatelessWidget {
               ],
             ),
             Positioned(
-              bottom: 33,
-              right: 1,
+              right: 0,
               child: Opacity(
-                opacity: 0.3,
+                opacity: 0.2,
                 child: Icon(icon, size: 30, color: Colors.white),
               ),
             ),
