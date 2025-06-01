@@ -94,18 +94,24 @@ class _MainViewState extends State<MainView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled:
-                true, // consente al popup di occupare tutto lo schermo
-            builder: (context) {
-              return const PopupAggiunta();
-            },
-          );
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding:
+            MediaQuery.of(context).orientation == Orientation.portrait
+                ? EdgeInsets.only(bottom: 30.0)
+                : EdgeInsets.zero,
+        child: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled:
+                  true, // consente al popup di occupare tutto lo schermo
+              builder: (context) {
+                return const PopupAggiunta();
+              },
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
