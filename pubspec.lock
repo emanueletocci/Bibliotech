@@ -57,14 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.6"
-  curved_navigation_bar:
-    dependency: "direct main"
+  equatable:
+    dependency: transitive
     description:
-      name: curved_navigation_bar
-      sha256: bb4ab128fcb6f4a9f0f1f72d227db531818b20218984789777f049fcbf919279
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+4"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: "577aeac8ca414c25333334d7c4bb246775234c0e44b38b10a82b559dd4d764e7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -575,4 +583,4 @@ packages:
     version: "1.1.0"
 sdks:
   dart: ">=3.7.2 <4.0.0"
-  flutter: ">=3.27.0"
+  flutter: ">=3.27.4"
