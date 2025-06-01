@@ -70,7 +70,7 @@ class _HomepageTabState extends State<HomepageTab> {
             children: <Widget>[
               SafeArea(
                 child: Text(
-                  "Welcome to Bibliotech!",
+                  "Benvenuto su Bibliotech!",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
