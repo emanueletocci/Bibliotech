@@ -106,7 +106,7 @@ class StatisticheController {
   ///
   /// Considera solo i libri nello stato "letto".
   /// @return Mappa con chiave [GenereLibro] e valore il conteggio dei libri letti.
-  Map<GenereLibro, int> getConteggioGeneri() {
+  Map<GenereLibro, int> getConteggioGeneriLetti() {
     final libriLetti = libreria.getLibriPerStato(StatoLibro.letto);
     final Map<GenereLibro, int> conteggioGeneri = {};
     for (var libro in libriLetti) {
@@ -120,4 +120,24 @@ class StatisticheController {
     }
     return conteggioGeneri;
   }
+
+  /// Restituisce una mappa che associa ogni genere di libro al numero totale di libri di quel genere.
+  ///
+  /// Considera tutti i libri presenti nella libreria, indipendentemente dallo stato.
+  /// @return Mappa con chiave [GenereLibro] e valore il conteggio totale dei libri.
+  Map<GenereLibro, int> getConteggioGeneriTotali() {
+    final tuttiILibri = libreria.getLibri();
+    final Map<GenereLibro, int> conteggioGeneri = {};
+    for (var libro in tuttiILibri) {
+      if (libro.genere != null) {
+        conteggioGeneri.update(
+          libro.genere!,
+          (val) => val + 1,
+          ifAbsent: () => 1,
+        );
+      }
+    }
+    return conteggioGeneri;
+  }
+
 }

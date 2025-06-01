@@ -30,7 +30,8 @@ class StatisticheTab extends StatelessWidget {
     final numRecensioni = controller.getNumRecensioni();
     final mediaVoto = controller.getMediaVoto();
     final pagineLetteETempo = controller.getPagineLetteETempo();
-    final conteggioGeneri = controller.getConteggioGeneri(); 
+    final conteggioGeneriLetti = controller.getConteggioGeneriLetti(); 
+    final conteggioGeneriTotale = controller.getConteggioGeneriTotali();
     final votiLibri = controller.getListaVoti();
     final titoliLibri = controller.getTitoliLibriConVoto();
 
@@ -43,7 +44,8 @@ class StatisticheTab extends StatelessWidget {
           GrigliaStato(conteggioPerStato: conteggioPerStato),
           _buildRecensioniCard(mediaVoto, numRecensioni, titoliLibri, votiLibri),
           _buildLetturaENoteCard(pagineLetteETempo, numNote),
-          _buildGeneriLettiCard(conteggioGeneri),
+          _buildGeneriLettiCard(conteggioGeneriLetti),
+          _buildGeneriTuttiCard(conteggioGeneriTotale),
         ],
       ),
     );
@@ -71,7 +73,7 @@ class StatisticheTab extends StatelessWidget {
               style: const TextStyle(fontSize: 12.0),
             ),
             Column(
-              spacing: 4,
+              spacing: 5,
               children: [
                 const Icon(Icons.star, color: Colors.amber, size: 28),
                 Text(
@@ -100,10 +102,10 @@ class StatisticheTab extends StatelessWidget {
   /// Card con pagine lette, tempo stimato e note scritte.
   Widget _buildLetturaENoteCard(Map<String, dynamic> pagineLetteETempo, int numNote) {
     return Row(
-      spacing: 16,
+      spacing: 15,
       children: [
         Expanded(
-          flex: 2,
+          flex: 2,  // imposto la primo card con più spazio
           child: Card(
             elevation: 4,
             shape: RoundedRectangleBorder(
@@ -112,13 +114,14 @@ class StatisticheTab extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                spacing: 8,
+                spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Lettura',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
+                  // Uso text.rich per formattare il testo con più stili dinamicamente
                   Text.rich(
                     TextSpan(
                       text: 'Pagine lette: ',
@@ -204,7 +207,7 @@ class StatisticheTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'I tuoi genere più letti',
+              'I tuoi generi più letti',
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             PieChartWidget(conteggioGeneri: conteggioGeneri),
@@ -215,7 +218,31 @@ class StatisticheTab extends StatelessWidget {
   }
 }
 
-// GrigliaStato è nello stesso file, come richiesto
+  /// Card con grafico a torta dei generi di tutti i libri presenti nella libreria
+  Widget _buildGeneriTuttiCard(Map<GenereLibro, int> conteggioGeneri) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          spacing: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'I tuoi generi',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            PieChartWidget(conteggioGeneri: conteggioGeneri),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 class GrigliaStato extends StatelessWidget {
   final Map<StatoLibro, int> conteggioPerStato;
   const GrigliaStato({super.key, required this.conteggioPerStato});
