@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/genere_libro_model.dart';
 import '../../../models/libreria_model.dart';
 import '../../../models/stato_libro_model.dart';
 import '../../../components/grafici/pie_chart.dart';
@@ -37,149 +38,73 @@ class StatisticheTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         spacing: 20,
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GrigliaStato(conteggioPerStato: conteggioPerStato),
+          _buildRecensioniCard(mediaVoto, numRecensioni, titoliLibri, votiLibri),
+          _buildLetturaENoteCard(pagineLetteETempo, numNote),
+          _buildGeneriLettiCard(conteggioGeneri),
+        ],
+      ),
+    );
+  }
 
-          // Prima Card: Recensioni
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                spacing: 8,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Storico Recensioni',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Media recensioni:',
-                    style: const TextStyle(fontSize: 12.0),
-                  ),
-                  Column(
-                    spacing: 4,
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 28),
-                      Text(
-                        mediaVoto.toStringAsFixed(1),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      Text(
-                        'Recensioni fatte: $numRecensioni',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  BookRatingBarChart(
-                    titoliLibri: titoliLibri,
-                    voti: votiLibri,
-                  ),
-                ],
+  /// Card delle recensioni con media, conteggio e grafico.
+  Widget _buildRecensioniCard(double mediaVoto, int numRecensioni, List<String> titoliLibri, List<double> votiLibri) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          spacing: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Storico Recensioni',
+              style: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-
-          // Seconda Card: Pagine lette e Note
-          Row(
-            spacing: 16,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      spacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Lettura',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text.rich(
-                          TextSpan(
-                            text: 'Pagine lette: ',
-                            style: TextStyle(fontSize: 13),
-                            children: [
-                              TextSpan(
-                                text: '${pagineLetteETempo['pagineLette']}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text.rich(
-                          TextSpan(
-                            text: 'Tempo stimato: ',
-                            style: TextStyle(fontSize: 13),
-                            children: [
-                              TextSpan(
-                                text: '${pagineLetteETempo['ore']}h ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: '${pagineLetteETempo['minuti']}min',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+            Text(
+              'Media recensioni:',
+              style: const TextStyle(fontSize: 12.0),
+            ),
+            Column(
+              spacing: 4,
+              children: [
+                const Icon(Icons.star, color: Colors.amber, size: 28),
+                Text(
+                  mediaVoto.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      spacing: 8,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Note",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text.rich(
-                          TextSpan(
-                            text: "Note scritte: ",
-                            style: TextStyle(fontSize: 13),
-                            children: [
-                              TextSpan(
-                                text: "$numNote",
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                Text(
+                  'Recensioni fatte: $numRecensioni',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            BookRatingBarChart(
+              titoliLibri: titoliLibri,
+              voti: votiLibri,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-          // Grafico a torta dei generi
-          Card(
+  /// Card con pagine lette, tempo stimato e note scritte.
+  Widget _buildLetturaENoteCard(Map<String, dynamic> pagineLetteETempo, int numNote) {
+    return Row(
+      spacing: 16,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Card(
             elevation: 4,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -191,15 +116,100 @@ class StatisticheTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'I tuoi genere più letti',
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                    'Lettura',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  PieChartWidget(conteggioGeneri: conteggioGeneri),
+                  Text.rich(
+                    TextSpan(
+                      text: 'Pagine lette: ',
+                      style: const TextStyle(fontSize: 13),
+                      children: [
+                        TextSpan(
+                          text: '${pagineLetteETempo['pagineLette']}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      text: 'Tempo stimato: ',
+                      style: const TextStyle(fontSize: 13),
+                      children: [
+                        TextSpan(
+                          text: '${pagineLetteETempo['ore']}h ',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${pagineLetteETempo['minuti']}min',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-        ],
+        ),
+        Expanded(
+          flex: 1,
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                spacing: 8,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Note",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      text: "Note scritte: ",
+                      style: const TextStyle(fontSize: 13),
+                      children: [
+                        TextSpan(
+                          text: "$numNote",
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Card con grafico a torta dei generi più letti.
+  Widget _buildGeneriLettiCard(Map<GenereLibro, int> conteggioGeneri) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          spacing: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'I tuoi genere più letti',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            PieChartWidget(conteggioGeneri: conteggioGeneri),
+          ],
+        ),
       ),
     );
   }
