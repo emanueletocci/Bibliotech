@@ -35,6 +35,9 @@ class StatisticheTab extends StatelessWidget {
     final votiLibri = controller.getListaVoti();
     final titoliLibri = controller.getTitoliLibriConVoto();
 
+    final orientamento = MediaQuery.of(context).orientation;
+    final chartBoxHeight = orientamento == Orientation.portrait ? 350.0 : 150.0;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -49,8 +52,8 @@ class StatisticheTab extends StatelessWidget {
             votiLibri,
           ),
           _buildLetturaENoteCard(pagineLetteETempo, numNote),
-          _buildGeneriLettiCard(conteggioGeneriLetti),
-          _buildGeneriTuttiCard(conteggioGeneriTotale),
+          _buildGeneriLettiCard(conteggioGeneriLetti, chartBoxHeight),
+          _buildGeneriTuttiCard(conteggioGeneriTotale, chartBoxHeight),
         ],
       ),
     );
@@ -208,21 +211,25 @@ class StatisticheTab extends StatelessWidget {
   }
 
   /// Card che mostra i generi **più letti** sotto forma di grafico a torta.
-  Widget _buildGeneriLettiCard(Map<GenereLibro, int> conteggioGeneri) {
+  Widget _buildGeneriLettiCard(
+    Map<GenereLibro, int> conteggioGeneri,
+    double chartBoxHeight,
+  ) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
-          spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               'I tuoi generi più letti',
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            PieChartWidget(conteggioGeneri: conteggioGeneri),
+            SizedBox(
+              height: chartBoxHeight,
+              child: PieChartWidget(conteggioGeneri: conteggioGeneri),
+            ),
           ],
         ),
       ),
@@ -231,21 +238,25 @@ class StatisticheTab extends StatelessWidget {
 }
 
 /// Card che mostra i generi di **tutti** i libri (non solo quelli letti).
-Widget _buildGeneriTuttiCard(Map<GenereLibro, int> conteggioGeneri) {
+Widget _buildGeneriTuttiCard(
+  Map<GenereLibro, int> conteggioGeneri,
+  double chartBoxHeight,
+) {
   return Card(
     elevation: 4,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     child: Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
-        spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'Tutti i tuoi generi',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
-          PieChartWidget(conteggioGeneri: conteggioGeneri),
+          SizedBox(
+            height: chartBoxHeight,
+            child: PieChartWidget(conteggioGeneri: conteggioGeneri),
+          ),
         ],
       ),
     ),
@@ -272,21 +283,46 @@ class GrigliaStato extends StatelessWidget {
           Row(
             spacing: 8,
             children: [
-              _statoCard('Letti', conteggioPerStato[StatoLibro.letto]?.toString() ?? '0', Colors.green, Icons.book_rounded),
-              _statoCard('In lettura', conteggioPerStato[StatoLibro.inLettura]?.toString() ?? '0', Colors.blue, Icons.incomplete_circle_rounded),
+              _statoCard(
+                'Letti',
+                conteggioPerStato[StatoLibro.letto]?.toString() ?? '0',
+                Colors.green,
+                Icons.book_rounded,
+              ),
+              _statoCard(
+                'In lettura',
+                conteggioPerStato[StatoLibro.inLettura]?.toString() ?? '0',
+                Colors.blue,
+                Icons.incomplete_circle_rounded,
+              ),
             ],
           ),
           Row(
             spacing: 8,
             children: [
-              _statoCard('Da leggere', conteggioPerStato[StatoLibro.daLeggere]?.toString() ?? '0', Colors.orange, Icons.bookmark_add),
+              _statoCard(
+                'Da leggere',
+                conteggioPerStato[StatoLibro.daLeggere]?.toString() ?? '0',
+                Colors.orange,
+                Icons.bookmark_add,
+              ),
             ],
           ),
           Row(
             spacing: 8,
             children: [
-              _statoCard('Abbandonati', conteggioPerStato[StatoLibro.abbandonato]?.toString() ?? '0', Colors.red, Icons.cancel_rounded),
-              _statoCard('Da acquistare', conteggioPerStato[StatoLibro.daAcquistare]?.toString() ?? '0', Colors.purple, Icons.add_shopping_cart_rounded),
+              _statoCard(
+                'Abbandonati',
+                conteggioPerStato[StatoLibro.abbandonato]?.toString() ?? '0',
+                Colors.red,
+                Icons.cancel_rounded,
+              ),
+              _statoCard(
+                'Da acquistare',
+                conteggioPerStato[StatoLibro.daAcquistare]?.toString() ?? '0',
+                Colors.purple,
+                Icons.add_shopping_cart_rounded,
+              ),
             ],
           ),
         ],
@@ -295,7 +331,12 @@ class GrigliaStato extends StatelessWidget {
   }
 
   /// Costruisce una card decorata per uno specifico stato libro.
-  Expanded _statoCard(String title, String count, MaterialColor baseColor, IconData icon) {
+  Expanded _statoCard(
+    String title,
+    String count,
+    MaterialColor baseColor,
+    IconData icon,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(10.0),
@@ -320,8 +361,22 @@ class GrigliaStato extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text(count, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  count,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
             Positioned(

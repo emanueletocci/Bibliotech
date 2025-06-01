@@ -21,11 +21,10 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Se non ci sono generi letti, mostra un messaggio informativo.
     if (widget.conteggioGeneri.isEmpty) {
       return Center(
         child: Text(
-          "Inizia a leggere solo così potrai vedere i tuoi generi preferiti!",
+          "Non hai letto nessun libro! Inizia a leggere qualcosa!",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
@@ -36,43 +35,64 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       );
     }
 
-    // Visualizzazione del grafico e della legenda.
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AspectRatio(
-          aspectRatio: 1.3,
-          child: PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  // Aggiorna l'indice toccato per animare la sezione.
-                  setState(() {
-                    touchedIndex =
-                        pieTouchResponse?.touchedSection?.touchedSectionIndex ??
-                        -1;
-                  });
-                },
+    final orientation = MediaQuery.of(context).orientation;
+
+    if (orientation == Orientation.landscape) {
+      // Layout orizzontale: grafico e legenda affiancati
+      return Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PieChart(
+                PieChartData(
+                  sectionsSpace: 1,
+                  centerSpaceRadius: 0,
+                  sections: _showingSections(widget.conteggioGeneri),
+                ),
               ),
-              sectionsSpace: 0,
-              centerSpaceRadius: 0,
-              sections: _showingSections(widget.conteggioGeneri),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        _buildLegenda(widget.conteggioGeneri),
-      ],
-    );
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildLegenda(widget.conteggioGeneri),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Layout verticale classico: grafico sopra, legenda sotto
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 1.3,
+            child: PieChart(
+              PieChartData(
+                sectionsSpace: 1,
+                centerSpaceRadius: 0,
+                sections: _showingSections(widget.conteggioGeneri),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: _buildLegenda(widget.conteggioGeneri),
+          ),
+        ],
+      );
+    }
   }
 
   /// Crea le sezioni del grafico a torta in base al conteggio dei generi.
-  ///
   /// Ogni sezione ha un colore assegnato e dimensioni diverse se selezionata.
   List<PieChartSectionData> _showingSections(
     Map<GenereLibro, int> conteggioGeneri,
   ) {
-    // Calcolo del totale (non utilizzato direttamente qui, può essere utile).
+    // fold accumula il totale dei libri letti per calcolare le percentuali.
     conteggioGeneri.values.fold<int>(0, (a, b) => a + b);
     final List<Color> colori = Colors.primaries;
 
@@ -99,7 +119,6 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   }
 
   /// Costruisce la legenda sottostante il grafico a torta.
-  ///
   /// Ogni voce mostra un colore, il nome del genere e la percentuale corrispondente.
   Widget _buildLegenda(Map<GenereLibro, int> conteggioGeneri) {
     final totale = conteggioGeneri.values.fold<int>(0, (a, b) => a + b);

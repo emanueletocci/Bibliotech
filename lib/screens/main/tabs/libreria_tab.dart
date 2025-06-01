@@ -61,8 +61,8 @@ class _LibreriaTabState extends State<LibreriaTab> {
       titolo: _titoloSelezionato,
     );
 
-    final orientazione = MediaQuery.of(context).orientation;
-    final crossAxisCount = orientazione == Orientation.portrait ? 3 : 5;
+    final orientamento = MediaQuery.of(context).orientation;
+    final crossAxisCount = orientamento == Orientation.portrait ? 3 : 5;
 
 
     return SafeArea(

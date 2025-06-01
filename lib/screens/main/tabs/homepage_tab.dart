@@ -40,10 +40,14 @@ class _HomepageTabState extends State<HomepageTab> {
 
   /// Costruisce l'header della homepage con titolo, pulsante aggiunta e stile personalizzato.
   Widget _buildHeader(BuildContext context) {
+    final orientamento = MediaQuery.of(context).orientation;
+    final headerHeight = orientamento == Orientation.portrait ? 250.0 : 180.0;
+    final headerPadding = orientamento == Orientation.portrait ? 20.0 : 0.0;
+    final headerSpacing = orientamento == Orientation.portrait ? 25.0 : 10.0;
     return Stack(
       children: <Widget>[
         Container(
-          height: 250,
+          height: headerHeight,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
@@ -62,9 +66,9 @@ class _HomepageTabState extends State<HomepageTab> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: headerPadding),
           child: Column(
-            spacing: 20,
+            spacing: headerSpacing,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SafeArea(
@@ -135,6 +139,7 @@ class _HomepageTabState extends State<HomepageTab> {
         children: <Widget>[
           // card con citazione del giorno
           Card(
+            elevation: 4,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
