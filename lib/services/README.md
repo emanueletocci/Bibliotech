@@ -1,3 +1,3 @@
 # Services
 
-Questa cartella contiene l'implementazione della logica di backend dell'applicazione.
+Questa cartella contiene l'implementazione della logica di bus dell'applicazione.
