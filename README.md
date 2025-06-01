@@ -25,6 +25,22 @@
 
 ---
 
+
+## 📦 Come iniziare
+
+```
+git clone https://github.com/emanueletocci/Bibliotech.git
+cd Bibliotech
+flutter pub get
+```
+Per l'esecuzione locale dell'applicazione é necessario aver installato un emulatore **Android/Ios**. L'applicazione non é compatibile con desktop e browser. Una volta lanciato l'emulatore, é possibile avviare *Bibliotech* con il seguente comando:
+
+```
+flutter run
+```
+
+---
+
 ## 📱 Anteprima
 
 <p align="center">
@@ -34,9 +50,4 @@
   <img src="assets/images/preview/dettaglio-libro.png" alt="Screenshot Bibliotech" width="300"/>
 
 </p>
-
----
-
-
-## 📦 Come iniziare
 
