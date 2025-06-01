@@ -1,10 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../models/libreria_model.dart';
-import '../../models/stato_libro_model.dart';
 import '../../models/genere_libro_model.dart';
-import '../../models/libro_model.dart';
 
 /// Widget che visualizza un grafico a torta con i generi dei libri letti.
 class PieChartWidget extends StatefulWidget {

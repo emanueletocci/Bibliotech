@@ -92,6 +92,13 @@ abstract class GenericController {
           "Il voto deve essere compreso tra 0 e 5! Verrá normalizzato automaticamente\n\n",
         );
       }
+
+    // Implementazione della normalizzazione del voto
+      if (voto! < 0) {
+        voto = 0;
+      } else if (voto! > 5) {
+        voto = 5;
+      }
     }
 
     return messaggio.isNotEmpty ? messaggio.toString() : null;

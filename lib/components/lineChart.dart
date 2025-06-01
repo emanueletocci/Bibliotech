@@ -23,7 +23,7 @@ class _BookRatingBarChartState extends State<BookRatingBarChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 250,
       child: Padding(
         padding: const EdgeInsets.all(16),
