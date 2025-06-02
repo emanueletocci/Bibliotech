@@ -1,6 +1,6 @@
 import 'package:bibliotech/components/feedback.dart';
 import 'package:bibliotech/models/libreria_model.dart';
-import 'package:bibliotech/screens/aggiungi_libro/aggiunta_modifica_manuale_view.dart';
+import 'package:bibliotech/screens/aggiunta_libro/aggiunta_modifica_manuale_view.dart';
 import 'package:bibliotech/services/controllers/aggiunta/dettagli_libro_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
