@@ -21,6 +21,7 @@
 - 🔍 **Ricerca e filtri avanzati**: trova rapidamente libri per titolo, genere, stato o preferiti.
 - 💬 **Citazioni letterarie**: ogni giorno una nuova citazione per ispirarti.
 - 📊 **Statistiche di lettura**: monitora i tuoi progressi e le tue abitudini di lettura.
+- 📱 **responsive e multipiattaforma**: interfaccia ottimizzata per dispositivi mobile, compatibile con iOS e Android.
 
 
 ---
