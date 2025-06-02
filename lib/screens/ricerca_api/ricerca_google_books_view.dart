@@ -30,6 +30,12 @@ class _RicercaGoogleBooksViewState extends State<RicercaGoogleBooksView> {
     }
   }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   /// Gestisce la ricerca dei libri e mostra eventuali errori tramite SnackBar.
   Future<void> _handleSearchBooks() async {
     try {

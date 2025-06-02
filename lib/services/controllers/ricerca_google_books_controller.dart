@@ -75,4 +75,9 @@ class RicercaGoogleBooksController {
       _isLoading = false;
     }
   }
+
+  /// Rilascia le risorse allocate dal controller
+  void dispose() {
+    searchQueryController.dispose();
+  }
 }

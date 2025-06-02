@@ -207,4 +207,17 @@ class AggiuntaModificaController extends AggiuntaBaseController {
 
     return status;
   }
+
+  /// Rllascia le risorse allocate dal controller
+  void dispose(){
+    titoloController.dispose();
+    autoriController.dispose();
+    numeroPagineController.dispose();
+    linguaController.dispose();
+    tramaController.dispose();
+    isbnController.dispose();
+    dataPubblicazioneController.dispose();
+    votoController.dispose();
+    noteController.dispose();
+  }
 }

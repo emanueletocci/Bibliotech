@@ -61,6 +61,12 @@ class _DettagliLibroViewState extends State<DettagliLibroView>
   }
 
   @override
+  void dispose() {
+    _tabControllerDetail.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
