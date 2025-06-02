@@ -39,6 +39,12 @@ Per l'esecuzione locale dell'applicazione é necessario aver installato un emula
 flutter run
 ```
 
+Altrimenti, per un'anteprima in modalitá release é possibile utilizzare il seguente comando:
+
+```
+flutter run --release
+```
+
 ---
 
 ## 📱 Anteprima
