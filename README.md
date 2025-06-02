@@ -45,6 +45,8 @@ Altrimenti, per un'anteprima in modalitá release é possibile utilizzare il seg
 flutter run --release
 ```
 
+Gli utenti **Android** possono installare direttamente l'apk fornito al seguente ![link](https://github.com/emanueletocci/Bibliotech/releases/tag/android)
+
 ---
 
 ## 📱 Anteprima
